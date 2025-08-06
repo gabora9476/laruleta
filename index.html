@@ -281,20 +281,25 @@
 
 .phone-input {
     display: flex;
-    gap: 55px;
-    align-items: center;
+    gap: 8px;
+    align-items: stretch;
 }
 
 .country-select {
-    width: 15px;
+    min-width: 80px;
+    width: 80px;
+    max-width: 80px;
     flex-shrink: 0;
-    font-size: 12px;
-    padding: 12px 5px;
-    text-align: center;
+    font-size: 13px;
+    padding: 12px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .phone-number-input {
     flex: 1;
+    min-width: 0;
     padding: 12px;
 }
 
