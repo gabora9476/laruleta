@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Ruleta Dorada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: #3498db;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: white;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel h3 {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #27ae60, #219a52);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .participants-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .participant-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .participant-info {
+            color: white;
+        }
+
+        .participant-info strong {
+            color: #3498db;
+        }
+
+        .participant-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.3);
+            color: #f39c12;
+        }
+
+        .status-verified {
+            background: rgba(39, 174, 96, 0.3);
+            color: #27ae60;
+        }
+
+        .sorteo-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: white;
+            opacity: 0.8;
+        }
+
+        .results-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-table th {
+            background: rgba(52, 152, 219, 0.3);
+            font-weight: bold;
+        }
+
+        .ruleta-preview {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 6px solid #3498db;
+            margin: 0 auto 20px;
+            position: relative;
+            background: conic-gradient(
+                #FF6B6B 0deg,
+                #4ECDC4 36deg,
+                #45B7D1 72deg,
+                #96CEB4 108deg,
+                #FFEAA7 144deg,
+                #DDA0DD 180deg,
+                #98D8C8 216deg,
+                #F7DC6F 252deg,
+                #BB8FCE 288deg,
+                #85C1E9 324deg
+            );
+            transition: transform 3s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .ruleta-preview.spinning {
+            transform: rotate(1800deg);
+        }
+
+        .numero-slot-preview {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            border: 2px solid #3498db;
+        }
+
+        .numero-slot-preview.ocupado {
+            background: #27ae60;
+            color: white;
+        }
+
+        .numero-slot-preview.pendiente {
+            background: #f39c12;
+            color: white;
+        }
+
+        .pointer-preview {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 30px solid #e74c3c;
+            z-index: 10;
+        }
+
+        .winner-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(39, 174, 96, 0.2);
+            border: 2px solid rgba(39, 174, 96, 0.5);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .winner-display.show {
+            display: block;
+        }
+
+        .winner-display h4 {
+            color: #27ae60;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .sorteo-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .ruleta-preview {
+                width: 250px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚙️ Panel de Administración</h1>
+            <p>Sistema de gestión para Ruleta Dorada</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statParticipantes">--</div>
+                <div class="stat-label">Participantes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statVerificados">--</div>
+                <div class="stat-label">Verificados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statIngresos">$--</div>
+                <div class="stat-label">Ingresos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statDisponibles">--</div>
+                <div class="stat-label">Disponibles</div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Configuración de Sorteo -->
+            <div class="panel">
+                <h3>⚙️ Configuración de Sorteo</h3>
+                <form id="sorteoForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cantidad de Números (5-50):</label>
+                            <input type="number" id="cantidadNumeros" min="5" max="50" value="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Premio (USD):</label>
+                            <input type="number" id="premioSorteo" value="80" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha del Sorteo:</label>
+                            <input type="date" id="fechaSorteo" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hora del Sorteo:</label>
+                            <input type="time" id="horaSorteo" value="20:00" required>
+                        </div>
+                    </div>
+                    <div class="sorteo-controls">
+                        <button type="submit" class="btn btn-success">🔧 Configurar Nuevo Sorteo</button>
+                        <button type="button" class="btn btn-warning" onclick="pausarSorteo()">⏸️ Pausar Sorteo</button>
+                        <button type="button" class="btn btn-danger" onclick="finalizarSorteo()">🏁 Finalizar Sorteo</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Control de Sorteo -->
+            <div class="panel">
+                <h3>🎲 Control de Sorteo</h3>
+                <div class="ruleta-preview" id="ruletaPreview">
+                    <div class="pointer-preview"></div>
+                </div>
+                
+                <div class="winner-display" id="winnerDisplay">
+                    <h4>🎉 ¡GANADOR! 🎉</h4>
+                    <p id="winnerText"></p>
+                </div>
+                
+                <div class="sorteo-controls">
+                    <button class="btn btn-warning" onclick="girarRuleta()" id="btnGirar">
+                        🎲 Girar Ruleta
+                    </button>
+                    <button class="btn" onclick="generarRuletaPreview()">
+                        🔄 Actualizar Vista
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participantes Panel -->
+        <div class="panel full-width">
+            <h3>👥 Gestión de Participantes</h3>
+            <div class="participants-list" id="participantsList">
+                <p style="color: white; opacity: 0.7; text-align: center;">Cargando participantes...</p>
+            </div>
+        </div>
+
+        <!-- Historial Panel -->
+        <div class="panel full-width">
+            <h3>📊 Historial de Sorteos</h3>
+            <table class="results-table" id="historialTable">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Participantes</th>
+                        <th>Ganador</th>
+                        <th>Número</th>
+                        <th>Premio</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7" style="text-align: center; opacity: 0.7;">Cargando historial...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 GStar INK. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, deleteDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH0eto3duCUC3y2VF-5NJiq70i8OLOXSY",
+            authDomain: "ruleta-55bef.firebaseapp.com",
+            projectId: "ruleta-55bef",
+            storageBucket: "ruleta-55bef.firebasestorage.app",
+            messagingSenderId: "314981215922",
+            appId: "1:314981215922:web:bd6a2c445abbd5e697a3ab",
+            measurementId: "G-7T07MJH0RF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Variables globales
+        let sorteoActual = null;
+        let participantesData = {};
+        let historialData = [];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarAdmin();
+            configurarFechaHora();
+        });
+
+        function configurarFechaHora() {
+            let ahora = new Date();
+            document.getElementById('fechaSorteo').value = ahora.toISOString().split('T')[0];
+            document.getElementById('horaSorteo').value = '20:00';
+        }
+
+        function inicializarAdmin() {
+            // Escuchar sorteo activo
+            const sorteoRef = doc(db, 'sorteos', 'activo');
+            onSnapshot(sorteoRef, (doc) => {
+                if (doc.exists()) {
+                    sorteoActual = doc.data();
+                    actualizarInterfazAdmin();
+                } else {
+                    sorteoActual = null;
+                    actualizarStats();
+                }
+            });
+
+            // Escuchar participantes
+            const participantesRef = collection(db, 'participantes');
+            onSnapshot(participantesRef, (snapshot) => {
+                participantesData = {};
+                snapshot.forEach((doc) => {
+                    if (doc.data().sorteoId === 'activo') {
+                        participantesData[doc.data().numeroSeleccionado] = {
+                            ...doc.data(),
+                            id: doc.id
+                        };
+                    }
+                });
+                actualizarParticipantes();
+                actualizarStats();
+                generarRuletaPreview();
+            });
+
+            // Escuchar historial
+            const historialQuery = query(
+                collection(db, 'resultados'),
+                orderBy('timestamp', 'desc'),
+                limit(20)
+            );
+            onSnapshot(historialQuery, (snapshot) => {
+                historialData = [];
+                snapshot.forEach((doc) => {
+                    historialData.push({ id: doc.id, ...doc.data() });
+                });
+                cargarHistorial();
+            });
+        }
+
+        function actualizarInterfazAdmin() {
+            if (!sorteoActual) return;
+
+            // Actualizar formulario con datos actuales
+            document.getElementById('cantidadNumeros').value = sorteoActual.cantidadNumeros;
+            document.getElementById('premioSorteo').value = sorteoActual.premio;
+            document.getElementById('fechaSorteo').value = sorteoActual.fecha;
+            document.getElementById('horaSorteo').value = sorteoActual.hora;
+
+            generarRuletaPreview();
+        }
+
+        function actualizarStats() {
+            const totalParticipantes = Object.keys(participantesData).length;
+            const verificados = Object.values(participantesData).filter(p => p.verificado).length;
+            const ingresos = verificados * 10;
+            const disponibles = sorteoActual ? sorteoActual.cantidadNumeros - totalParticipantes : 0;
+
+            document.getElementById('statParticipantes').textContent = totalParticipantes;
+            document.getElementById('statVerificados').textContent = verificados;
+            document.getElementById('statIngresos').textContent = `$${ingresos}`;
+            document.getElementById('statDisponibles').textContent = disponibles;
+        }
+
+        function generarRuletaPreview() {
+            const ruleta = document.getElementById('ruletaPreview');
+            const pointer = ruleta.querySelector('.pointer-preview');
+            ruleta.innerHTML = '';
+            ruleta.appendChild(pointer);
+
+            if (!sorteoActual) return;
+
+            const cantidad = sorteoActual.cantidadNumeros;
+            const angleStep = 360 / cantidad;
+
+            for (let i = 1; i <= cantidad; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'numero-slot-preview';
+                slot.textContent = i;
+
+                // Verificar estado del número
+                if (participantesData[i]) {
+                    if (participantesData[i].verificado) {
+                        slot.classList.add('ocupado');
+                        slot.textContent = participantesData[i].nombre.split(' ').map(n => n[0]).join('');
+                        slot.title = participantesData[i].nombre;
+                    } else {
+                        slot.classList.add('pendiente');
+                        slot.title = 'Pendiente de verificación';
+                    }
+                }
+
+                // Posicionamiento en círculo
+                const angle = (i - 1) * angleStep;
+                const radian = (angle * Math.PI) / 180;
+                const radius = 120;
+                const x = Math.cos(radian) * radius;
+                const y = Math.sin(radian) * radius;
+
+                slot.style.left = `calc(50% + ${x}px - 15px)`;
+                slot.style.top = `calc(50% + ${y}px - 15px)`;
+
+                ruleta.appendChild(slot);
+            }
+        }
+
+        function actualizarParticipantes() {
+            const container = document.getElementById('participantsList');
+            const participantes = Object.entries(participantesData);
+            
+            if (participantes.length === 0) {
+                container.innerHTML = '<p style="color: white; opacity: 0.7; text-align: center;">No hay participantes registrados</p>';
+                return;
+            }
+
+            container.innerHTML = participantes
+                .map(([numero, data]) => `
+                    <div class="participant-item">
+                        <div class="participant-info">
+                            <strong>#${numero}</strong> - ${data.nombre}<br>
+                            <small>📱 ${data.telefono} | 💳 ${data.codigoReferencia}</small>
+                        </div>
+                        <div class="participant-actions">
+                            <span class="status-badge ${data.verificado ? 'status-verified' : 'status-pending'}">
+                                ${data.verificado ? 'Verificado' : 'Pendiente'}
+                            </span>
+                            ${!data.verificado ? `
+                                <button class="btn btn-success" onclick="verificarParticipante('${data.id}', ${numero})">
+                                    ✅ Verificar
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-danger" onclick="eliminarParticipante('${data.id}', ${numero})">
+                                ❌ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Verificar participante
+        window.verificarParticipante = async function(participanteId, numero) {
+            try {
+                await updateDoc(doc(db, 'participantes', participanteId), {
+                    verificado: true
+                });
+                alert(`Participante #${numero} verificado correctamente`);
+            } catch (error) {
+                console.error('Error al verificar participante:', error);
+                alert('Error al verificar participante');
+            }
+        }
+
+        // Eliminar participante
+        window.eliminarParticipante = async function(participanteId, numero) {
+            if (confirm(`¿Estás seguro de eliminar al participante #${numero}?`)) {
+                try {
+                    await deleteDoc(doc(db, 'participantes', participanteId));
+                    alert(`Participante #${numero} eliminado`);
+                } catch (error) {
+                    console.error('Error al eliminar participante:', error);
+                    alert('Error al eliminar participante');
+                }
+            }
+        }
+
+        // Configurar sorteo
+        document.getElementById('sorteoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const cantidad = parseInt(document.getElementById('cantidadNumeros').value);
+            const premio = parseInt(document.getElementById('premioSorteo').value);
+            const fecha = document.getElementById('fechaSorteo').value;
+            const hora = document.getElementById('horaSorteo').value;
+
+            if (cantidad < 5 || cantidad > 50) {
+                alert('La cantidad de números debe estar entre 5 y 50');
+                return;
+            }
+
+            if (sorteoActual && Object.keys(participantesData).length > 0) {
+                if (!confirm('Hay participantes registrados. ¿Desea crear un nuevo sorteo? Se perderán los datos actuales.')) {
+                    return;
+                }
+                
+                // Limpiar participantes actuales
+                const participantesQuery = query(collection(db, 'participantes'), where('sorteoId', '==', 'activo'));
+                const participantesSnapshot = await getDocs(participantesQuery);
+                
+                for (const doc of participantesSnapshot.docs) {
+                    await deleteDoc(doc.ref);
+                }
+            }
+
+            try {
+                await setDoc(doc(db, 'sorteos', 'activo'), {
+                    cantidadNumeros: cantidad,
+                    premio: premio,
+                    fecha: fecha,
+                    hora: hora,
+                    estado: 'activo',
+                    timestamp: new Date()
+                });
+
+                alert('Sorteo configurado correctamente');
+            } catch (error) {
+                console.error('Error al configurar sorteo:', error);
+                alert('Error al configurar el sorteo');
+            }
+        });
+
+        // Girar ruleta
+        window.girarRuleta = async function() {
+            const participantesVerificados = Object.entries(participantesData).filter(([num, data]) => data.verificado);
+            
+            if (participantesVerificados.length === 0) {
+                alert('No hay participantes verificados para el sorteo');
+                return;
+            }
+
+            if (!confirm(`¿Realizar sorteo con ${participantesVerificados.length} participantes verificados?`)) {
+                return;
+            }
+
+            const ruleta = document.getElementById('ruletaPreview');
+            const btnGirar = document.getElementById('btnGirar');
+            
+            btnGirar.disabled = true;
+            btnGirar.textContent = '🎲 Girando...';
+            ruleta.classList.add('spinning');
+
+            setTimeout(async () => {
+                // Seleccionar ganador aleatorio
+                const [numeroGanador, datosGanador] = participantesVerificados[Math.floor(Math.random() * participantesVerificados.length)];
+
+                // Mostrar resultado
+                document.getElementById('winnerDisplay').classList.add('show');
+                document.getElementById('winnerText').innerHTML = `
+                    <strong>${datosGanador.nombre}</strong><br>
+                    Número: #${numeroGanador}<br>
+                    Premio: ${sorteoActual.premio} USD<br>
+                    Teléfono: ${datosGanador.telefono}
+                `;
+
+                try {
+                    // Guardar resultado
+                    await addDoc(collection(db, 'resultados'), {
+                        fecha: sorteoActual.fecha,
+                        hora: sorteoActual.hora,
+                        ganadorNombre: datosGanador.nombre,
+                        ganadorNumero: parseInt(numeroGanador),
+                        ganadorTelefono: datosGanador.telefono,
+                        premio: sorteoActual.premio,
+                        totalParticipantes: participantesVerificados.length,
+                        estado: 'finalizado',
+                        timestamp: new Date()
+                    });
+
+                    // Actualizar sorteo como finalizado
+                    await updateDoc(doc(db, 'sorteos', 'activo'), {
+                        estado: 'finalizado',
+                        ganador: datosGanador.nombre,
+                        ganadorNombre: datosGanador.nombre,
+                        ganadorNumero: parseInt(numeroGanador),
+                        fechaFinalizacion: new Date()
+                    });
+
+                    // Mensaje de WhatsApp para anunciar ganador
+                    const mensajeGanador = `🎉 ¡TENEMOS GANADOR! 🎉
+
+🏆 Sorteo Ruleta Dorada
+👤 Ganador: ${datosGanador.nombre}
+🎲 Número ganador: #${numeroGanador}
+💰 Premio: ${sorteoActual.premio} USD
+📱 Contacto: ${datosGanador.telefono}
+
+¡Felicidades al ganador! El pago se realizará en las próximas 2 horas.
+
+¡Mantente atento al próximo sorteo!`;
+
+                    // Copiar mensaje al portapapeles
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(mensajeGanador);
+                        alert(`🎉 ¡Ganador: ${datosGanador.nombre}!\nMensaje copiado al portapapeles para anunciar en WhatsApp.`);
+                    } else {
+                        alert(`🎉 ¡Ganador: ${datosGanador.nombre}!\nAnuncia el resultado en WhatsApp.`);
+                    }
+
+                } catch (error) {
+                    console.error('Error al guardar resultado:', error);
+                    alert('Error al guardar el resultado del sorteo');
+                }
+
+                ruleta.classList.remove('spinning');
+                btnGirar.disabled = false;
+                btnGirar.textContent = '🎲 Girar Ruleta';
+
+            }, 3000);
+        }
+
+        // Pausar sorteo
+        window.pausarSorteo = async function() {
+            if (!sorteoActual) {
+                alert('No hay sorteo activo para pausar');
+                return;
+            }
+
+            if (confirm('¿Pausar el sorteo actual? Los usuarios no podrán participar temporalmente.')) {
+                try {
+                    await updateDoc(doc(db, 'sorteos', 'activo'), {
+                        estado: 'pausado'
+                    });
+                    alert('Sorteo pausado correctamente');
+                } catch (error) {
+                    console.error('Error al pausar sorteo:', error);
+                    alert('Error al pausar el sorteo');
+                }
+            }
+        }
+
+        // Finalizar sorteo
+        window.finalizarSorteo = async function() {
+            if (!sorteoActual) {
+                alert('No hay sorteo activo para finalizar');
+                return;
+            }
+
+            if (confirm('¿Finalizar el sorteo sin realizar el sorteo? Esto eliminará todos los participantes.')) {
+                try {
+                    // Mover sorteo a historial sin ganador
+                    await addDoc(collection(db, 'resultados'), {
+                        fecha: sorteoActual.fecha,
+                        hora: sorteoActual.hora,
+                        ganadorNombre: 'Sorteo cancelado',
+                        ganadorNumero: 0,
+                        premio: sorteoActual.premio,
+                        totalParticipantes: Object.keys(participantesData).length,
+                        estado: 'cancelado',
+                        timestamp: new Date()
+                    });
+
+                    // Eliminar sorteo activo
+                    await deleteDoc(doc(db, 'sorteos', 'activo'));
+
+                    // Limpiar participantes
+                    const participantesQuery = query(collection(db, 'participantes'), where('sorteoId', '==', 'activo'));
+                    const participantesSnapshot = await getDocs(participantesQuery);
+                    
+                    for (const doc of participantesSnapshot.docs) {
+                        await deleteDoc(doc.ref);
+                    }
+
+                    alert('Sorteo finalizado y cancelado correctamente');
+                } catch (error) {
+                    console.error('Error al finalizar sorteo:', error);
+                    alert('Error al finalizar el sorteo');
+                }
+            }
+        }
+
+        function cargarHistorial() {
+            const tbody = document.querySelector('#historialTable tbody');
+            
+            if (historialData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.7;">No hay historial disponible</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = historialData.map(resultado => {
+                const fecha = resultado.timestamp ? new Date(resultado.timestamp.seconds * 1000) : new Date();
+                return `
+                    <tr>
+                        <td>${fecha.toLocaleDateString()}</td>
+                        <td>${resultado.hora}</td>
+                        <td>${resultado.totalParticipantes || 0}</td>
+                        <td>${resultado.ganadorNombre}</td>
+                        <td>${resultado.ganadorNumero > 0 ? '#' + resultado.ganadorNumero : 'N/A'}</td>
+                        <td>${resultado.premio}</td>
+                        <td>
+                            <span class="status-badge ${resultado.estado === 'finalizado' ? 'status-verified' : 'status-pending'}">
+                                ${resultado.estado}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Función para exportar datos (opcional)
+        window.exportarDatos = function() {
+            const datos = {
+                sorteoActual: sorteoActual,
+                participantes: participantesData,
+                historial: historialData,
+                fecha: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ruleta-dorada-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Función para limpiar datos antiguos (opcional)
+        window.limpiarHistorial = async function() {
+            if (confirm('¿Eliminar todos los resultados antiguos? Esta acción no se puede deshacer.')) {
+                try {
+                    const resultadosQuery = query(collection(db, 'resultados'));
+                    const resultadosSnapshot = await getDocs(resultadosQuery);
+                    
+                    for (const doc of resultadosSnapshot.docs) {
+                        await deleteDoc(doc.ref);
+                    }
+                    
+                    alert('Historial limpiado correctamente');
+                } catch (error) {
+                    console.error('Error al limpiar historial:', error);
+                    alert('Error al limpiar el historial');
+                }
+            }
+        }
+
+        // Auto-refresh cada 30 segundos para mantener datos actualizados
+        setInterval(() => {
+            console.log('Actualizando datos...', new Date().toLocaleTimeString());
+        }, 30000);
+
+    </script>
+</body>
+</html>
