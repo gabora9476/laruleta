@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaRuleta - Tu Oportunidad de Ganar</title>
+    <title>LaLaRuleta - Tu Oportunidad de Ganar</title>
     <style>
         * {
             margin: 0;
@@ -16,64 +16,12 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
-            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-        }
-
-        /* Animaciones */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -200px 0;
-            }
-            100% {
-                background-position: 200px 0;
-            }
-        }
-
-        @keyframes levelGlow {
-            0%, 100% {
-                box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            }
         }
 
         .header {
@@ -84,7 +32,6 @@
             border-radius: 20px;
             padding: 30px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 0.8s ease;
         }
 
         .header h1 {
@@ -92,7 +39,6 @@
             font-size: 3em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-bottom: 10px;
-            animation: pulse 2s infinite;
         }
 
         .header p {
@@ -115,7 +61,6 @@
             padding: 40px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
-            animation: fadeInUp 1s ease 0.2s both;
         }
 
         .sorteo-status {
@@ -124,12 +69,6 @@
             border-radius: 15px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .sorteo-status:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
         .status-activo {
@@ -170,10 +109,6 @@
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
         }
 
-        .ruleta:hover {
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-        }
-
         .ruleta.spinning {
             transform: rotate(1800deg);
         }
@@ -195,11 +130,9 @@
         }
 
         .numero-slot:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
             background: #FFD700;
             color: white;
-            z-index: 10;
-            animation: bounce 0.6s ease;
         }
 
         .numero-slot.reservado {
@@ -216,8 +149,7 @@
 
         .numero-slot.reservado:hover,
         .numero-slot.ocupado:hover {
-            transform: scale(1.1);
-            animation: none;
+            transform: none;
         }
 
         .pointer {
@@ -231,14 +163,12 @@
             border-right: 15px solid transparent;
             border-top: 40px solid #FF4444;
             z-index: 10;
-            animation: bounce 2s infinite;
         }
 
         .sidebar {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            animation: fadeInUp 1s ease 0.4s both;
         }
 
         .info-panel {
@@ -247,21 +177,12 @@
             border-radius: 20px;
             padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .info-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .info-panel h3 {
             color: #FFD700;
             margin-bottom: 15px;
             font-size: 1.4em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .info-item {
@@ -269,12 +190,6 @@
             justify-content: space-between;
             margin-bottom: 10px;
             color: white;
-            transition: all 0.3s ease;
-        }
-
-        .info-item:hover {
-            transform: translateX(5px);
-            color: #FFD700;
         }
 
         .participant {
@@ -286,83 +201,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .participant:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(10px);
-        }
-
-        /* Sistema de Niveles */
-        .nivel-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
-            margin: 5px;
-            transition: all 0.3s ease;
-            animation: levelGlow 2s infinite;
-        }
-
-        .nivel-1 {
-            background: linear-gradient(45deg, #CD7F32, #A0522D);
-            color: white;
-            border: 2px solid #CD7F32;
-        }
-
-        .nivel-2 {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #333;
-            border: 2px solid #FFD700;
-        }
-
-        .nivel-3 {
-            background: linear-gradient(45deg, #1E90FF, #0066CC);
-            color: white;
-            border: 2px solid #1E90FF;
-        }
-
-        .nivel-4 {
-            background: linear-gradient(45deg, #C0C0C0, #A9A9A9);
-            color: #333;
-            border: 2px solid #C0C0C0;
-        }
-
-        .nivel-5 {
-            background: linear-gradient(45deg, #FF1493, #9932CC, #00CED1, #FFD700);
-            background-size: 200% 200%;
-            animation: shimmer 2s infinite, levelGlow 2s infinite;
-            color: white;
-            border: 2px solid #FFD700;
-        }
-
-        .nivel-info {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 10px 0;
-            color: white;
-            border-left: 4px solid #FFD700;
-        }
-
-        .nivel-progreso {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            height: 8px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-
-        .nivel-progreso-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            border-radius: 10px;
-            transition: width 1s ease;
-            animation: shimmer 2s infinite;
         }
 
         .whatsapp-buttons {
@@ -380,29 +218,11 @@
             text-align: center;
             font-weight: bold;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .whatsapp-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .whatsapp-btn:hover::before {
-            left: 100%;
         }
 
         .whatsapp-btn:hover {
             background: #128C7E;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            transform: translateY(-2px);
         }
 
         .modal {
@@ -413,30 +233,25 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.3s ease;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            margin: 5% auto;
+            margin: 10% auto;
             padding: 30px;
             border-radius: 25px;
             width: 90%;
             max-width: 500px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: fadeInUp 0.5s ease;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         .modal h3 {
             color: #333;
             margin-bottom: 20px;
             text-align: center;
-            font-size: 1.8em;
         }
 
         .form-group {
@@ -456,15 +271,12 @@
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
+            transition: border-color 0.3s ease;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #FFD700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-            transform: scale(1.02);
         }
 
         .phone-input {
@@ -473,17 +285,8 @@
         }
 
         .country-select {
-            width: 140px;
+            width: 80px;
             flex-shrink: 0;
-        }
-
-        .phone-number {
-            flex: 1;
-        }
-
-        .codigo-referencia-input {
-            width: 100%;
-            max-width: 200px;
         }
 
         .form-buttons {
@@ -491,7 +294,6 @@
             gap: 15px;
             justify-content: center;
             margin-top: 25px;
-            flex-wrap: wrap;
         }
 
         .btn {
@@ -505,23 +307,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn:hover {
@@ -530,12 +315,12 @@
         }
 
         .btn-cancel {
-            background: linear-gradient(45deg, #6c757d, #5a6268);
+            background: #6c757d;
             color: white;
         }
 
         .btn-submit {
-            background: linear-gradient(45deg, #28a745, #20c997);
+            background: #28a745;
             color: white;
         }
 
@@ -545,7 +330,6 @@
             border-radius: 20px;
             padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s ease 0.6s both;
         }
 
         .results-panel h3 {
@@ -566,7 +350,6 @@
             text-align: left;
             color: white;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
         }
 
         .results-table th {
@@ -574,17 +357,11 @@
             font-weight: bold;
         }
 
-        .results-table tr:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.01);
-        }
-
         .footer {
             text-align: center;
             padding: 30px;
             color: white;
             opacity: 0.8;
-            animation: fadeInUp 1s ease 0.8s both;
         }
 
         .sorteo-no-activo {
@@ -599,7 +376,6 @@
             color: #FFD700;
             margin: 20px 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            animation: pulse 1s infinite;
         }
 
         .winner-announcement {
@@ -610,57 +386,12 @@
             margin: 20px 0;
             text-align: center;
             color: white;
-            animation: pulse 2s infinite;
         }
 
         .winner-announcement h4 {
             color: #FFD700;
             font-size: 1.8em;
             margin-bottom: 10px;
-            animation: bounce 1s infinite;
-        }
-
-        /* Validación visual de formularios */
-        .form-group input.valid {
-            border-color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
-        }
-
-        .form-group input.invalid {
-            border-color: #dc3545;
-            background: rgba(220, 53, 69, 0.1);
-        }
-
-        .validation-message {
-            font-size: 12px;
-            margin-top: 5px;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .validation-message.success {
-            color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
-        }
-
-        .validation-message.error {
-            color: #dc3545;
-            background: rgba(220, 53, 69, 0.1);
-        }
-
-        /* Loading spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         /* Responsive */
@@ -681,21 +412,6 @@
             .ruleta-container {
                 padding: 20px;
             }
-
-            .modal-content {
-                margin: 2% auto;
-                width: 95%;
-                padding: 20px;
-            }
-
-            .form-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                margin: 5px 0;
-            }
         }
 
         @media (max-width: 480px) {
@@ -712,48 +428,9 @@
                 height: 250px;
             }
             
-            .numero-slot {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
-            }
-
-            .phone-input {
-                flex-direction: column;
-            }
-
-            .country-select {
-                width: 100%;
-            }
-        }
-
-        /* Mejoras en accesibilidad */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        /* Tema oscuro para mejor contraste */
-        @media (prefers-color-scheme: dark) {
             .modal-content {
-                background: rgba(30, 30, 30, 0.95);
-                color: white;
-            }
-            
-            .form-group label {
-                color: #FFD700;
-            }
-            
-            .form-group input, .form-group select {
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                border-color: rgba(255, 255, 255, 0.3);
+                margin: 5% auto;
+                padding: 20px;
             }
         }
     </style>
@@ -799,7 +476,7 @@
             <div class="sidebar">
                 <!-- Info Panel -->
                 <div class="info-panel">
-                    <h3>📊 Información del Sorteo</h3>
+                    <h3>Información del Sorteo</h3>
                     <div class="info-item">
                         <span>Premio:</span>
                         <span id="infoPremio">$-- USD</span>
@@ -822,17 +499,9 @@
                     </div>
                 </div>
 
-                <!-- Sistema de Niveles -->
-                <div class="info-panel" id="nivelPanel" style="display: none;">
-                    <h3>🏆 Tu Nivel Golden Player</h3>
-                    <div id="nivelActual"></div>
-                    <div id="nivelProgreso"></div>
-                    <div id="nivelBeneficios"></div>
-                </div>
-
                 <!-- Participants -->
                 <div class="info-panel">
-                    <h3>👥 Participantes</h3>
+                    <h3>Participantes</h3>
                     <div id="participantes">
                         <p style="color: white; opacity: 0.7;">Cargando participantes...</p>
                     </div>
@@ -852,7 +521,7 @@
 
         <!-- Results Panel -->
         <div class="results-panel">
-            <h3>📊 Resultados Recientes</h3>
+            <h3>Resultados Recientes</h3>
             <table class="results-table" id="resultsTable">
                 <thead>
                     <tr>
@@ -875,55 +544,34 @@
     <!-- Modal for Number Selection -->
     <div id="numeroModal" class="modal">
         <div class="modal-content">
-            <h3>🎯 Seleccionar Número <span id="numeroSeleccionado"></span></h3>
-            
-            <!-- Información del nivel del usuario -->
-            <div id="modalNivelInfo" style="display: none;">
-                <div class="nivel-info">
-                    <div id="modalNivelBadge"></div>
-                    <div id="modalNivelDescripcion"></div>
-                </div>
-            </div>
-
+            <h3>Seleccionar Número <span id="numeroSeleccionado"></span></h3>
             <form id="participantForm">
                 <div class="form-group">
-                    <label for="nombreCompleto">👤 Nombre Completo:</label>
-                    <input type="text" id="nombreCompleto" required placeholder="Juan Pérez" maxlength="50">
-                    <div class="validation-message" id="nombreValidation"></div>
+                    <label>Nombre Completo:</label>
+                    <input type="text" id="nombreCompleto" required placeholder="Juan Pérez">
                 </div>
-                
                 <div class="form-group">
-                    <label for="telefonoCompleto">📱 Teléfono:</label>
+                    <label>Teléfono:</label>
                     <div class="phone-input">
-                        <select id="codigoPais" class="country-select" required>
-                            <option value="+58">🇻🇪 Venezuela (+58)</option>
-                            <option value="+57">🇨🇴 Colombia (+57)</option>
-                            <option value="+1">🇺🇸 Estados Unidos (+1)</option>
-                            <option value="+52">🇲🇽 México (+52)</option>
-                            <option value="+51">🇵🇪 Perú (+51)</option>
-                            <option value="+54">🇦🇷 Argentina (+54)</option>
-                            <option value="+56">🇨🇱 Chile (+56)</option>
-                            <option value="+593">🇪🇨 Ecuador (+593)</option>
-                            <option value="+595">🇵🇾 Paraguay (+595)</option>
-                            <option value="+598">🇺🇾 Uruguay (+598)</option>
+                        <select id="codigoPais" class="country-select">
+                            <option value="+58">🇻🇪 +58</option>
+                            <option value="+57">🇨🇴 +57</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+52">🇲🇽 +52</option>
+                            <option value="+51">🇵🇪 +51</option>
+                            <option value="+54">🇦🇷 +54</option>
+                            <option value="+56">🇨🇱 +56</option>
                         </select>
-                        <input type="tel" id="numeroTelefono" class="phone-number" required placeholder="4121234567" maxlength="15">
+                        <input type="tel" id="numeroTelefono" required placeholder="4121234567">
                     </div>
-                    <div class="validation-message" id="telefonoValidation"></div>
                 </div>
-                
                 <div class="form-group">
-                    <label for="codigoReferencia">💳 Código de Referencia del Pago (últimos 6 dígitos):</label>
-                    <input type="text" id="codigoReferencia" class="codigo-referencia-input" required placeholder="123456" maxlength="6" pattern="[0-9]{6}">
-                    <div class="validation-message" id="referenciaValidation"></div>
+                    <label>Código de Referencia del Pago (últimos 6 dígitos):</label>
+                    <input type="text" id="codigoReferencia" required placeholder="123456" maxlength="6">
                 </div>
-                
                 <div class="form-buttons">
-                    <button type="button" class="btn btn-cancel" onclick="cerrarModal()">❌ Cancelar</button>
-                    <button type="submit" class="btn btn-submit" id="submitBtn">
-                        <span id="submitText">✅ Confirmar Participación</span>
-                        <span id="submitSpinner" class="loading-spinner" style="display: none;"></span>
-                    </button>
+                    <button type="button" class="btn btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-submit">Confirmar Participación</button>
                 </div>
             </form>
         </div>
@@ -937,7 +585,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, query, orderBy, limit, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDH0eto3duCUC3y2VF-5NJiq70i8OLOXSY",
@@ -956,194 +604,27 @@
         // Variables globales
         let sorteoActual = null;
         let participantesData = {};
-        let usuariosData = {}; // NUEVO: Para almacenar datos de usuarios
         let numeroSeleccionado = null;
-        let nivelUsuario = null;
-        let historialUsuario = [];
-
-        // CONFIGURACIÓN CORREGIDA del sistema de niveles (igual que en admin)
-        const NIVELES_CONFIG = {
-            1: {
-                badge: '🥉',
-                nombre: 'BRONCE',
-                emoji: '🥉',
-                participaciones: [1, 9], // Cambiado de [5, 9] a [1, 9]
-                beneficios: ['1 número GRATIS cada 10 sorteos', 'Notificación 5 min antes', 'Grupo WhatsApp exclusivo'],
-                color: 'nivel-1'
-            },
-            2: {
-                badge: '⚡️',
-                nombre: 'PLATA',
-                emoji: '🥈',
-                participaciones: [10, 19],
-                beneficios: ['1 número GRATIS cada 5 sorteos', 'Reservar número favorito 1h', 'Sorteo mensual $100'],
-                color: 'nivel-2'
-            },
-            3: {
-                badge: '🔥',
-                nombre: 'ORO',
-                emoji: '🥇',
-                participaciones: [20, 49],
-                beneficios: ['2 números GRATIS por semana', 'Club VIP Escalera del Dinero', 'Descuento 20%', 'Estadísticas personales'],
-                color: 'nivel-3'
-            },
-            4: {
-                badge: '👑',
-                nombre: 'PLATINO',
-                emoji: '💎',
-                participaciones: [50, 99],
-                beneficios: ['Acceso VIP exclusivo', 'Descuentos especiales', 'Sorteos premium', 'Soporte prioritario'],
-                color: 'nivel-4'
-            },
-            5: {
-                badge: '💎',
-                nombre: 'DIAMANTE',
-                emoji: '🌈',
-                participaciones: [100, Infinity],
-                beneficios: ['Beneficios ÉLITE', 'Sorteos exclusivos mensuales', 'Premios físicos', 'Reconocimiento especial'],
-                color: 'nivel-5'
-            }
-        };
-
-        // FUNCIÓN CORREGIDA: Calcular nivel basado en participaciones reales
-        function calcularNivel(participacionesTotales) {
-            const participaciones = Math.max(1, participacionesTotales || 1); // Mínimo 1
-            
-            for (let nivel in NIVELES_CONFIG) {
-                const [min, max] = NIVELES_CONFIG[nivel].participaciones;
-                if (participaciones >= min && participaciones <= max) {
-                    return {
-                        nivel: parseInt(nivel),
-                        participaciones: participaciones,
-                        datos: NIVELES_CONFIG[nivel]
-                    };
-                }
-            }
-            
-            // Por defecto nivel 1 si no se encuentra
-            return {
-                nivel: 1,
-                participaciones: participaciones,
-                datos: NIVELES_CONFIG[1]
-            };
-        }
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
             inicializarApp();
-            configurarValidaciones();
             
-            // Auto-detección de código de país mejorada
-            const numeroInput = document.getElementById('numeroTelefono');
-            numeroInput.addEventListener('input', function(e) {
+            // Auto-detección de código de país
+            document.getElementById('numeroTelefono').addEventListener('input', function(e) {
                 let valor = e.target.value.replace(/\D/g, '');
-                
-                // Formateo automático según el país
-                const codigoPais = document.getElementById('codigoPais').value;
-                if (codigoPais === '+58' && valor.length >= 3) {
-                    // Formato venezolano: 0412-123-4567
-                    valor = valor.replace(/(\d{4})(\d{3})(\d{4})/, '$1-$2-$3');
-                } else if (codigoPais === '+57' && valor.length >= 3) {
-                    // Formato colombiano: 300-123-4567
-                    valor = valor.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                if (valor.length >= 2) {
+                    let codigo = valor.substring(0, 2);
+                    const codigosPais = {
+                        '58': '+58', '57': '+57', '1': '+1', '52': '+52',
+                        '51': '+51', '54': '+54', '56': '+56'
+                    };
+                    if (codigosPais[codigo]) {
+                        document.getElementById('codigoPais').value = codigosPais[codigo];
+                    }
                 }
-                
-                e.target.value = valor;
-                validarTelefono();
             });
         });
-
-        function configurarValidaciones() {
-            const nombreInput = document.getElementById('nombreCompleto');
-            const telefonoInput = document.getElementById('numeroTelefono');
-            const referenciaInput = document.getElementById('codigoReferencia');
-
-            nombreInput.addEventListener('input', validarNombre);
-            telefonoInput.addEventListener('input', validarTelefono);
-            referenciaInput.addEventListener('input', validarReferencia);
-        }
-
-        function validarNombre() {
-            const input = document.getElementById('nombreCompleto');
-            const mensaje = document.getElementById('nombreValidation');
-            const valor = input.value.trim();
-
-            if (valor.length < 3) {
-                mostrarValidacion(input, mensaje, 'El nombre debe tener al menos 3 caracteres', false);
-                return false;
-            } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(valor)) {
-                mostrarValidacion(input, mensaje, 'Solo se permiten letras y espacios', false);
-                return false;
-            } else if (valor.split(' ').length < 2) {
-                mostrarValidacion(input, mensaje, 'Ingrese nombre y apellido', false);
-                return false;
-            } else {
-                mostrarValidacion(input, mensaje, '✓ Nombre válido', true);
-                return true;
-            }
-        }
-
-        function validarTelefono() {
-            const codigoInput = document.getElementById('codigoPais');
-            const numeroInput = document.getElementById('numeroTelefono');
-            const mensaje = document.getElementById('telefonoValidation');
-            const codigo = codigoInput.value;
-            const numero = numeroInput.value.replace(/\D/g, '');
-
-            let esValido = false;
-            let mensajeText = '';
-
-            switch(codigo) {
-                case '+58':
-                    esValido = /^(412|414|424|416|426)\d{7}$/.test(numero);
-                    mensajeText = esValido ? '✓ Número venezolano válido' : 'Formato: 412XXXXXXX';
-                    break;
-                case '+57':
-                    esValido = /^(3\d{9})$/.test(numero);
-                    mensajeText = esValido ? '✓ Número colombiano válido' : 'Formato: 300XXXXXXX';
-                    break;
-                case '+1':
-                    esValido = /^\d{10}$/.test(numero);
-                    mensajeText = esValido ? '✓ Número válido' : 'Formato: 1234567890';
-                    break;
-                default:
-                    esValido = numero.length >= 8 && numero.length <= 15;
-                    mensajeText = esValido ? '✓ Número válido' : 'Entre 8 y 15 dígitos';
-            }
-
-            mostrarValidacion(numeroInput, mensaje, mensajeText, esValido);
-            return esValido;
-        }
-
-        function validarReferencia() {
-            const input = document.getElementById('codigoReferencia');
-            const mensaje = document.getElementById('referenciaValidation');
-            const valor = input.value.replace(/\D/g, '');
-
-            if (valor.length !== 6) {
-                mostrarValidacion(input, mensaje, 'Debe tener exactamente 6 dígitos', false);
-                return false;
-            } else {
-                mostrarValidacion(input, mensaje, '✓ Código válido', true);
-                return true;
-            }
-        }
-
-        function mostrarValidacion(input, mensajeElement, texto, esValido) {
-            input.className = input.className.replace(/\s*(valid|invalid)/g, '');
-            mensajeElement.className = mensajeElement.className.replace(/\s*(success|error)/g, '');
-            
-            if (esValido) {
-                input.classList.add('valid');
-                mensajeElement.classList.add('success');
-            } else {
-                input.classList.add('invalid');
-                mensajeElement.classList.add('error');
-            }
-            
-            mensajeElement.textContent = texto;
-            mensajeElement.style.display = 'block';
-        }
 
         function inicializarApp() {
             // Escuchar sorteo activo
@@ -1155,15 +636,6 @@
                 } else {
                     mostrarSorteoInactivo();
                 }
-            });
-
-            // NUEVO: Escuchar datos de usuarios
-            const usuariosRef = collection(db, 'usuarios');
-            onSnapshot(usuariosRef, (snapshot) => {
-                usuariosData = {};
-                snapshot.forEach((doc) => {
-                    usuariosData[doc.id] = doc.data();
-                });
             });
 
             // Escuchar participantes
@@ -1197,116 +669,6 @@
             });
         }
 
-        // FUNCIÓN CORREGIDA: Obtener nivel real del usuario
-        async function obtenerNivelUsuario(telefono) {
-            try {
-                const telefonoLimpio = telefono.replace(/\D/g, '');
-                
-                // Buscar en la colección de usuarios
-                const usuarioData = usuariosData[telefonoLimpio];
-                
-                if (usuarioData && usuarioData.participacionesTotales) {
-                    // Usuario existente con participaciones registradas
-                    return calcularNivel(usuarioData.participacionesTotales);
-                } else {
-                    // Usuario nuevo - nivel 1
-                    return calcularNivel(1);
-                }
-            } catch (error) {
-                console.error('Error al obtener nivel del usuario:', error);
-                return calcularNivel(1); // Por defecto nivel 1
-            }
-        }
-
-        // FUNCIÓN CORREGIDA: Mostrar nivel del usuario
-        async function mostrarNivelUsuario(telefono) {
-            const nivelInfo = await obtenerNivelUsuario(telefono);
-            nivelUsuario = nivelInfo;
-            
-            // Mostrar en el modal
-            const modalNivelInfo = document.getElementById('modalNivelInfo');
-            const modalNivelBadge = document.getElementById('modalNivelBadge');
-            const modalNivelDescripcion = document.getElementById('modalNivelDescripcion');
-            
-            modalNivelBadge.innerHTML = `
-                <div class="nivel-badge ${nivelInfo.datos.color}">
-                    ${nivelInfo.datos.badge} ${nivelInfo.datos.nombre} ${nivelInfo.datos.emoji}
-                </div>
-            `;
-            
-            const proximoNivel = NIVELES_CONFIG[nivelInfo.nivel + 1];
-            const progreso = proximoNivel ? 
-                Math.min(100, (nivelInfo.participaciones / proximoNivel.participaciones[0]) * 100) : 100;
-            
-            modalNivelDescripcion.innerHTML = `
-                <p><strong>Participaciones:</strong> ${nivelInfo.participaciones}</p>
-                <div class="nivel-progreso">
-                    <div class="nivel-progreso-fill" style="width: ${progreso}%"></div>
-                </div>
-                <p><strong>Beneficios actuales:</strong></p>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                    ${nivelInfo.datos.beneficios.map(b => `<li>${b}</li>`).join('')}
-                </ul>
-                ${proximoNivel ? `<p><small>Siguiente nivel: ${proximoNivel.nombre} (${proximoNivel.participaciones[0]} participaciones)</small></p>` : '<p><small>¡Has alcanzado el nivel máximo!</small></p>'}
-            `;
-            
-            modalNivelInfo.style.display = 'block';
-            
-            // Mostrar en sidebar si el usuario ha participado antes
-            if (nivelInfo.participaciones > 1) {
-                actualizarNivelSidebar(nivelInfo);
-            }
-        }
-
-        function actualizarNivelSidebar(nivelInfo) {
-            const nivelPanel = document.getElementById('nivelPanel');
-            const nivelActual = document.getElementById('nivelActual');
-            const nivelProgreso = document.getElementById('nivelProgreso');
-            const nivelBeneficios = document.getElementById('nivelBeneficios');
-            
-            nivelActual.innerHTML = `
-                <div class="nivel-badge ${nivelInfo.datos.color}">
-                    ${nivelInfo.datos.badge} ${nivelInfo.datos.nombre} ${nivelInfo.datos.emoji}
-                </div>
-                <p style="color: white; margin-top: 10px;">
-                    <strong>${nivelInfo.participaciones}</strong> participaciones totales
-                </p>
-            `;
-            
-            const proximoNivel = NIVELES_CONFIG[nivelInfo.nivel + 1];
-            if (proximoNivel) {
-                const progreso = Math.min(100, (nivelInfo.participaciones / proximoNivel.participaciones[0]) * 100);
-                const faltan = proximoNivel.participaciones[0] - nivelInfo.participaciones;
-                
-                nivelProgreso.innerHTML = `
-                    <p style="color: #FFD700; font-size: 14px; margin-bottom: 5px;">
-                        Progreso a ${proximoNivel.nombre}:
-                    </p>
-                    <div class="nivel-progreso">
-                        <div class="nivel-progreso-fill" style="width: ${progreso}%"></div>
-                    </div>
-                    <p style="color: white; font-size: 12px; margin-top: 5px;">
-                        Te faltan ${faltan} participaciones
-                    </p>
-                `;
-            } else {
-                nivelProgreso.innerHTML = `
-                    <p style="color: #FFD700; text-align: center;">
-                        🏆 ¡Nivel Máximo Alcanzado! 🏆
-                    </p>
-                `;
-            }
-            
-            nivelBeneficios.innerHTML = `
-                <h4 style="color: #FFD700; font-size: 14px; margin-bottom: 8px;">Tus Beneficios:</h4>
-                <ul style="color: white; font-size: 12px; margin: 0; padding-left: 15px;">
-                    ${nivelInfo.datos.beneficios.map(b => `<li style="margin-bottom: 3px;">${b}</li>`).join('')}
-                </ul>
-            `;
-            
-            nivelPanel.style.display = 'block';
-        }
-
         function actualizarInterfazSorteo() {
             if (!sorteoActual) return;
 
@@ -1324,7 +686,7 @@
                     document.getElementById('winnerText').innerHTML = `
                         <strong>${sorteoActual.ganadorNombre}</strong><br>
                         Número: #${sorteoActual.ganadorNumero}<br>
-                        Premio: ${sorteoActual.premio} USD
+                        Premio: $${sorteoActual.premio} USD
                     `;
                 }
                 
@@ -1403,26 +765,24 @@
                 slot.className = 'numero-slot';
                 slot.textContent = i;
 
-                // CORREGIDO: Verificar estado del pago en lugar de "verificado"
+                // Verificar estado del número
                 if (participantesData[i]) {
-                    if (participantesData[i].pagoVerificado) {
+                    if (participantesData[i].verificado) {
                         slot.classList.add('ocupado');
                         slot.textContent = participantesData[i].nombre.split(' ').map(n => n[0]).join('');
-                        slot.title = `${participantesData[i].nombre} - Pago Verificado ✅`;
+                        slot.title = participantesData[i].nombre;
                     } else {
                         slot.classList.add('reservado');
-                        slot.title = 'Reservado - Pendiente verificación de pago ⏳';
+                        slot.title = 'Reservado - Pendiente de verificación';
                     }
                 } else if (sorteoActual.estado === 'activo') {
                     slot.onclick = () => seleccionarNumero(i);
-                    slot.title = `Número ${i} disponible - Clic para seleccionar`;
                 }
 
-                // Posicionamiento en círculo mejorado
+                // Posicionamiento en círculo
                 const angle = (i - 1) * angleStep;
                 const radian = (angle * Math.PI) / 180;
-                const ruletaWidth = ruleta.offsetWidth || 400;
-                const radius = (ruletaWidth < 300) ? 100 : 160;
+                const radius = ruleta.offsetWidth < 300 ? 100 : 160;
                 const x = Math.cos(radian) * radius;
                 const y = Math.sin(radian) * radius;
 
@@ -1436,13 +796,13 @@
         function actualizarInfoPanel() {
             if (!sorteoActual) return;
 
-            document.getElementById('infoPremio').textContent = `${sorteoActual.premio} USD`;
+            document.getElementById('infoPremio').textContent = `$${sorteoActual.premio} USD`;
             
             const ocupados = Object.keys(participantesData).length;
             const disponibles = sorteoActual.cantidadNumeros - ocupados;
             document.getElementById('infoDisponibles').textContent = `${disponibles}/${sorteoActual.cantidadNumeros}`;
             
-            document.getElementById('infoFecha').textContent = new Date(sorteoActual.fecha).toLocaleDateString('es-ES');
+            document.getElementById('infoFecha').textContent = new Date(sorteoActual.fecha).toLocaleDateString();
             document.getElementById('infoHora').textContent = sorteoActual.hora;
         }
 
@@ -1456,65 +816,29 @@
             }
 
             container.innerHTML = participantes
-                .sort(([a], [b]) => parseInt(a) - parseInt(b))
                 .map(([numero, data]) => `
                     <div class="participant">
                         <span><strong>#${numero}</strong> - ${data.nombre}</span>
-                        <span>${data.pagoVerificado ? '✅' : '⏳'}</span>
+                        <span>${data.verificado ? '✅' : '⏳'}</span>
                     </div>
                 `).join('');
         }
 
         function seleccionarNumero(numero) {
             if (participantesData[numero]) {
-                alert('🚫 Este número ya está ocupado o reservado');
+                alert('Este número ya está ocupado o reservado');
                 return;
             }
 
             numeroSeleccionado = numero;
             document.getElementById('numeroSeleccionado').textContent = numero;
-            
-            // Resetear el modal
-            document.getElementById('participantForm').reset();
-            document.getElementById('modalNivelInfo').style.display = 'none';
-            
-            // Limpiar validaciones
-            document.querySelectorAll('.validation-message').forEach(msg => {
-                msg.style.display = 'none';
-                msg.textContent = '';
-            });
-            
-            document.querySelectorAll('input').forEach(input => {
-                input.classList.remove('valid', 'invalid');
-            });
-            
             document.getElementById('numeroModal').style.display = 'block';
         }
 
-        // FUNCIÓN CORREGIDA: Cerrar modal correctamente
         function cerrarModal() {
-            const modal = document.getElementById('numeroModal');
-            modal.style.display = 'none';
-            
-            // Limpiar formulario
+            document.getElementById('numeroModal').style.display = 'none';
             document.getElementById('participantForm').reset();
-            document.getElementById('modalNivelInfo').style.display = 'none';
-            
-            // Limpiar validaciones
-            document.querySelectorAll('.validation-message').forEach(msg => {
-                msg.style.display = 'none';
-                msg.textContent = '';
-            });
-            
-            document.querySelectorAll('input').forEach(input => {
-                input.classList.remove('valid', 'invalid');
-            });
-            
-            numeroSeleccionado = null;
         }
-
-        // EXPONER LA FUNCIÓN CERRAR MODAL GLOBALMENTE
-        window.cerrarModal = cerrarModal;
 
         function formatearNombre(nombre) {
             return nombre.split(' ').map(palabra => 
@@ -1522,170 +846,49 @@
             ).join(' ');
         }
 
-        function formatearTelefono(codigo, numero) {
-            // Eliminar caracteres no numéricos
-            const numeroLimpio = numero.replace(/\D/g, '');
-            
-            // Formatear según el país
-            switch(codigo) {
-                case '+58':
-                    if (numeroLimpio.length === 10) {
-                        return `${codigo} ${numeroLimpio.substring(0,4)}-${numeroLimpio.substring(4,7)}-${numeroLimpio.substring(7)}`;
-                    }
-                    break;
-                case '+57':
-                    if (numeroLimpio.length === 10) {
-                        return `${codigo} ${numeroLimpio.substring(0,3)}-${numeroLimpio.substring(3,6)}-${numeroLimpio.substring(6)}`;
-                    }
-                    break;
-                default:
-                    return `${codigo} ${numeroLimpio}`;
-            }
-            
-            return `${codigo} ${numeroLimpio}`;
-        }
-
-        // MANEJAR ENVÍO DEL FORMULARIO CORREGIDO
+        // Manejar envío del formulario
         document.getElementById('participantForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Validar todos los campos
-            const nombreValido = validarNombre();
-            const telefonoValido = validarTelefono();
-            const referenciaValida = validarReferencia();
-            
-            if (!nombreValido || !telefonoValido || !referenciaValida) {
-                alert('⚠️ Por favor corrige los errores en el formulario');
-                return;
-            }
             
             const numero = numeroSeleccionado;
             const nombre = formatearNombre(document.getElementById('nombreCompleto').value);
             const codigoPais = document.getElementById('codigoPais').value;
             const telefono = document.getElementById('numeroTelefono').value;
             const referencia = document.getElementById('codigoReferencia').value;
-            const telefonoCompleto = formatearTelefono(codigoPais, telefono);
-            
-            // Mostrar loading
-            const submitBtn = document.getElementById('submitBtn');
-            const submitText = document.getElementById('submitText');
-            const submitSpinner = document.getElementById('submitSpinner');
-            
-            submitBtn.disabled = true;
-            submitText.style.display = 'none';
-            submitSpinner.style.display = 'inline-block';
 
             try {
-                // Verificar si el número sigue disponible
-                const participantesSnapshot = await getDocs(
-                    query(collection(db, 'participantes'), 
-                          where('sorteoId', '==', 'activo'),
-                          where('numeroSeleccionado', '==', numero))
-                );
-                
-                if (!participantesSnapshot.empty) {
-                    throw new Error('El número ya fue seleccionado por otro usuario');
-                }
-
-                // CORREGIDO: Agregar participante con pagoVerificado = false
+                // Agregar participante a Firebase
                 await addDoc(collection(db, 'participantes'), {
                     sorteoId: 'activo',
                     numeroSeleccionado: numero,
                     nombre: nombre,
-                    telefono: telefonoCompleto,
-                    telefonoNumerico: telefono.replace(/\D/g, ''),
-                    codigoPais: codigoPais,
+                    telefono: codigoPais + telefono,
                     codigoReferencia: referencia,
-                    pagoVerificado: false,
-                    pagoVerificado: false, // CORREGIDO: pagoVerificado en lugar de verificado
-                    timestamp: new Date(),
-                    ip: 'N/A', // En un entorno real, se capturaría la IP
-                    userAgent: navigator.userAgent
+                    verificado: false,
+                    timestamp: new Date()
                 });
 
-                // CORREGIDO: Obtener nivel real del usuario
-                const nivelInfo = await obtenerNivelUsuario(telefonoCompleto);
-
-                // Mensaje mejorado para WhatsApp
+                // Mensaje para WhatsApp
                 const mensaje = `🎯 NUEVA PARTICIPACIÓN - LaRuleta
 
 👤 Participante: ${nombre}
 🎲 Número seleccionado: #${numero}
-📱 Teléfono: ${telefonoCompleto}
+📱 Teléfono: ${codigoPais} ${telefono}
 💳 Código de referencia: ${referencia}
 💰 Monto: $10 USD
 
-🏆 NIVEL: ${nivelInfo.datos.badge} ${nivelInfo.datos.nombre} ${nivelInfo.datos.emoji}
-📊 Participaciones totales: ${nivelInfo.participaciones}
-
-⏰ Fecha: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}
-
 Por favor verificar el pago y confirmar la participación.`;
 
-                // Crear enlaces de WhatsApp con mejor formato
-                const mensajeCodificado = encodeURIComponent(mensaje);
-                const urlWhatsApp = `https://wa.me/584129745777?text=${mensajeCodificado}`;
-                
-                // Abrir WhatsApp de forma más confiable
-                const nuevaVentana = window.open(urlWhatsApp, '_blank', 'noopener,noreferrer');
-                
-                if (!nuevaVentana) {
-                    // Si se bloquea el popup, mostrar el enlace
-                    const enlaceElement = document.createElement('a');
-                    enlaceElement.href = urlWhatsApp;
-                    enlaceElement.target = '_blank';
-                    enlaceElement.rel = 'noopener noreferrer';
-                    enlaceElement.textContent = 'Abrir WhatsApp';
-                    
-                    alert('Por favor, haz clic en el enlace para abrir WhatsApp y enviar tu información.');
-                    document.body.appendChild(enlaceElement);
-                    enlaceElement.click();
-                    document.body.removeChild(enlaceElement);
-                }
+                // Abrir WhatsApp
+                const urlWhatsApp = `https://wa.me/584129745777?text=${encodeURIComponent(mensaje)}`;
+                window.open(urlWhatsApp, '_blank');
 
                 cerrarModal();
-                
-                // Mensaje de confirmación mejorado
-                const mensajeConfirmacion = `🎉 ¡Número ${numero} reservado exitosamente!
-
-👤 ${nombre}
-🏆 Nivel: ${nivelInfo.datos.badge} ${nivelInfo.datos.nombre}
-📱 Se ha enviado tu información al administrador
-
-⏳ Tu participación estará activa una vez verificado el pago.
-💬 Revisa WhatsApp para confirmar.`;
-
-                alert(mensajeConfirmacion);
+                alert(`¡Número ${numero} reservado para ${nombre}!\nSe ha enviado la información al administrador.`);
 
             } catch (error) {
                 console.error('Error al registrar participación:', error);
-                let mensajeError = 'Error al registrar la participación. ';
-                
-                if (error.message.includes('número ya fue seleccionado')) {
-                    mensajeError = '😔 Lo sentimos, este número acaba de ser seleccionado por otro usuario. Por favor elige otro número.';
-                } else if (error.message.includes('network')) {
-                    mensajeError += 'Verifica tu conexión a internet e intenta nuevamente.';
-                } else {
-                    mensajeError += 'Por favor intenta nuevamente en unos momentos.';
-                }
-                
-                alert(mensajeError);
-            } finally {
-                // Restaurar botón
-                submitBtn.disabled = false;
-                submitText.style.display = 'inline';
-                submitSpinner.style.display = 'none';
-            }
-        });
-
-        // CORREGIDO: Detectar nivel cuando se ingresa teléfono
-        document.getElementById('numeroTelefono').addEventListener('blur', async function() {
-            const codigoPais = document.getElementById('codigoPais').value;
-            const numero = this.value.replace(/\D/g, '');
-            
-            if (numero.length >= 8) {
-                const telefonoCompleto = formatearTelefono(codigoPais, numero);
-                await mostrarNivelUsuario(telefonoCompleto);
+                alert('Error al registrar la participación. Por favor intenta nuevamente.');
             }
         });
 
@@ -1697,288 +900,24 @@ Por favor verificar el pago y confirmar la participación.`;
                 return;
             }
 
-            tbody.innerHTML = resultados.map(resultado => {
-                const fecha = resultado.timestamp ? 
-                    new Date(resultado.timestamp.seconds * 1000).toLocaleDateString('es-ES') : 
-                    new Date(resultado.fecha).toLocaleDateString('es-ES');
-                
-                return `
-                    <tr>
-                        <td>${fecha}</td>
-                        <td>${resultado.hora}</td>
-                        <td>${resultado.ganadorNombre}</td>
-                        <td>${resultado.ganadorNumero > 0 ? '#' + resultado.ganadorNumero : 'N/A'}</td>
-                        <td>${resultado.premio}</td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = resultados.map(resultado => `
+                <tr>
+                    <td>${new Date(resultado.fecha).toLocaleDateString()}</td>
+                    <td>${resultado.hora}</td>
+                    <td>${resultado.ganadorNombre}</td>
+                    <td>#${resultado.ganadorNumero}</td>
+                    <td>${resultado.premio}</td>
+                </tr>
+            `).join('');
         }
 
-        // CORREGIDO: Mejorar el cierre del modal con escape y clic fuera
+        // Cerrar modal al hacer clic fuera
         window.onclick = function(event) {
             const modal = document.getElementById('numeroModal');
             if (event.target === modal) {
                 cerrarModal();
             }
         }
-
-        // Manejo de teclas
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                const modal = document.getElementById('numeroModal');
-                if (modal.style.display === 'block') {
-                    cerrarModal();
-                }
-            }
-        });
-
-        // Funciones adicionales para mejorar la experiencia
-
-        // Auto-scroll suave para móviles
-        function smoothScrollTo(element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
-
-        // Detectar dispositivo móvil
-        function esMobile() {
-            return window.innerWidth <= 768;
-        }
-
-        // Ajustar ruleta según el dispositivo
-        function ajustarRuleta() {
-            const ruleta = document.getElementById('ruleta');
-            if (esMobile()) {
-                ruleta.style.width = '250px';
-                ruleta.style.height = '250px';
-            } else {
-                ruleta.style.width = '400px';
-                ruleta.style.height = '400px';
-            }
-            
-            // Regenerar números con nuevo tamaño
-            setTimeout(generarRuleta, 100);
-        }
-
-        // Listener para cambios de orientación
-        window.addEventListener('resize', function() {
-            clearTimeout(window.resizeTimeout);
-            window.resizeTimeout = setTimeout(ajustarRuleta, 250);
-        });
-
-        // Animación de entrada para elementos
-        function animarEntrada() {
-            const elementos = document.querySelectorAll('.info-panel, .ruleta-container');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
-                    }
-                });
-            });
-
-            elementos.forEach(el => observer.observe(el));
-        }
-
-        // Inicializar animaciones cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(animarEntrada, 500);
-        });
-
-        // Feedback visual para acciones del usuario
-        function mostrarFeedback(mensaje, tipo = 'info') {
-            const feedback = document.createElement('div');
-            feedback.className = `feedback-message feedback-${tipo}`;
-            feedback.textContent = mensaje;
-            feedback.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#17a2b8'};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 10000;
-                animation: slideInRight 0.3s ease;
-                max-width: 300px;
-                word-wrap: break-word;
-            `;
-
-            document.body.appendChild(feedback);
-
-            setTimeout(() => {
-                feedback.style.animation = 'slideOutRight 0.3s ease';
-                setTimeout(() => {
-                    document.body.removeChild(feedback);
-                }, 300);
-            }, 3000);
-        }
-
-        // CSS para animaciones de feedback
-        const feedbackStyles = document.createElement('style');
-        feedbackStyles.textContent = `
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(feedbackStyles);
-
-        // Función para copiar al portapapeles
-        async function copiarAlPortapapeles(texto) {
-            try {
-                await navigator.clipboard.writeText(texto);
-                mostrarFeedback('✅ Copiado al portapapeles', 'success');
-                return true;
-            } catch (err) {
-                // Fallback para navegadores más antiguos
-                const textArea = document.createElement('textarea');
-                textArea.value = texto;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-999999px';
-                textArea.style.top = '-999999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                try {
-                    document.execCommand('copy');
-                    mostrarFeedback('✅ Copiado al portapapeles', 'success');
-                    return true;
-                } catch (err) {
-                    mostrarFeedback('❌ No se pudo copiar', 'error');
-                    return false;
-                } finally {
-                    document.body.removeChild(textArea);
-                }
-            }
-        }
-
-        // Mejorar accesibilidad
-        function mejorarAccesibilidad() {
-            // Agregar roles ARIA
-            document.getElementById('ruleta').setAttribute('role', 'application');
-            document.getElementById('ruleta').setAttribute('aria-label', 'Ruleta de sorteo interactiva');
-            
-            // Mejorar navegación por teclado
-            const numeroSlots = document.querySelectorAll('.numero-slot');
-            numeroSlots.forEach((slot, index) => {
-                if (!slot.classList.contains('ocupado') && !slot.classList.contains('reservado')) {
-                    slot.setAttribute('tabindex', '0');
-                    slot.setAttribute('role', 'button');
-                    slot.setAttribute('aria-label', `Seleccionar número ${slot.textContent}`);
-                    
-                    slot.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            this.click();
-                        }
-                    });
-                }
-            });
-        }
-
-        // Optimización de rendimiento
-        function optimizarRendimiento() {
-            // Usar requestAnimationFrame para animaciones suaves
-            let animacionEnCurso = false;
-            
-            function animarRuleta() {
-                if (!animacionEnCurso) {
-                    animacionEnCurso = true;
-                    requestAnimationFrame(() => {
-                        // Actualizar animaciones aquí
-                        animacionEnCurso = false;
-                    });
-                }
-            }
-            
-            // Debounce para eventos de resize
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    ajustarRuleta();
-                    mejorarAccesibilidad();
-                }, 250);
-            });
-        }
-
-        // Manejo de errores global
-        window.addEventListener('error', function(e) {
-            console.error('Error global capturado:', e.error);
-            mostrarFeedback('Ha ocurrido un error inesperado. Por favor recarga la página.', 'error');
-        });
-
-        // Manejo de errores de conexión
-        window.addEventListener('online', function() {
-            mostrarFeedback('✅ Conexión restaurada', 'success');
-        });
-
-        window.addEventListener('offline', function() {
-            mostrarFeedback('⚠️ Sin conexión a internet', 'error');
-        });
-
-        // Inicialización final
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                optimizarRendimiento();
-                mejorarAccesibilidad();
-                
-                // Mostrar mensaje de bienvenida
-                setTimeout(() => {
-                    mostrarFeedback('¡Bienvenido a LaRuleta! 🎯', 'info');
-                }, 1000);
-            }, 100);
-        });
-
-        // Service Worker para PWA (opcional)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registrado correctamente');
-                    })
-                    .catch(function(error) {
-                        console.log('Error al registrar ServiceWorker:', error);
-                    });
-            });
-        }
-
-        // Estadísticas de uso (opcional)
-        function trackearEvento(evento, datos) {
-            // En un entorno de producción, aquí enviarías datos a Google Analytics
-            console.log('Evento:', evento, datos);
-        }
-
-        // Trackear selección de números
-        window.seleccionarNumeroOriginal = window.seleccionarNumero;
-        window.seleccionarNumero = function(numero) {
-            trackearEvento('numero_seleccionado', { numero: numero });
-            return window.seleccionarNumeroOriginal(numero);
-        };
-
     </script>
 </body>
 </html>
