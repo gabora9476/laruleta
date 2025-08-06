@@ -281,12 +281,19 @@
 
         .phone-input {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            align-items: stretch;
         }
 
         .country-select {
-            width: 80px;
+            width: 90px;
             flex-shrink: 0;
+            font-size: 14px;
+            padding: 10px 8px;
+        }
+
+        .phone-number-input {
+            flex: 1;
         }
 
         .form-buttons {
@@ -411,6 +418,15 @@
             
             .ruleta-container {
                 padding: 20px;
+            }
+
+            .phone-input {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .country-select {
+                width: 100%;
             }
         }
 
@@ -562,7 +578,7 @@
                             <option value="+54">🇦🇷 +54</option>
                             <option value="+56">🇨🇱 +56</option>
                         </select>
-                        <input type="tel" id="numeroTelefono" required placeholder="4121234567">
+                        <input type="tel" id="numeroTelefono" class="phone-number-input" required placeholder="4121234567">
                     </div>
                 </div>
                 <div class="form-group">
@@ -651,6 +667,7 @@
                     }
                 });
                 actualizarParticipantes();
+                actualizarInfoPanel(); // Actualizar contadores aquí
                 generarRuleta();
             });
 
@@ -798,8 +815,9 @@
 
             document.getElementById('infoPremio').textContent = `$${sorteoActual.premio} USD`;
             
-            const ocupados = Object.keys(participantesData).length;
-            const disponibles = sorteoActual.cantidadNumeros - ocupados;
+            // Contar solo jugadores verificados como ocupados
+            const verificados = Object.values(participantesData).filter(p => p.verificado).length;
+            const disponibles = sorteoActual.cantidadNumeros - verificados;
             document.getElementById('infoDisponibles').textContent = `${disponibles}/${sorteoActual.cantidadNumeros}`;
             
             document.getElementById('infoFecha').textContent = new Date(sorteoActual.fecha).toLocaleDateString();
@@ -918,6 +936,9 @@ Por favor verificar el pago y confirmar la participación.`;
                 cerrarModal();
             }
         }
+
+        // Hacer las funciones globalmente accesibles
+        window.cerrarModal = cerrarModal;
     </script>
 </body>
 </html>
