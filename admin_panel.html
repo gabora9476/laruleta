@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Ruleta Dorada</title>
+    <title>Panel de Administración - LaRuleta Premium</title>
     <style>
         * {
             margin: 0;
@@ -11,96 +11,346 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --admin-primary: #2E86AB;
+            --admin-secondary: #A23B72;
+            --admin-success: #28a745;
+            --admin-danger: #dc3545;
+            --admin-warning: #ffc107;
+            --admin-info: #17a2b8;
+            --admin-dark: #1a1a2e;
+            --admin-light: #f8f9fa;
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #2E86AB 0%, #A23B72 100%);
             min-height: 100vh;
-            color: #333;
+            color: #fff;
+            position: relative;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.1);
+        /* Admin Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px 20px;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
 
-        .header h1 {
-            color: #3498db;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .admin-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-logo h2 {
+            color: var(--gold);
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-menu {
+            list-style: none;
+        }
+
+        .admin-menu-item {
             margin-bottom: 10px;
         }
 
-        .header p {
-            color: white;
-            font-size: 1.2em;
-            opacity: 0.9;
+        .admin-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .main-grid {
+        .admin-menu-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .admin-menu-link:hover::before {
+            left: 100%;
+        }
+
+        .admin-menu-link:hover,
+        .admin-menu-link.active {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold);
+            transform: translateX(5px);
+        }
+
+        .admin-menu-link.active {
+            border-left: 3px solid var(--gold);
+        }
+
+        .menu-icon {
+            font-size: 1.3em;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .admin-main {
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .admin-main.expanded {
+            margin-left: 0;
+        }
+
+        /* Admin Header */
+        .admin-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-title {
+            font-size: 2em;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .toggle-sidebar-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 15px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--admin-warning));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: white;
+        }
+
+        /* Dashboard Stats Grid */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1), transparent);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: var(--gold);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+        }
+
+        .stat-change {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .stat-change.positive {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .stat-change.negative {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        /* Control Panels */
+        .control-panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-bottom: 30px;
         }
 
-        .panel {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
+        .control-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .panel h3 {
-            color: #3498db;
-            margin-bottom: 20px;
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .panel-title {
             font-size: 1.5em;
+            color: var(--gold);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        .panel-badge {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--gold);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
             margin-bottom: 8px;
-            color: white;
-            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 1.1em;
         }
 
-        .form-group input, .form-group select {
+        .form-control {
             width: 100%;
-            padding: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 12px 15px;
             background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
             color: white;
-            transition: border-color 0.3s ease;
+            font-size: 1em;
+            transition: all 0.3s ease;
         }
 
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .form-group input:focus, .form-group select:focus {
+        .form-control:focus {
             outline: none;
-            border-color: #3498db;
-            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
         .form-row {
@@ -109,401 +359,1260 @@
             gap: 20px;
         }
 
+        /* Buttons */
         .btn {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
+            padding: 12px 25px;
             border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 1em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 5px;
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+            color: white;
         }
 
         .btn-success {
-            background: linear-gradient(45deg, #27ae60, #219a52);
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+            background: linear-gradient(135deg, var(--admin-success), #20c997);
+            color: white;
         }
 
         .btn-danger {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            background: linear-gradient(135deg, var(--admin-danger), #c82333);
+            color: white;
         }
 
         .btn-warning {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
-            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+            background: linear-gradient(135deg, var(--admin-warning), #e0a800);
+            color: #333;
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .participants-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .participant-item {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .participant-info {
+        .btn-info {
+            background: linear-gradient(135deg, var(--admin-info), #138496);
             color: white;
         }
 
-        .participant-info strong {
-            color: #3498db;
-        }
-
-        .participant-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .status-pending {
-            background: rgba(243, 156, 18, 0.3);
-            color: #f39c12;
-        }
-
-        .status-verified {
-            background: rgba(39, 174, 96, 0.3);
-            color: #27ae60;
-        }
-
-        .sorteo-controls {
+        .btn-group {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #3498db;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: white;
-            opacity: 0.8;
-        }
-
-        .results-table {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
             margin-top: 20px;
         }
 
-        .results-table th, .results-table td {
-            padding: 12px;
-            text-align: left;
-            color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .results-table th {
-            background: rgba(52, 152, 219, 0.3);
-            font-weight: bold;
+        /* Ruleta Preview */
+        .ruleta-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
         }
 
         .ruleta-preview {
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            border: 6px solid #3498db;
-            margin: 0 auto 20px;
             position: relative;
             background: conic-gradient(
-                #FF6B6B 0deg,
-                #4ECDC4 36deg,
-                #45B7D1 72deg,
-                #96CEB4 108deg,
-                #FFEAA7 144deg,
-                #DDA0DD 180deg,
-                #98D8C8 216deg,
-                #F7DC6F 252deg,
-                #BB8FCE 288deg,
-                #85C1E9 324deg
+                from 0deg,
+                #e74c3c 0deg 36deg,
+                #2c3e50 36deg 72deg,
+                #27ae60 72deg 108deg,
+                #3498db 108deg 144deg,
+                #f39c12 144deg 180deg,
+                #9b59b6 180deg 216deg,
+                #e91e63 216deg 252deg,
+                #ff9800 252deg 288deg,
+                #00bcd4 288deg 324deg,
+                #3f51b5 324deg 360deg
             );
+            box-shadow: 
+                0 0 0 10px var(--gold),
+                0 0 0 12px var(--admin-warning),
+                0 0 30px rgba(255, 215, 0, 0.5);
             transition: transform 3s cubic-bezier(0.23, 1, 0.320, 1);
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+		.ruleta-preview.spinning {
+            animation: spin 3s cubic-bezier(0.23, 1, 0.320, 1) forwards;
         }
 
-        .ruleta-preview.spinning {
-            transform: rotate(1800deg);
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(2520deg); }
         }
 
-        .numero-slot-preview {
+        .ruleta-center-preview {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.9);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, var(--gold), var(--admin-warning));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            border: 2px solid #3498db;
+            font-size: 30px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            z-index: 10;
         }
 
-        .numero-slot-preview.ocupado {
-            background: #27ae60;
-            color: white;
-        }
-
-        .numero-slot-preview.pendiente {
-            background: #f39c12;
-            color: white;
-        }
-
-        .pointer-preview {
+        .ruleta-pointer-preview {
             position: absolute;
-            top: -15px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 30px solid #e74c3c;
-            z-index: 10;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 40px solid #FF4444;
+            z-index: 20;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
         }
 
-        .winner-display {
-            text-align: center;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(39, 174, 96, 0.2);
-            border: 2px solid rgba(39, 174, 96, 0.5);
+        /* Participants Management */
+        .participants-table-container {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .participants-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .participants-table thead {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        .participants-table th {
+            padding: 15px;
+            text-align: left;
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1em;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .participants-table td {
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .participants-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .participants-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
+        }
+
+        .participant-number {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--gold);
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .participant-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-verified {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--admin-success);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--admin-warning);
+        }
+
+        .participant-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .level-bronze { color: #CD7F32; }
+        .level-silver { color: #C0C0C0; }
+        .level-gold { color: var(--gold); }
+        .level-platinum { color: #E5E4E2; }
+        .level-diamond { 
+            background: linear-gradient(45deg, #B9F2FF, #89CFF0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-verify {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--admin-success);
+            border: 1px solid var(--admin-success);
+        }
+
+        .btn-delete {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--admin-danger);
+            border: 1px solid var(--admin-danger);
+        }
+
+        .btn-edit {
+            background: rgba(23, 162, 184, 0.2);
+            color: var(--admin-info);
+            border: 1px solid var(--admin-info);
+        }
+
+        /* Live Control Panel */
+        .live-control {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 107, 107, 0.1));
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-control::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, red, transparent);
+            animation: liveGlow 2s linear infinite;
+        }
+
+        @keyframes liveGlow {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 0, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid rgba(255, 0, 0, 0.4);
+            margin-bottom: 20px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+            50% { 
+                transform: scale(1.2);
+                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+            }
+        }
+
+        /* History Table */
+        .history-table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .history-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .history-table thead {
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-table th {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .history-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Analytics Section */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            font-size: 1.5em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2em;
+        }
+
+        /* User Management */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--admin-warning));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .user-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-stat {
+            text-align: center;
+        }
+
+        .user-stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .user-stat-label {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(46, 134, 171, 0.95), rgba(162, 59, 114, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px) scale(0.9);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            color: var(--gold);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--admin-danger);
+            transform: rotate(90deg);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+        }
+		.notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            font-size: 1.5em;
+        }
+
+        .notification-success {
+            background: linear-gradient(135deg, var(--admin-success), #20c997);
+            color: white;
+        }
+
+        .notification-error {
+            background: linear-gradient(135deg, var(--admin-danger), #c82333);
+            color: white;
+        }
+
+        .notification-warning {
+            background: linear-gradient(135deg, var(--admin-warning), #e0a800);
+            color: #333;
+        }
+
+        .notification-info {
+            background: linear-gradient(135deg, var(--admin-info), #138496);
+            color: white;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Settings Panel */
+        .settings-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-title {
+            font-size: 1.3em;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            display: inline-block;
+        }
+
+        .toggle-switch input {
             display: none;
         }
 
-        .winner-display.show {
-            display: block;
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            transition: 0.4s;
+            border-radius: 30px;
         }
 
-        .winner-display h4 {
-            color: #27ae60;
-            font-size: 1.8em;
-            margin-bottom: 10px;
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.4s;
+            border-radius: 50%;
         }
 
-        .full-width {
-            grid-column: 1 / -1;
+        input:checked + .toggle-slider {
+            background: var(--admin-success);
         }
 
-        .footer {
-            text-align: center;
-            padding: 30px;
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Export/Import Controls */
+        .data-controls {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--admin-info), #138496);
             color: white;
-            opacity: 0.8;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
         }
 
-        /* Responsive */
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Design */
         @media (max-width: 1200px) {
-            .main-grid {
+            .control-panels {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            .admin-sidebar {
+                transform: translateX(-100%);
             }
             
-            .header h1 {
-                font-size: 2em;
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar-btn {
+                display: block;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
             }
             
             .form-row {
                 grid-template-columns: 1fr;
             }
             
-            .sorteo-controls {
+            .admin-header {
                 flex-direction: column;
-                align-items: center;
+                gap: 20px;
             }
             
-            .ruleta-preview {
-                width: 250px;
-                height: 250px;
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-main {
+                padding: 15px;
+            }
+            
+            .control-panel {
+                padding: 20px;
+            }
+            
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span class="notification-icon" id="notificationIcon"></span>
+        <div>
+            <div id="notificationTitle"></div>
+            <div id="notificationMessage"></div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-logo">
+            <h2>🎯 LaRuleta</h2>
+            <p style="color: rgba(255, 255, 255, 0.7);">Panel Administrativo</p>
+        </div>
+        
+        <ul class="admin-menu">
+            <li class="admin-menu-item">
+                <a href="#dashboard" class="admin-menu-link active" onclick="showSection('dashboard')">
+                    <span class="menu-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#sorteo" class="admin-menu-link" onclick="showSection('sorteo')">
+                    <span class="menu-icon">🎲</span>
+                    <span>Gestión de Sorteo</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#participants" class="admin-menu-link" onclick="showSection('participants')">
+                    <span class="menu-icon">👥</span>
+                    <span>Participantes</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#users" class="admin-menu-link" onclick="showSection('users')">
+                    <span class="menu-icon">👤</span>
+                    <span>Usuarios VIP</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#analytics" class="admin-menu-link" onclick="showSection('analytics')">
+                    <span class="menu-icon">📈</span>
+                    <span>Analíticas</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#history" class="admin-menu-link" onclick="showSection('history')">
+                    <span class="menu-icon">📜</span>
+                    <span>Historial</span>
+                </a>
+            </li>
+            <li class="admin-menu-item">
+                <a href="#settings" class="admin-menu-link" onclick="showSection('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Configuración</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main" id="adminMain">
         <!-- Header -->
-        <div class="header">
-            <h1>⚙️ Panel de Administración</h1>
-            <p>Sistema de gestión para Ruleta Dorada</p>
-        </div>
+        <header class="admin-header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰</button>
+                <h1 class="header-title" id="sectionTitle">Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <div class="admin-user-info">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <div style="font-weight: bold;">Administrador</div>
+                        <div style="font-size: 0.9em; opacity: 0.8;">admin@laruleta.com</div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="statParticipantes">--</div>
-                <div class="stat-label">Participantes</div>
+        <!-- Dashboard Section -->
+        <section id="dashboardSection" class="content-section">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">💰</span>
+                    <div class="stat-value" id="totalIngresos">$0</div>
+                    <div class="stat-label">Ingresos Totales</div>
+                    <span class="stat-change positive">+15%</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">👥</span>
+                    <div class="stat-value" id="totalParticipantes">0</div>
+                    <div class="stat-label">Participantes Activos</div>
+                    <span class="stat-change positive">+8%</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <div class="stat-value" id="numerosOcupados">0/0</div>
+                    <div class="stat-label">Números Ocupados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🏆</span>
+                    <div class="stat-value" id="ultimoGanador">---</div>
+                    <div class="stat-label">Último Ganador</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statVerificados">--</div>
-                <div class="stat-label">Verificados</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statIngresos">$--</div>
-                <div class="stat-label">Ingresos</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="statDisponibles">--</div>
-                <div class="stat-label">Disponibles</div>
-            </div>
-        </div>
 
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Configuración de Sorteo -->
-            <div class="panel">
-                <h3>⚙️ Configuración de Sorteo</h3>
+            <div class="control-panels">
+                <div class="control-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">
+                            <span>⚡</span>
+                            <span>Acciones Rápidas</span>
+                        </h3>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="iniciarSorteo()">
+                            🎲 Iniciar Sorteo
+                        </button>
+                        <button class="btn btn-warning" onclick="pausarSorteo()">
+                            ⏸️ Pausar
+                        </button>
+                        <button class="btn btn-danger" onclick="finalizarSorteo()">
+                            🏁 Finalizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">
+                            <span>📊</span>
+                            <span>Estado Actual</span>
+                        </h3>
+                        <span class="panel-badge" id="estadoSorteo">ACTIVO</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span>Fecha del Sorteo:</span>
+                            <span id="fechaSorteoInfo">--/--/----</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Hora:</span>
+                            <span id="horaSorteoInfo">--:--</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Premio:</span>
+                            <span id="premioInfo">$0 USD</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Participantes Verificados:</span>
+                            <span id="verificadosInfo">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sorteo Management Section -->
+        <section id="sorteoSection" class="content-section" style="display: none;">
+            <div class="control-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <span>🎯</span>
+                        <span>Configuración del Sorteo</span>
+                    </h3>
+                </div>
                 <form id="sorteoForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Cantidad de Números (5-50):</label>
-                            <input type="number" id="cantidadNumeros" min="5" max="50" value="10" required>
+                            <label class="form-label">Cantidad de Números</label>
+                            <input type="number" class="form-control" id="cantidadNumeros" min="5" max="100" value="10" required>
                         </div>
                         <div class="form-group">
-                            <label>Premio (USD):</label>
-                            <input type="number" id="premioSorteo" value="80" required>
+                            <label class="form-label">Premio (USD)</label>
+                            <input type="number" class="form-control" id="premioSorteo" min="10" value="100" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Fecha del Sorteo:</label>
-                            <input type="date" id="fechaSorteo" required>
+                            <label class="form-label">Fecha del Sorteo</label>
+                            <input type="date" class="form-control" id="fechaSorteo" required>
                         </div>
                         <div class="form-group">
-                            <label>Hora del Sorteo:</label>
-                            <input type="time" id="horaSorteo" value="20:00" required>
+                            <label class="form-label">Hora del Sorteo</label>
+                            <input type="time" class="form-control" id="horaSorteo" value="20:00" required>
                         </div>
                     </div>
-                    <div class="sorteo-controls">
-                        <button type="submit" class="btn btn-success">🔧 Configurar Nuevo Sorteo</button>
-                        <button type="button" class="btn btn-warning" onclick="pausarSorteo()">⏸️ Pausar Sorteo</button>
-                        <button type="button" class="btn btn-danger" onclick="finalizarSorteo()">🏁 Finalizar Sorteo</button>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">
+                            💾 Guardar Configuración
+                        </button>
+                        <button type="button" class="btn btn-info" onclick="resetearSorteo()">
+                            🔄 Resetear
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Control de Sorteo -->
-            <div class="panel">
-                <h3>🎲 Control de Sorteo</h3>
-                <div class="ruleta-preview" id="ruletaPreview">
-                    <div class="pointer-preview"></div>
+            <div class="live-control">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>Control en Vivo</span>
                 </div>
-                
-                <div class="winner-display" id="winnerDisplay">
-                    <h4>🎉 ¡GANADOR! 🎉</h4>
-                    <p id="winnerText"></p>
+                <div class="ruleta-preview-container">
+                    <div class="ruleta-preview" id="ruletaPreview">
+                        <div class="ruleta-pointer-preview"></div>
+                        <div class="ruleta-center-preview">🎯</div>
+                    </div>
                 </div>
-                
-                <div class="sorteo-controls">
+                <div class="btn-group">
                     <button class="btn btn-warning" onclick="girarRuleta()" id="btnGirar">
-                        🎲 Girar Ruleta
+                        🎲 GIRAR RULETA
                     </button>
-                    <button class="btn" onclick="generarRuletaPreview()">
-                        🔄 Actualizar Vista
+                    <button class="btn btn-success" onclick="seleccionarGanador()">
+                        🏆 Seleccionar Ganador
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Participantes Panel -->
-        <div class="panel full-width">
-            <h3>👥 Gestión de Participantes</h3>
-            <div class="participants-list" id="participantsList">
-                <p style="color: white; opacity: 0.7; text-align: center;">Cargando participantes...</p>
+        </section>
+		<!-- Participants Section -->
+        <section id="participantsSection" class="content-section" style="display: none;">
+            <div class="control-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <span>👥</span>
+                        <span>Gestión de Participantes</span>
+                    </h3>
+                    <span class="panel-badge" id="totalParticipantesCount">0 Total</span>
+                </div>
+                
+                <div class="participants-table-container">
+                    <table class="participants-table">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Nivel VIP</th>
+                                <th>Referencia</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participantsTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; opacity: 0.7;">
+                                    No hay participantes registrados
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Historial Panel -->
-        <div class="panel full-width">
-            <h3>📊 Historial de Sorteos</h3>
-            <table class="results-table" id="historialTable">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Participantes</th>
-                        <th>Ganador</th>
-                        <th>Número</th>
-                        <th>Premio</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="7" style="text-align: center; opacity: 0.7;">Cargando historial...</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Users VIP Section -->
+        <section id="usersSection" class="content-section" style="display: none;">
+            <div class="control-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <span>👤</span>
+                        <span>Usuarios VIP</span>
+                    </h3>
+                </div>
+                
+                <div class="users-grid" id="usersGrid">
+                    <!-- User cards will be generated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analyticsSection" class="content-section" style="display: none;">
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <span>📈</span>
+                        <span>Ingresos Mensuales</span>
+                    </h3>
+                    <div class="chart-placeholder">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">
+                        <span>🥇</span>
+                        <span>Top Ganadores</span>
+                    </h3>
+                    <div id="topWinnersList" style="padding: 20px;">
+                        <!-- Winners list will be generated -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <span class="stat-icon">📊</span>
+                    <div class="stat-value" id="totalSorteos">0</div>
+                    <div class="stat-label">Sorteos Realizados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">💸</span>
+                    <div class="stat-value" id="totalPremios">$0</div>
+                    <div class="stat-label">Premios Entregados</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">👑</span>
+                    <div class="stat-value" id="usuariosVIP">0</div>
+                    <div class="stat-label">Usuarios VIP</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📈</span>
+                    <div class="stat-value" id="tasaConversion">0%</div>
+                    <div class="stat-label">Tasa de Conversión</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="historySection" class="content-section" style="display: none;">
+            <div class="history-table-container">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <span>📜</span>
+                        <span>Historial de Sorteos</span>
+                    </h3>
+                    <button class="btn btn-info" onclick="exportarHistorial()">
+                        📥 Exportar
+                    </button>
+                </div>
+                
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Ganador</th>
+                            <th>Número</th>
+                            <th>Premio</th>
+                            <th>Participantes</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; opacity: 0.7;">
+                                No hay historial disponible
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settingsSection" class="content-section" style="display: none;">
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <span>🔔</span>
+                        <span>Notificaciones</span>
+                    </h3>
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifNuevoParticipante" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Nuevo participante registrado</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifPagoVerificado" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Pago verificado</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifSorteoFinalizado" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Sorteo finalizado</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <span>💾</span>
+                        <span>Datos y Respaldo</span>
+                    </h3>
+                    <div class="data-controls">
+                        <button class="btn btn-info" onclick="exportarDatos()">
+                            📥 Exportar Datos
+                        </button>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="importFile" accept=".json" onchange="importarDatos(event)">
+                            <label for="importFile" class="file-input-label">
+                                📤 Importar Datos
+                            </label>
+                        </div>
+                        <button class="btn btn-warning" onclick="limpiarCache()">
+                            🗑️ Limpiar Caché
+                        </button>
+                        <button class="btn btn-danger" onclick="resetearSistema()">
+                            ⚠️ Resetear Sistema
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <span>🎨</span>
+                        <span>Personalización</span>
+                    </h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Color Principal</label>
+                            <input type="color" class="form-control" id="colorPrincipal" value="#FFD700">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Color Secundario</label>
+                            <input type="color" class="form-control" id="colorSecundario" value="#FFA500">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Título</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" id="modalConfirmBtn">Confirmar</button>
+            </div>
         </div>
     </div>
 
-    <footer class="footer">
-        <p>&copy; 2025 GStar INK. Todos los derechos reservados.</p>
-    </footer>
-
-    <!-- Firebase Configuration -->
+    <!-- Firebase Configuration and JavaScript -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, deleteDoc, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, setDoc, updateDoc, deleteDoc, addDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDH0eto3duCUC3y2VF-5NJiq70i8OLOXSY",
@@ -516,40 +1625,36 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Variables globales
+        // Global Variables
         let sorteoActual = null;
         let participantesData = {};
         let historialData = [];
+        let usersData = [];
 
-        // Inicialización
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            inicializarAdmin();
-            configurarFechaHora();
+            initializeAdmin();
+            setCurrentDate();
         });
 
-        function configurarFechaHora() {
-            let ahora = new Date();
-            document.getElementById('fechaSorteo').value = ahora.toISOString().split('T')[0];
-            document.getElementById('horaSorteo').value = '20:00';
+        function setCurrentDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaSorteo').value = today;
         }
 
-        function inicializarAdmin() {
-            // Escuchar sorteo activo
+        function initializeAdmin() {
+            // Listen to active lottery
             const sorteoRef = doc(db, 'sorteos', 'activo');
             onSnapshot(sorteoRef, (doc) => {
                 if (doc.exists()) {
                     sorteoActual = doc.data();
-                    actualizarInterfazAdmin();
-                } else {
-                    sorteoActual = null;
-                    actualizarStats();
+                    updateAdminInterface();
                 }
             });
 
-            // Escuchar participantes
+            // Listen to participants
             const participantesRef = collection(db, 'participantes');
             onSnapshot(participantesRef, (snapshot) => {
                 participantesData = {};
@@ -561,12 +1666,11 @@
                         };
                     }
                 });
-                actualizarParticipantes();
-                actualizarStats();
-                generarRuletaPreview();
+                updateParticipantsTable();
+                updateStatistics();
             });
 
-            // Escuchar historial
+            // Listen to history
             const historialQuery = query(
                 collection(db, 'resultados'),
                 orderBy('timestamp', 'desc'),
@@ -577,215 +1681,287 @@
                 snapshot.forEach((doc) => {
                     historialData.push({ id: doc.id, ...doc.data() });
                 });
-                cargarHistorial();
+                updateHistoryTable();
+            });
+
+            // Listen to users
+            const usersRef = collection(db, 'users');
+            onSnapshot(usersRef, (snapshot) => {
+                usersData = [];
+                snapshot.forEach((doc) => {
+                    usersData.push({ id: doc.id, ...doc.data() });
+                });
+                updateUsersGrid();
             });
         }
 
-        function actualizarInterfazAdmin() {
+        // UI Functions
+        window.showSection = function(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.admin-menu-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(section + 'Section').style.display = 'block';
+            event.target.classList.add('active');
+            
+            const titles = {
+                dashboard: 'Dashboard',
+                sorteo: 'Gestión de Sorteo',
+                participants: 'Participantes',
+                users: 'Usuarios VIP',
+                analytics: 'Analíticas',
+                history: 'Historial',
+                settings: 'Configuración'
+            };
+            document.getElementById('sectionTitle').textContent = titles[section];
+        }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            sidebar.classList.toggle('collapsed');
+            main.classList.toggle('expanded');
+        }
+
+        window.showNotification = function(title, message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+				info: 'ℹ️'
+            };
+            
+            notification.className = `notification notification-${type}`;
+            document.getElementById('notificationIcon').textContent = icons[type];
+            document.getElementById('notificationTitle').textContent = title;
+            document.getElementById('notificationMessage').textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        window.showLoading = function() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        window.hideLoading = function() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+
+        // Update Functions
+        function updateAdminInterface() {
             if (!sorteoActual) return;
-
-            // Actualizar formulario con datos actuales
-            document.getElementById('cantidadNumeros').value = sorteoActual.cantidadNumeros;
-            document.getElementById('premioSorteo').value = sorteoActual.premio;
-            document.getElementById('fechaSorteo').value = sorteoActual.fecha;
-            document.getElementById('horaSorteo').value = sorteoActual.hora;
-
-            generarRuletaPreview();
+            
+            // Update form fields
+            document.getElementById('cantidadNumeros').value = sorteoActual.cantidadNumeros || 10;
+            document.getElementById('premioSorteo').value = sorteoActual.premio || 100;
+            document.getElementById('fechaSorteo').value = sorteoActual.fecha || '';
+            document.getElementById('horaSorteo').value = sorteoActual.hora || '20:00';
+            
+            // Update info displays
+            document.getElementById('fechaSorteoInfo').textContent = sorteoActual.fecha || '--/--/----';
+            document.getElementById('horaSorteoInfo').textContent = sorteoActual.hora || '--:--';
+            document.getElementById('premioInfo').textContent = `$${sorteoActual.premio || 0} USD`;
+            document.getElementById('estadoSorteo').textContent = (sorteoActual.estado || 'INACTIVO').toUpperCase();
+            
+            updateStatistics();
         }
 
-        function actualizarStats() {
-            const totalParticipantes = Object.keys(participantesData).length;
-            const verificados = Object.values(participantesData).filter(p => p.verificado).length;
-            const ingresos = verificados * 10;
-            const disponibles = sorteoActual ? sorteoActual.cantidadNumeros - totalParticipantes : 0;
-
-            document.getElementById('statParticipantes').textContent = totalParticipantes;
-            document.getElementById('statVerificados').textContent = verificados;
-            document.getElementById('statIngresos').textContent = `$${ingresos}`;
-            document.getElementById('statDisponibles').textContent = disponibles;
+        function updateStatistics() {
+            const participantes = Object.values(participantesData);
+            const verificados = participantes.filter(p => p.verificado).length;
+            const totalIngresos = verificados * 10;
+            
+            document.getElementById('totalIngresos').textContent = `$${totalIngresos}`;
+            document.getElementById('totalParticipantes').textContent = participantes.length;
+            document.getElementById('numerosOcupados').textContent = `${participantes.length}/${sorteoActual?.cantidadNumeros || 0}`;
+            document.getElementById('verificadosInfo').textContent = verificados;
+            
+            // Update participant count badge
+            document.getElementById('totalParticipantesCount').textContent = `${participantes.length} Total`;
         }
 
-        function generarRuletaPreview() {
-            const ruleta = document.getElementById('ruletaPreview');
-            const pointer = ruleta.querySelector('.pointer-preview');
-            ruleta.innerHTML = '';
-            ruleta.appendChild(pointer);
-
-            if (!sorteoActual) return;
-
-            const cantidad = sorteoActual.cantidadNumeros;
-            const angleStep = 360 / cantidad;
-
-            for (let i = 1; i <= cantidad; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'numero-slot-preview';
-                slot.textContent = i;
-
-                // Verificar estado del número
-                if (participantesData[i]) {
-                    if (participantesData[i].verificado) {
-                        slot.classList.add('ocupado');
-                        slot.textContent = participantesData[i].nombre.split(' ').map(n => n[0]).join('');
-                        slot.title = participantesData[i].nombre;
-                    } else {
-                        slot.classList.add('pendiente');
-                        slot.title = 'Pendiente de verificación';
-                    }
-                }
-
-                // Posicionamiento en círculo
-                const angle = (i - 1) * angleStep;
-                const radian = (angle * Math.PI) / 180;
-                const radius = 120;
-                const x = Math.cos(radian) * radius;
-                const y = Math.sin(radian) * radius;
-
-                slot.style.left = `calc(50% + ${x}px - 15px)`;
-                slot.style.top = `calc(50% + ${y}px - 15px)`;
-
-                ruleta.appendChild(slot);
-            }
-        }
-
-        function actualizarParticipantes() {
-            const container = document.getElementById('participantsList');
+        function updateParticipantsTable() {
+            const tbody = document.getElementById('participantsTableBody');
             const participantes = Object.entries(participantesData);
             
             if (participantes.length === 0) {
-                container.innerHTML = '<p style="color: white; opacity: 0.7; text-align: center;">No hay participantes registrados</p>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.7;">No hay participantes registrados</td></tr>';
                 return;
             }
-
-            container.innerHTML = participantes
-                .map(([numero, data]) => `
-                    <div class="participant-item">
-                        <div class="participant-info">
-                            <strong>#${numero}</strong> - ${data.nombre}<br>
-                            <small>📱 ${data.telefono} | 💳 ${data.codigoReferencia}</small>
-                        </div>
-                        <div class="participant-actions">
-                            <span class="status-badge ${data.verificado ? 'status-verified' : 'status-pending'}">
-                                ${data.verificado ? 'Verificado' : 'Pendiente'}
-                            </span>
+            
+            tbody.innerHTML = participantes.map(([numero, data]) => `
+                <tr>
+                    <td><span class="participant-number">#${numero}</span></td>
+                    <td>${data.nombre}</td>
+                    <td>${data.telefono}</td>
+                    <td><span class="participant-level level-${data.userLevel || 'bronze'}">${(data.userLevel || 'bronze').toUpperCase()}</span></td>
+                    <td>${data.codigoReferencia}</td>
+                    <td>
+                        <span class="participant-status ${data.verificado ? 'status-verified' : 'status-pending'}">
+                            ${data.verificado ? 'Verificado' : 'Pendiente'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
                             ${!data.verificado ? `
-                                <button class="btn btn-success" onclick="verificarParticipante('${data.id}', ${numero})">
+                                <button class="action-btn btn-verify" onclick="verificarParticipante('${data.id}')">
                                     ✅ Verificar
                                 </button>
                             ` : ''}
-                            <button class="btn btn-danger" onclick="eliminarParticipante('${data.id}', ${numero})">
+                            <button class="action-btn btn-delete" onclick="eliminarParticipante('${data.id}')">
                                 ❌ Eliminar
                             </button>
                         </div>
-                    </div>
-                `).join('');
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        // Verificar participante
-        window.verificarParticipante = async function(participanteId, numero) {
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            
+            if (historialData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.7;">No hay historial disponible</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = historialData.map(resultado => {
+                const fecha = resultado.timestamp ? new Date(resultado.timestamp.seconds * 1000) : new Date();
+                return `
+                    <tr>
+                        <td>${fecha.toLocaleDateString('es-ES')}</td>
+                        <td>${resultado.hora}</td>
+                        <td>${resultado.ganadorNombre || 'N/A'}</td>
+                        <td>${resultado.ganadorNumero ? '#' + resultado.ganadorNumero : 'N/A'}</td>
+                        <td style="color: var(--gold); font-weight: bold;">$${resultado.premio}</td>
+                        <td>${resultado.totalParticipantes || 0}</td>
+                        <td>
+                            <span class="participant-status ${resultado.estado === 'finalizado' ? 'status-verified' : 'status-pending'}">
+                                ${resultado.estado || 'pendiente'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update analytics
+            document.getElementById('totalSorteos').textContent = historialData.length;
+            const totalPremios = historialData.reduce((sum, r) => sum + (r.premio || 0), 0);
+            document.getElementById('totalPremios').textContent = `$${totalPremios}`;
+            
+            if (historialData.length > 0 && historialData[0].ganadorNombre) {
+                document.getElementById('ultimoGanador').textContent = historialData[0].ganadorNombre;
+            }
+        }
+
+        function updateUsersGrid() {
+            const grid = document.getElementById('usersGrid');
+            
+            if (usersData.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; opacity: 0.7;">No hay usuarios VIP registrados</p>';
+                return;
+            }
+            
+            const levelIcons = {
+                bronze: '🥉',
+                silver: '🥈',
+                gold: '🥇',
+                platinum: '💎',
+                diamond: '💠'
+            };
+            
+            grid.innerHTML = usersData.map(user => `
+                <div class="user-card">
+                    <div class="user-avatar">${user.nombre ? user.nombre[0].toUpperCase() : 'U'}</div>
+                    <div class="user-name">${user.nombre || 'Usuario'}</div>
+                    <div class="user-info">
+                        <div>Nivel: ${levelIcons[user.level]} ${user.level.toUpperCase()}</div>
+                        <div>Puntos: ${user.points || 0}</div>
+                    </div>
+                    <div class="user-stats">
+                        <div class="user-stat">
+                            <div class="user-stat-value">${user.totalParticipations || 0}</div>
+                            <div class="user-stat-label">Participaciones</div>
+                        </div>
+                        <div class="user-stat">
+                            <div class="user-stat-value">${user.wins || 0}</div>
+                            <div class="user-stat-label">Victorias</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('usuariosVIP').textContent = usersData.filter(u => u.level !== 'bronze').length;
+        }
+
+        // Action Functions
+        window.verificarParticipante = async function(participanteId) {
+            showLoading();
             try {
                 await updateDoc(doc(db, 'participantes', participanteId), {
                     verificado: true
                 });
-                alert(`Participante #${numero} verificado correctamente`);
+                showNotification('Éxito', 'Participante verificado correctamente', 'success');
             } catch (error) {
-                console.error('Error al verificar participante:', error);
-                alert('Error al verificar participante');
+                console.error('Error:', error);
+                showNotification('Error', 'No se pudo verificar el participante', 'error');
+            } finally {
+                hideLoading();
             }
         }
 
-        // Eliminar participante
-        window.eliminarParticipante = async function(participanteId, numero) {
-            if (confirm(`¿Estás seguro de eliminar al participante #${numero}?`)) {
+        window.eliminarParticipante = async function(participanteId) {
+            if (confirm('¿Está seguro de eliminar este participante?')) {
+                showLoading();
                 try {
                     await deleteDoc(doc(db, 'participantes', participanteId));
-                    alert(`Participante #${numero} eliminado`);
+                    showNotification('Éxito', 'Participante eliminado', 'success');
                 } catch (error) {
-                    console.error('Error al eliminar participante:', error);
-                    alert('Error al eliminar participante');
+                    console.error('Error:', error);
+                    showNotification('Error', 'No se pudo eliminar el participante', 'error');
+                } finally {
+                    hideLoading();
                 }
             }
         }
 
-        // Configurar sorteo
-        document.getElementById('sorteoForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const cantidad = parseInt(document.getElementById('cantidadNumeros').value);
-            const premio = parseInt(document.getElementById('premioSorteo').value);
-            const fecha = document.getElementById('fechaSorteo').value;
-            const hora = document.getElementById('horaSorteo').value;
-
-            if (cantidad < 5 || cantidad > 50) {
-                alert('La cantidad de números debe estar entre 5 y 50');
-                return;
-            }
-
-            if (sorteoActual && Object.keys(participantesData).length > 0) {
-                if (!confirm('Hay participantes registrados. ¿Desea crear un nuevo sorteo? Se perderán los datos actuales.')) {
-                    return;
-                }
-                
-                // Limpiar participantes actuales
-                const participantesQuery = query(collection(db, 'participantes'), where('sorteoId', '==', 'activo'));
-                const participantesSnapshot = await getDocs(participantesQuery);
-                
-                for (const doc of participantesSnapshot.docs) {
-                    await deleteDoc(doc.ref);
-                }
-            }
-
-            try {
-                await setDoc(doc(db, 'sorteos', 'activo'), {
-                    cantidadNumeros: cantidad,
-                    premio: premio,
-                    fecha: fecha,
-                    hora: hora,
-                    estado: 'activo',
-                    timestamp: new Date()
-                });
-
-                alert('Sorteo configurado correctamente');
-            } catch (error) {
-                console.error('Error al configurar sorteo:', error);
-                alert('Error al configurar el sorteo');
-            }
-        });
-
-        // Girar ruleta
         window.girarRuleta = async function() {
             const participantesVerificados = Object.entries(participantesData).filter(([num, data]) => data.verificado);
             
             if (participantesVerificados.length === 0) {
-                alert('No hay participantes verificados para el sorteo');
+                showNotification('Advertencia', 'No hay participantes verificados', 'warning');
                 return;
             }
-
-            if (!confirm(`¿Realizar sorteo con ${participantesVerificados.length} participantes verificados?`)) {
+            
+            if (!confirm(`¿Iniciar sorteo con ${participantesVerificados.length} participantes verificados?`)) {
                 return;
             }
-
+            
+            showLoading();
+            
+            // Update Firebase to indicate ruleta is spinning
+            await updateDoc(doc(db, 'sorteos', 'activo'), {
+                girando: true
+            });
+            
+            // Spin animation
             const ruleta = document.getElementById('ruletaPreview');
             const btnGirar = document.getElementById('btnGirar');
             
             btnGirar.disabled = true;
-            btnGirar.textContent = '🎲 Girando...';
+            btnGirar.textContent = '🎲 GIRANDO...';
             ruleta.classList.add('spinning');
-
+            
             setTimeout(async () => {
-                // Seleccionar ganador aleatorio
+                // Select random winner
                 const [numeroGanador, datosGanador] = participantesVerificados[Math.floor(Math.random() * participantesVerificados.length)];
-
-                // Mostrar resultado
-                document.getElementById('winnerDisplay').classList.add('show');
-                document.getElementById('winnerText').innerHTML = `
-                    <strong>${datosGanador.nombre}</strong><br>
-                    Número: #${numeroGanador}<br>
-                    Premio: ${sorteoActual.premio} USD<br>
-                    Teléfono: ${datosGanador.telefono}
-                `;
-
+                
                 try {
-                    // Guardar resultado
+                    // Save result
                     await addDoc(collection(db, 'resultados'), {
                         fecha: sorteoActual.fecha,
                         hora: sorteoActual.hora,
@@ -797,179 +1973,108 @@
                         estado: 'finalizado',
                         timestamp: new Date()
                     });
-
-                    // Actualizar sorteo como finalizado
+                    
+                    // Update sorteo
                     await updateDoc(doc(db, 'sorteos', 'activo'), {
                         estado: 'finalizado',
                         ganador: datosGanador.nombre,
                         ganadorNombre: datosGanador.nombre,
                         ganadorNumero: parseInt(numeroGanador),
+                        girando: false,
                         fechaFinalizacion: new Date()
                     });
-
-                    // Mensaje de WhatsApp para anunciar ganador
-                    const mensajeGanador = `🎉 ¡TENEMOS GANADOR! 🎉
-
-🏆 Sorteo Ruleta Dorada
-👤 Ganador: ${datosGanador.nombre}
-🎲 Número ganador: #${numeroGanador}
-💰 Premio: ${sorteoActual.premio} USD
-📱 Contacto: ${datosGanador.telefono}
-
-¡Felicidades al ganador! El pago se realizará en las próximas 2 horas.
-
-¡Mantente atento al próximo sorteo!`;
-
-                    // Copiar mensaje al portapapeles
-                    if (navigator.clipboard) {
-                        navigator.clipboard.writeText(mensajeGanador);
-                        alert(`🎉 ¡Ganador: ${datosGanador.nombre}!\nMensaje copiado al portapapeles para anunciar en WhatsApp.`);
-                    } else {
-                        alert(`🎉 ¡Ganador: ${datosGanador.nombre}!\nAnuncia el resultado en WhatsApp.`);
-                    }
-
+                    
+                    showNotification('¡Ganador!', `${datosGanador.nombre} - Número #${numeroGanador}`, 'success');
+                    
                 } catch (error) {
-                    console.error('Error al guardar resultado:', error);
-                    alert('Error al guardar el resultado del sorteo');
+                    console.error('Error:', error);
+                    showNotification('Error', 'Error al guardar el resultado', 'error');
                 }
-
+                
                 ruleta.classList.remove('spinning');
                 btnGirar.disabled = false;
-                btnGirar.textContent = '🎲 Girar Ruleta';
-
+                btnGirar.textContent = '🎲 GIRAR RULETA';
+                hideLoading();
+                
             }, 3000);
         }
 
-        // Pausar sorteo
-        window.pausarSorteo = async function() {
-            if (!sorteoActual) {
-                alert('No hay sorteo activo para pausar');
-                return;
-            }
-
-            if (confirm('¿Pausar el sorteo actual? Los usuarios no podrán participar temporalmente.')) {
-                try {
-                    await updateDoc(doc(db, 'sorteos', 'activo'), {
-                        estado: 'pausado'
-                    });
-                    alert('Sorteo pausado correctamente');
-                } catch (error) {
-                    console.error('Error al pausar sorteo:', error);
-                    alert('Error al pausar el sorteo');
-                }
-            }
-        }
-
-        // Finalizar sorteo
-        window.finalizarSorteo = async function() {
-            if (!sorteoActual) {
-                alert('No hay sorteo activo para finalizar');
-                return;
-            }
-
-            if (confirm('¿Finalizar el sorteo sin realizar el sorteo? Esto eliminará todos los participantes.')) {
-                try {
-                    // Mover sorteo a historial sin ganador
-                    await addDoc(collection(db, 'resultados'), {
-                        fecha: sorteoActual.fecha,
-                        hora: sorteoActual.hora,
-                        ganadorNombre: 'Sorteo cancelado',
-                        ganadorNumero: 0,
-                        premio: sorteoActual.premio,
-                        totalParticipantes: Object.keys(participantesData).length,
-                        estado: 'cancelado',
-                        timestamp: new Date()
-                    });
-
-                    // Eliminar sorteo activo
-                    await deleteDoc(doc(db, 'sorteos', 'activo'));
-
-                    // Limpiar participantes
-                    const participantesQuery = query(collection(db, 'participantes'), where('sorteoId', '==', 'activo'));
-                    const participantesSnapshot = await getDocs(participantesQuery);
-                    
-                    for (const doc of participantesSnapshot.docs) {
-                        await deleteDoc(doc.ref);
-                    }
-
-                    alert('Sorteo finalizado y cancelado correctamente');
-                } catch (error) {
-                    console.error('Error al finalizar sorteo:', error);
-                    alert('Error al finalizar el sorteo');
-                }
-            }
-        }
-
-        function cargarHistorial() {
-            const tbody = document.querySelector('#historialTable tbody');
+        // Form submission
+        document.getElementById('sorteoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (historialData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; opacity: 0.7;">No hay historial disponible</td></tr>';
-                return;
+            const cantidad = parseInt(document.getElementById('cantidadNumeros').value);
+            const premio = parseInt(document.getElementById('premioSorteo').value);
+            const fecha = document.getElementById('fechaSorteo').value;
+            const hora = document.getElementById('horaSorteo').value;
+            
+            showLoading();
+            
+            try {
+                await setDoc(doc(db, 'sorteos', 'activo'), {
+                    cantidadNumeros: cantidad,
+                    premio: premio,
+                    fecha: fecha,
+                    hora: hora,
+                    estado: 'activo',
+                    girando: false,
+                    timestamp: new Date()
+                });
+                
+                showNotification('Éxito', 'Sorteo configurado correctamente', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error', 'Error al configurar el sorteo', 'error');
+            } finally {
+                hideLoading();
             }
+        });
 
-            tbody.innerHTML = historialData.map(resultado => {
-                const fecha = resultado.timestamp ? new Date(resultado.timestamp.seconds * 1000) : new Date();
-                return `
-                    <tr>
-                        <td>${fecha.toLocaleDateString()}</td>
-                        <td>${resultado.hora}</td>
-                        <td>${resultado.totalParticipantes || 0}</td>
-                        <td>${resultado.ganadorNombre}</td>
-                        <td>${resultado.ganadorNumero > 0 ? '#' + resultado.ganadorNumero : 'N/A'}</td>
-                        <td>${resultado.premio}</td>
-                        <td>
-                            <span class="status-badge ${resultado.estado === 'finalizado' ? 'status-verified' : 'status-pending'}">
-                                ${resultado.estado}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Función para exportar datos (opcional)
+        // Export functions
         window.exportarDatos = function() {
             const datos = {
                 sorteoActual: sorteoActual,
                 participantes: participantesData,
                 historial: historialData,
+                usuarios: usersData,
                 fecha: new Date().toISOString()
             };
-
+            
             const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ruleta-dorada-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `laruleta-backup-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            
+            showNotification('Éxito', 'Datos exportados correctamente', 'success');
         }
 
-        // Función para limpiar datos antiguos (opcional)
-        window.limpiarHistorial = async function() {
-            if (confirm('¿Eliminar todos los resultados antiguos? Esta acción no se puede deshacer.')) {
-                try {
-                    const resultadosQuery = query(collection(db, 'resultados'));
-                    const resultadosSnapshot = await getDocs(resultadosQuery);
-                    
-                    for (const doc of resultadosSnapshot.docs) {
-                        await deleteDoc(doc.ref);
-                    }
-                    
-                    alert('Historial limpiado correctamente');
-                } catch (error) {
-                    console.error('Error al limpiar historial:', error);
-                    alert('Error al limpiar el historial');
-                }
-            }
+        window.exportarHistorial = function() {
+            const csv = 'Fecha,Hora,Ganador,Número,Premio,Participantes,Estado\n' + 
+                historialData.map(r => 
+                    `${r.fecha},${r.hora},${r.ganadorNombre},${r.ganadorNumero},${r.premio},${r.totalParticipantes},${r.estado}`
+                ).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `historial-sorteos-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Éxito', 'Historial exportado correctamente', 'success');
         }
 
-        // Auto-refresh cada 30 segundos para mantener datos actualizados
-        setInterval(() => {
-            console.log('Actualizando datos...', new Date().toLocaleTimeString());
-        }, 30000);
+        // Modal functions
+        window.closeModal = function() {
+            document.getElementById('modal').classList.remove('active');
+        }
 
+        // Initialize sections
+        showSection('dashboard');
     </script>
 </body>
 </html>
