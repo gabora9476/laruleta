@@ -2102,22 +2102,22 @@
 
     <!-- Firebase Configuration and JavaScript -->
     <script type="module">
-  		import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  		import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
         import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-  		const firebaseConfig = {
-   		 apiKey: "AIzaSyDYDxqsCtPUegCCDUNhvQcvLahJzNTvQtY",
-  		 authDomain: "laruleta2025.firebaseapp.com",
-  		 projectId: "laruleta2025",
-   		 storageBucket: "laruleta2025.firebasestorage.app",
-   		 messagingSenderId: "970855213972",
-  		 appId: "1:970855213972:web:b1cd025e0bf989e877bd81",
-  		 measurementId: "G-Q9W8FL69P2"
-  		};
+const firebaseConfig = {
+  apiKey: "AIzaSyDYDxqsCtPUegCCDUNhvQcvLahJzNTvQtY",
+  authDomain: "laruleta2025.firebaseapp.com",
+  projectId: "laruleta2025",
+  storageBucket: "laruleta2025.firebasestorage.app",
+  messagingSenderId: "970855213972",
+  appId: "1:970855213972:web:b1cd025e0bf989e877bd81",
+  measurementId: "G-Q9W8FL69P2"
+};
 
-		const app = initializeApp(firebaseConfig);
-		const analytics = getAnalytics(app);
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
         // Global Variables
