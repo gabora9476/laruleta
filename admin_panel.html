@@ -84,6 +84,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .admin-menu-link::before {
@@ -194,7 +195,7 @@
         }
 
         /* Dashboard Stats Grid */
-        .dashboard-stats {
+		.dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
@@ -353,6 +354,10 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -370,6 +375,9 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
         }
 
         .btn::before {
@@ -393,6 +401,16 @@
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
         }
 
         .btn-primary {
@@ -420,11 +438,18 @@
             color: white;
         }
 
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
         .btn-group {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         /* Ruleta Preview */
@@ -459,7 +484,8 @@
                 0 0 30px rgba(255, 215, 0, 0.5);
             transition: transform 3s cubic-bezier(0.23, 1, 0.320, 1);
         }
-		.ruleta-preview.spinning {
+
+        .ruleta-preview.spinning {
             animation: spin 3s cubic-bezier(0.23, 1, 0.320, 1) forwards;
         }
 
@@ -499,17 +525,36 @@
             filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
         }
 
-        /* Participants Management */
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+		/* Participants Management */
         .participants-table-container {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             overflow: hidden;
             margin-top: 20px;
+            overflow-x: auto;
         }
 
         .participants-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 700px;
         }
 
         .participants-table thead {
@@ -591,6 +636,7 @@
         .action-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
@@ -695,6 +741,7 @@
         .history-table {
             width: 100%;
             margin-top: 20px;
+            overflow-x: auto;
         }
 
         .history-table thead {
@@ -901,7 +948,15 @@
             transform: rotate(90deg);
         }
 
-        /* Notifications */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+		/* Notifications */
         .notification {
             position: fixed;
             top: 20px;
@@ -917,7 +972,8 @@
             gap: 15px;
             max-width: 400px;
         }
-		.notification.show {
+
+        .notification.show {
             transform: translateX(0);
         }
 
@@ -1084,6 +1140,15 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .control-panels {
@@ -1178,46 +1243,46 @@
         
         <ul class="admin-menu">
             <li class="admin-menu-item">
-                <a href="#dashboard" class="admin-menu-link active" onclick="showSection('dashboard')">
+                <div class="admin-menu-link active" onclick="showSection('dashboard')">
                     <span class="menu-icon">📊</span>
                     <span>Dashboard</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#sorteo" class="admin-menu-link" onclick="showSection('sorteo')">
+                <div class="admin-menu-link" onclick="showSection('sorteo')">
                     <span class="menu-icon">🎲</span>
                     <span>Gestión de Sorteo</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#participants" class="admin-menu-link" onclick="showSection('participants')">
+                <div class="admin-menu-link" onclick="showSection('participants')">
                     <span class="menu-icon">👥</span>
                     <span>Participantes</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#users" class="admin-menu-link" onclick="showSection('users')">
+                <div class="admin-menu-link" onclick="showSection('users')">
                     <span class="menu-icon">👤</span>
                     <span>Usuarios VIP</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#analytics" class="admin-menu-link" onclick="showSection('analytics')">
+                <div class="admin-menu-link" onclick="showSection('analytics')">
                     <span class="menu-icon">📈</span>
                     <span>Analíticas</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#history" class="admin-menu-link" onclick="showSection('history')">
+                <div class="admin-menu-link" onclick="showSection('history')">
                     <span class="menu-icon">📜</span>
                     <span>Historial</span>
-                </a>
+                </div>
             </li>
             <li class="admin-menu-item">
-                <a href="#settings" class="admin-menu-link" onclick="showSection('settings')">
+                <div class="admin-menu-link" onclick="showSection('settings')">
                     <span class="menu-icon">⚙️</span>
                     <span>Configuración</span>
-                </a>
+                </div>
             </li>
         </ul>
     </aside>
@@ -1242,7 +1307,7 @@
         </header>
 
         <!-- Dashboard Section -->
-        <section id="dashboardSection" class="content-section">
+        <section id="dashboardSection" class="content-section active">
             <div class="dashboard-stats">
                 <div class="stat-card">
                     <span class="stat-icon">💰</span>
@@ -1318,9 +1383,8 @@
                 </div>
             </div>
         </section>
-
-        <!-- Sorteo Management Section -->
-        <section id="sorteoSection" class="content-section" style="display: none;">
+		<!-- Sorteo Management Section -->
+        <section id="sorteoSection" class="content-section">
             <div class="control-panel">
                 <div class="panel-header">
                     <h3 class="panel-title">
@@ -1381,8 +1445,9 @@
                 </div>
             </div>
         </section>
-		<!-- Participants Section -->
-        <section id="participantsSection" class="content-section" style="display: none;">
+
+        <!-- Participants Section -->
+        <section id="participantsSection" class="content-section">
             <div class="control-panel">
                 <div class="panel-header">
                     <h3 class="panel-title">
@@ -1418,7 +1483,7 @@
         </section>
 
         <!-- Users VIP Section -->
-        <section id="usersSection" class="content-section" style="display: none;">
+        <section id="usersSection" class="content-section">
             <div class="control-panel">
                 <div class="panel-header">
                     <h3 class="panel-title">
@@ -1428,21 +1493,23 @@
                 </div>
                 
                 <div class="users-grid" id="usersGrid">
-                    <!-- User cards will be generated dynamically -->
+                    <div style="text-align: center; opacity: 0.7; grid-column: 1 / -1;">
+                        No hay usuarios VIP registrados
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Analytics Section -->
-        <section id="analyticsSection" class="content-section" style="display: none;">
+        <section id="analyticsSection" class="content-section">
             <div class="analytics-grid">
                 <div class="chart-container">
                     <h3 class="chart-title">
                         <span>📈</span>
                         <span>Ingresos Mensuales</span>
                     </h3>
-                    <div class="chart-placeholder">
-                        <canvas id="revenueChart"></canvas>
+                    <div class="chart-placeholder" id="revenueChart">
+                        Gráfico de ingresos mensuales (próximamente)
                     </div>
                 </div>
                 
@@ -1452,7 +1519,9 @@
                         <span>Top Ganadores</span>
                     </h3>
                     <div id="topWinnersList" style="padding: 20px;">
-                        <!-- Winners list will be generated -->
+                        <div style="text-align: center; opacity: 0.7;">
+                            No hay ganadores aún
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1482,7 +1551,7 @@
         </section>
 
         <!-- History Section -->
-        <section id="historySection" class="content-section" style="display: none;">
+        <section id="historySection" class="content-section">
             <div class="history-table-container">
                 <div class="panel-header">
                     <h3 class="panel-title">
@@ -1518,7 +1587,7 @@
         </section>
 
         <!-- Settings Section -->
-        <section id="settingsSection" class="content-section" style="display: none;">
+        <section id="settingsSection" class="content-section">
             <div class="settings-container">
                 <div class="settings-section">
                     <h3 class="settings-title">
@@ -1627,13 +1696,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Global Variables
         let sorteoActual = null;
         let participantesData = {};
         let historialData = [];
         let usersData = [];
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initializeAdmin();
             setCurrentDate();
@@ -1645,16 +1712,24 @@
         }
 
         function initializeAdmin() {
-            // Listen to active lottery
             const sorteoRef = doc(db, 'sorteos', 'activo');
             onSnapshot(sorteoRef, (doc) => {
                 if (doc.exists()) {
                     sorteoActual = doc.data();
                     updateAdminInterface();
+                } else {
+                    setDoc(sorteoRef, {
+                        cantidadNumeros: 10,
+                        premio: 100,
+                        fecha: new Date().toISOString().split('T')[0],
+                        hora: '20:00',
+                        estado: 'inactivo',
+                        girando: false,
+                        timestamp: new Date()
+                    });
                 }
             });
 
-            // Listen to participants
             const participantesRef = collection(db, 'participantes');
             onSnapshot(participantesRef, (snapshot) => {
                 participantesData = {};
@@ -1670,12 +1745,7 @@
                 updateStatistics();
             });
 
-            // Listen to history
-            const historialQuery = query(
-                collection(db, 'resultados'),
-                orderBy('timestamp', 'desc'),
-                limit(20)
-            );
+            const historialQuery = query(collection(db, 'resultados'), orderBy('timestamp', 'desc'), limit(20));
             onSnapshot(historialQuery, (snapshot) => {
                 historialData = [];
                 snapshot.forEach((doc) => {
@@ -1684,7 +1754,6 @@
                 updateHistoryTable();
             });
 
-            // Listen to users
             const usersRef = collection(db, 'users');
             onSnapshot(usersRef, (snapshot) => {
                 usersData = [];
@@ -1695,23 +1764,14 @@
             });
         }
 
-        // UI Functions
         window.showSection = function(section) {
-            document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.admin-menu-link').forEach(l => l.classList.remove('active'));
             
-            document.getElementById(section + 'Section').style.display = 'block';
-            event.target.classList.add('active');
+            document.getElementById(section + 'Section').classList.add('active');
+            event.target.closest('.admin-menu-link').classList.add('active');
             
-            const titles = {
-                dashboard: 'Dashboard',
-                sorteo: 'Gestión de Sorteo',
-                participants: 'Participantes',
-                users: 'Usuarios VIP',
-                analytics: 'Analíticas',
-                history: 'Historial',
-                settings: 'Configuración'
-            };
+            const titles = { dashboard: 'Dashboard', sorteo: 'Gestión de Sorteo', participants: 'Participantes', users: 'Usuarios VIP', analytics: 'Analíticas', history: 'Historial', settings: 'Configuración' };
             document.getElementById('sectionTitle').textContent = titles[section];
         }
 
@@ -1724,12 +1784,7 @@
 
         window.showNotification = function(title, message, type = 'info') {
             const notification = document.getElementById('notification');
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-				info: 'ℹ️'
-            };
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
             
             notification.className = `notification notification-${type}`;
             document.getElementById('notificationIcon').textContent = icons[type];
@@ -1737,10 +1792,7 @@
             document.getElementById('notificationMessage').textContent = message;
             
             notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 5000);
+            setTimeout(() => notification.classList.remove('show'), 5000);
         }
 
         window.showLoading = function() {
@@ -1751,20 +1803,17 @@
             document.getElementById('loadingOverlay').classList.remove('active');
         }
 
-        // Update Functions
         function updateAdminInterface() {
             if (!sorteoActual) return;
             
-            // Update form fields
             document.getElementById('cantidadNumeros').value = sorteoActual.cantidadNumeros || 10;
             document.getElementById('premioSorteo').value = sorteoActual.premio || 100;
             document.getElementById('fechaSorteo').value = sorteoActual.fecha || '';
             document.getElementById('horaSorteo').value = sorteoActual.hora || '20:00';
             
-            // Update info displays
             document.getElementById('fechaSorteoInfo').textContent = sorteoActual.fecha || '--/--/----';
             document.getElementById('horaSorteoInfo').textContent = sorteoActual.hora || '--:--';
-            document.getElementById('premioInfo').textContent = `$${sorteoActual.premio || 0} USD`;
+            document.getElementById('premioInfo').textContent = `${sorteoActual.premio || 0} USD`;
             document.getElementById('estadoSorteo').textContent = (sorteoActual.estado || 'INACTIVO').toUpperCase();
             
             updateStatistics();
@@ -1775,12 +1824,10 @@
             const verificados = participantes.filter(p => p.verificado).length;
             const totalIngresos = verificados * 10;
             
-            document.getElementById('totalIngresos').textContent = `$${totalIngresos}`;
+            document.getElementById('totalIngresos').textContent = `${totalIngresos}`;
             document.getElementById('totalParticipantes').textContent = participantes.length;
             document.getElementById('numerosOcupados').textContent = `${participantes.length}/${sorteoActual?.cantidadNumeros || 0}`;
             document.getElementById('verificadosInfo').textContent = verificados;
-            
-            // Update participant count badge
             document.getElementById('totalParticipantesCount').textContent = `${participantes.length} Total`;
         }
 
@@ -1800,21 +1847,11 @@
                     <td>${data.telefono}</td>
                     <td><span class="participant-level level-${data.userLevel || 'bronze'}">${(data.userLevel || 'bronze').toUpperCase()}</span></td>
                     <td>${data.codigoReferencia}</td>
-                    <td>
-                        <span class="participant-status ${data.verificado ? 'status-verified' : 'status-pending'}">
-                            ${data.verificado ? 'Verificado' : 'Pendiente'}
-                        </span>
-                    </td>
+                    <td><span class="participant-status ${data.verificado ? 'status-verified' : 'status-pending'}">${data.verificado ? 'Verificado' : 'Pendiente'}</span></td>
                     <td>
                         <div class="action-buttons">
-                            ${!data.verificado ? `
-                                <button class="action-btn btn-verify" onclick="verificarParticipante('${data.id}')">
-                                    ✅ Verificar
-                                </button>
-                            ` : ''}
-                            <button class="action-btn btn-delete" onclick="eliminarParticipante('${data.id}')">
-                                ❌ Eliminar
-                            </button>
+                            ${!data.verificado ? `<button class="action-btn btn-verify" onclick="verificarParticipante('${data.id}')">✅ Verificar</button>` : ''}
+                            <button class="action-btn btn-delete" onclick="eliminarParticipante('${data.id}')">❌ Eliminar</button>
                         </div>
                     </td>
                 </tr>
@@ -1837,21 +1874,16 @@
                         <td>${resultado.hora}</td>
                         <td>${resultado.ganadorNombre || 'N/A'}</td>
                         <td>${resultado.ganadorNumero ? '#' + resultado.ganadorNumero : 'N/A'}</td>
-                        <td style="color: var(--gold); font-weight: bold;">$${resultado.premio}</td>
+                        <td style="color: var(--gold); font-weight: bold;">${resultado.premio}</td>
                         <td>${resultado.totalParticipantes || 0}</td>
-                        <td>
-                            <span class="participant-status ${resultado.estado === 'finalizado' ? 'status-verified' : 'status-pending'}">
-                                ${resultado.estado || 'pendiente'}
-                            </span>
-                        </td>
+                        <td><span class="participant-status ${resultado.estado === 'finalizado' ? 'status-verified' : 'status-pending'}">${resultado.estado || 'pendiente'}</span></td>
                     </tr>
                 `;
             }).join('');
             
-            // Update analytics
             document.getElementById('totalSorteos').textContent = historialData.length;
             const totalPremios = historialData.reduce((sum, r) => sum + (r.premio || 0), 0);
-            document.getElementById('totalPremios').textContent = `$${totalPremios}`;
+            document.getElementById('totalPremios').textContent = `${totalPremios}`;
             
             if (historialData.length > 0 && historialData[0].ganadorNombre) {
                 document.getElementById('ultimoGanador').textContent = historialData[0].ganadorNombre;
@@ -1862,24 +1894,18 @@
             const grid = document.getElementById('usersGrid');
             
             if (usersData.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; opacity: 0.7;">No hay usuarios VIP registrados</p>';
+                grid.innerHTML = '<div style="text-align: center; opacity: 0.7; grid-column: 1 / -1;">No hay usuarios VIP registrados</div>';
                 return;
             }
             
-            const levelIcons = {
-                bronze: '🥉',
-                silver: '🥈',
-                gold: '🥇',
-                platinum: '💎',
-                diamond: '💠'
-            };
+            const levelIcons = { bronze: '🥉', silver: '🥈', gold: '🥇', platinum: '💎', diamond: '💠' };
             
             grid.innerHTML = usersData.map(user => `
                 <div class="user-card">
                     <div class="user-avatar">${user.nombre ? user.nombre[0].toUpperCase() : 'U'}</div>
                     <div class="user-name">${user.nombre || 'Usuario'}</div>
                     <div class="user-info">
-                        <div>Nivel: ${levelIcons[user.level]} ${user.level.toUpperCase()}</div>
+                        <div>Nivel: ${levelIcons[user.level] || '🥉'} ${(user.level || 'bronze').toUpperCase()}</div>
                         <div>Puntos: ${user.points || 0}</div>
                     </div>
                     <div class="user-stats">
@@ -1895,16 +1921,13 @@
                 </div>
             `).join('');
             
-            document.getElementById('usuariosVIP').textContent = usersData.filter(u => u.level !== 'bronze').length;
+            document.getElementById('usuariosVIP').textContent = usersData.filter(u => (u.level || 'bronze') !== 'bronze').length;
         }
 
-        // Action Functions
         window.verificarParticipante = async function(participanteId) {
             showLoading();
             try {
-                await updateDoc(doc(db, 'participantes', participanteId), {
-                    verificado: true
-                });
+                await updateDoc(doc(db, 'participantes', participanteId), { verificado: true });
                 showNotification('Éxito', 'Participante verificado correctamente', 'success');
             } catch (error) {
                 console.error('Error:', error);
@@ -1929,6 +1952,65 @@
             }
         }
 
+        window.iniciarSorteo = async function() {
+            if (!sorteoActual) {
+                showNotification('Error', 'Configure el sorteo primero', 'error');
+                return;
+            }
+            if (confirm('¿Iniciar sorteo ahora?')) {
+                showLoading();
+                try {
+                    await updateDoc(doc(db, 'sorteos', 'activo'), { estado: 'activo', fechaInicio: new Date() });
+                    showNotification('Éxito', 'Sorteo iniciado correctamente', 'success');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('Error', 'No se pudo iniciar el sorteo', 'error');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+
+        window.pausarSorteo = async function() {
+            if (confirm('¿Pausar sorteo?')) {
+                showLoading();
+                try {
+                    await updateDoc(doc(db, 'sorteos', 'activo'), { estado: 'pausado' });
+                    showNotification('Éxito', 'Sorteo pausado', 'success');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('Error', 'No se pudo pausar el sorteo', 'error');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+
+        window.finalizarSorteo = async function() {
+            if (confirm('¿Finalizar sorteo? Esta acción no se puede deshacer.')) {
+                showLoading();
+                try {
+                    await updateDoc(doc(db, 'sorteos', 'activo'), { estado: 'finalizado', fechaFinalizacion: new Date() });
+                    showNotification('Éxito', 'Sorteo finalizado', 'success');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('Error', 'No se pudo finalizar el sorteo', 'error');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+
+        window.resetearSorteo = async function() {
+            if (confirm('¿Resetear configuración del sorteo?')) {
+                document.getElementById('cantidadNumeros').value = 10;
+                document.getElementById('premioSorteo').value = 100;
+                document.getElementById('fechaSorteo').value = new Date().toISOString().split('T')[0];
+                document.getElementById('horaSorteo').value = '20:00';
+                showNotification('Éxito', 'Configuración reseteada', 'success');
+            }
+        }
+
         window.girarRuleta = async function() {
             const participantesVerificados = Object.entries(participantesData).filter(([num, data]) => data.verificado);
             
@@ -1937,18 +2019,11 @@
                 return;
             }
             
-            if (!confirm(`¿Iniciar sorteo con ${participantesVerificados.length} participantes verificados?`)) {
-                return;
-            }
+            if (!confirm(`¿Iniciar sorteo con ${participantesVerificados.length} participantes verificados?`)) return;
             
             showLoading();
+            await updateDoc(doc(db, 'sorteos', 'activo'), { girando: true });
             
-            // Update Firebase to indicate ruleta is spinning
-            await updateDoc(doc(db, 'sorteos', 'activo'), {
-                girando: true
-            });
-            
-            // Spin animation
             const ruleta = document.getElementById('ruletaPreview');
             const btnGirar = document.getElementById('btnGirar');
             
@@ -1957,11 +2032,9 @@
             ruleta.classList.add('spinning');
             
             setTimeout(async () => {
-                // Select random winner
                 const [numeroGanador, datosGanador] = participantesVerificados[Math.floor(Math.random() * participantesVerificados.length)];
                 
                 try {
-                    // Save result
                     await addDoc(collection(db, 'resultados'), {
                         fecha: sorteoActual.fecha,
                         hora: sorteoActual.hora,
@@ -1974,7 +2047,6 @@
                         timestamp: new Date()
                     });
                     
-                    // Update sorteo
                     await updateDoc(doc(db, 'sorteos', 'activo'), {
                         estado: 'finalizado',
                         ganador: datosGanador.nombre,
@@ -1985,7 +2057,6 @@
                     });
                     
                     showNotification('¡Ganador!', `${datosGanador.nombre} - Número #${numeroGanador}`, 'success');
-                    
                 } catch (error) {
                     console.error('Error:', error);
                     showNotification('Error', 'Error al guardar el resultado', 'error');
@@ -1995,11 +2066,69 @@
                 btnGirar.disabled = false;
                 btnGirar.textContent = '🎲 GIRAR RULETA';
                 hideLoading();
-                
             }, 3000);
         }
 
-        // Form submission
+        window.seleccionarGanador = async function() {
+            const participantesVerificados = Object.entries(participantesData).filter(([num, data]) => data.verificado);
+            
+            if (participantesVerificados.length === 0) {
+                showNotification('Advertencia', 'No hay participantes verificados', 'warning');
+                return;
+            }
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Seleccionar Ganador:</label>
+                    <select class="form-control" id="ganadorSelect">
+                        ${participantesVerificados.map(([num, data]) => `<option value="${num}">#${num} - ${data.nombre}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+
+            document.getElementById('modalTitle').textContent = 'Seleccionar Ganador Manual';
+            document.getElementById('modal').classList.add('active');
+            
+            document.getElementById('modalConfirmBtn').onclick = async () => {
+                const numeroGanador = document.getElementById('ganadorSelect').value;
+                const datosGanador = participantesData[numeroGanador];
+                
+                closeModal();
+                showLoading();
+                
+                try {
+                    await addDoc(collection(db, 'resultados'), {
+                        fecha: sorteoActual.fecha,
+                        hora: sorteoActual.hora,
+                        ganadorNombre: datosGanador.nombre,
+                        ganadorNumero: parseInt(numeroGanador),
+                        ganadorTelefono: datosGanador.telefono,
+                        premio: sorteoActual.premio,
+                        totalParticipantes: participantesVerificados.length,
+                        estado: 'finalizado',
+                        timestamp: new Date(),
+                        tipo: 'manual'
+                    });
+                    
+                    await updateDoc(doc(db, 'sorteos', 'activo'), {
+                        estado: 'finalizado',
+                        ganador: datosGanador.nombre,
+                        ganadorNombre: datosGanador.nombre,
+                        ganadorNumero: parseInt(numeroGanador),
+                        fechaFinalizacion: new Date()
+                    });
+                    
+                    showNotification('¡Ganador Seleccionado!', `${datosGanador.nombre} - Número #${numeroGanador}`, 'success');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('Error', 'Error al seleccionar ganador', 'error');
+                } finally {
+                    hideLoading();
+                }
+            };
+        }
+
         document.getElementById('sorteoForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -2016,7 +2145,7 @@
                     premio: premio,
                     fecha: fecha,
                     hora: hora,
-                    estado: 'activo',
+                    estado: 'configurado',
                     girando: false,
                     timestamp: new Date()
                 });
@@ -2030,7 +2159,6 @@
             }
         });
 
-        // Export functions
         window.exportarDatos = function() {
             const datos = {
                 sorteoActual: sorteoActual,
@@ -2053,9 +2181,7 @@
 
         window.exportarHistorial = function() {
             const csv = 'Fecha,Hora,Ganador,Número,Premio,Participantes,Estado\n' + 
-                historialData.map(r => 
-                    `${r.fecha},${r.hora},${r.ganadorNombre},${r.ganadorNumero},${r.premio},${r.totalParticipantes},${r.estado}`
-                ).join('\n');
+                historialData.map(r => `${r.fecha},${r.hora},${r.ganadorNombre},${r.ganadorNumero},${r.premio},${r.totalParticipantes},${r.estado}`).join('\n');
             
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -2068,13 +2194,78 @@
             showNotification('Éxito', 'Historial exportado correctamente', 'success');
         }
 
-        // Modal functions
+        window.importarDatos = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    showNotification('Éxito', 'Datos importados correctamente', 'success');
+                } catch (error) {
+                    showNotification('Error', 'Archivo inválido', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        window.limpiarCache = function() {
+            if (confirm('¿Limpiar caché del sistema?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                showNotification('Éxito', 'Caché limpiado correctamente', 'success');
+            }
+        }
+
+        window.resetearSistema = function() {
+            if (confirm('¿RESETEAR TODO EL SISTEMA? Esta acción eliminará todos los datos y no se puede deshacer.')) {
+                if (confirm('¿Está ABSOLUTAMENTE seguro? Escriba "CONFIRMAR" para continuar') && 
+                    prompt('Escriba "CONFIRMAR" para resetear el sistema:') === 'CONFIRMAR') {
+                    
+                    showLoading();
+                    setTimeout(() => {
+                        hideLoading();
+                        showNotification('Sistema', 'Funcionalidad de reset deshabilitada por seguridad', 'warning');
+                    }, 2000);
+                }
+            }
+        }
+
         window.closeModal = function() {
             document.getElementById('modal').classList.remove('active');
         }
 
-        // Initialize sections
-        showSection('dashboard');
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('modal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('adminSidebar');
+                if (!sidebar.contains(e.target) && !e.target.classList.contains('toggle-sidebar-btn')) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const main = document.getElementById('adminMain');
+            
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('collapsed', 'active');
+                main.classList.remove('expanded');
+            }
+        });
+
+        console.log('🎯 Panel Administrativo LaRuleta cargado correctamente');
     </script>
 </body>
 </html>
