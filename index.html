@@ -21,6 +21,10 @@
             --dark-bg: #1a1a2e;
             --light-bg: #16213e;
             --accent: #E94560;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
         }
 
         body {
@@ -122,37 +126,40 @@
             to { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
         }
 
-        /* Sistema de Niveles VIP */
+        /* Sistema de Niveles VIP Corregido */
         .vip-status {
             position: absolute;
             top: 20px;
             right: 20px;
             background: rgba(0, 0, 0, 0.3);
-            padding: 15px 25px;
-            border-radius: 50px;
+            padding: 12px 20px;
+            border-radius: 25px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
+            min-width: 280px;
+            max-width: 320px;
         }
 
         .vip-status:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
             border-color: var(--primary-gold);
         }
 
         .vip-level {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.1em;
+            white-space: nowrap;
         }
 
-        .vip-bronze { color: var(--bronze); text-shadow: 0 0 10px var(--bronze); }
-        .vip-silver { color: var(--silver); text-shadow: 0 0 10px var(--silver); }
-        .vip-gold { color: var(--primary-gold); text-shadow: 0 0 10px var(--primary-gold); }
-        .vip-platinum { color: var(--platinum); text-shadow: 0 0 10px var(--platinum); }
+        .vip-bronze { color: var(--bronze); text-shadow: 0 0 8px var(--bronze); }
+        .vip-silver { color: var(--silver); text-shadow: 0 0 8px var(--silver); }
+        .vip-gold { color: var(--primary-gold); text-shadow: 0 0 8px var(--primary-gold); }
+        .vip-platinum { color: var(--platinum); text-shadow: 0 0 8px var(--platinum); }
         .vip-diamond { 
             background: linear-gradient(45deg, #B9F2FF, #89CFF0, #B9F2FF);
             -webkit-background-clip: text;
@@ -161,16 +168,18 @@
         }
 
         @keyframes diamond-sparkle {
-            0%, 100% { filter: brightness(1) drop-shadow(0 0 10px #B9F2FF); }
-            50% { filter: brightness(1.5) drop-shadow(0 0 20px #B9F2FF); }
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 8px #B9F2FF); }
+            50% { filter: brightness(1.5) drop-shadow(0 0 15px #B9F2FF); }
         }
 
+        /* Barra de progreso mejorada */
         .vip-progress {
-            width: 150px;
-            height: 8px;
+            width: 100px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             overflow: hidden;
+            position: relative;
         }
 
         .vip-progress-bar {
@@ -178,6 +187,29 @@
             background: linear-gradient(90deg, var(--primary-gold), var(--secondary-gold));
             border-radius: 10px;
             transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .vip-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: progressGlow 2s linear infinite;
+        }
+
+        @keyframes progressGlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .vip-points {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
         }
 
         /* VIP Benefits Panel */
@@ -209,7 +241,7 @@
 
         .benefits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -220,16 +252,32 @@
             border-radius: 15px;
             text-align: center;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .benefit-item:hover {
             transform: translateY(-5px);
             background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .benefit-icon {
             font-size: 2em;
             margin-bottom: 10px;
+            display: block;
+        }
+
+        .benefit-item strong {
+            display: block;
+            color: var(--primary-gold);
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .benefit-item p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            margin: 0;
         }
 
         /* Main Grid Layout */
@@ -269,9 +317,25 @@
             animation: pulseGreen 2s infinite;
         }
 
+        .status-finalizado {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.3), rgba(231, 76, 60, 0.3));
+            border-color: rgba(220, 53, 69, 0.5);
+        }
+
+        .status-proximamente {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 152, 0, 0.3));
+            border-color: rgba(255, 193, 7, 0.5);
+            animation: pulseYellow 2s infinite;
+        }
+
         @keyframes pulseGreen {
             0%, 100% { box-shadow: 0 0 20px rgba(40, 167, 69, 0.3); }
             50% { box-shadow: 0 0 30px rgba(40, 167, 69, 0.6); }
+        }
+
+        @keyframes pulseYellow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 193, 7, 0.6); }
         }
 
         /* RULETA PROFESIONAL CON DIVISIONES */
@@ -333,15 +397,33 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 24px;
+            font-size: 20px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .segment-inner:hover {
-            filter: brightness(1.2);
+        .segment-inner:hover:not(.occupied) {
+            filter: brightness(1.3);
+            transform: scale(1.02);
+        }
+
+        .segment-inner.occupied {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(0.7);
+        }
+
+        .segment-inner.verified {
+            border-color: var(--success);
+            box-shadow: inset 0 0 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .segment-inner.pending {
+            border-color: var(--warning);
+            box-shadow: inset 0 0 20px rgba(255, 193, 7, 0.3);
         }
 
         /* Colores de segmentos alternados */
@@ -382,7 +464,7 @@
         }
 
         .ruleta-center:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+            transform: translate(-50%, -50%) scale(1.05);
         }
 
         /* Puntero de la ruleta */
@@ -399,7 +481,7 @@
             z-index: 20;
             filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
             animation: pointerBounce 1s ease-in-out infinite;
-		}
+        }
 
         @keyframes pointerBounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
@@ -456,24 +538,24 @@
 
         /* Countdown Timer */
         .countdown {
-            font-size: 2.5em;
+            font-size: 2.2em;
             color: #FFD700;
             margin: 30px 0;
             padding: 20px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
             display: inline-block;
-            min-width: 300px;
+            min-width: 280px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             animation: countdownPulse 1s ease-in-out infinite;
+            border: 2px solid rgba(255, 215, 0, 0.3);
         }
 
         @keyframes countdownPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
         }
-
-        /* Winner Announcement */
+		/* Winner Announcement */
         .winner-announcement {
             background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(46, 204, 113, 0.3));
             border: 3px solid rgba(40, 167, 69, 0.6);
@@ -490,6 +572,23 @@
 
         .winner-announcement.show {
             display: block;
+            animation: winnerSlideIn 0.5s ease-out;
+        }
+
+        @keyframes winnerSlideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes winnerGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(40, 167, 69, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(40, 167, 69, 0.8); }
         }
 
         .winner-announcement::before {
@@ -505,6 +604,13 @@
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .winner-announcement h4 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: var(--primary-gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         /* Sidebar */
@@ -555,16 +661,19 @@
         .info-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
             padding: 12px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .info-item:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: translateX(5px);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .info-item span:first-child {
@@ -592,27 +701,31 @@
             color: #FFD700;
             margin-bottom: 15px;
             font-size: 1.3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .level-tier {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 12px;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .level-tier:hover {
             transform: scale(1.02);
             background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 215, 0, 0.3);
         }
 
         .level-tier.current {
             border: 2px solid var(--primary-gold);
-            background: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
         .level-name {
@@ -620,11 +733,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: white;
         }
 
         .level-benefits {
             font-size: 0.9em;
             color: rgba(255, 255, 255, 0.7);
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
 
         /* Participants List */
@@ -648,6 +765,10 @@
             border-radius: 10px;
         }
 
+        .participants-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.7);
+        }
+
         .participant {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             padding: 15px;
@@ -666,6 +787,7 @@
             transform: translateX(5px);
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
             border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .participant-info {
@@ -680,10 +802,12 @@
             border-radius: 10px;
             font-weight: bold;
             color: #FFD700;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .participant-name {
             font-weight: 500;
+            font-size: 1.1em;
         }
 
         .participant-level {
@@ -697,20 +821,25 @@
         }
 
         .participant-status {
-            padding: 5px 10px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 12px;
             font-size: 0.9em;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .status-verified {
             background: rgba(40, 167, 69, 0.3);
             color: #2ECC71;
+            border: 1px solid rgba(40, 167, 69, 0.5);
         }
 
         .status-pending {
             background: rgba(241, 196, 15, 0.3);
             color: #F1C40F;
+            border: 1px solid rgba(241, 196, 15, 0.5);
         }
 
         /* WhatsApp Buttons */
@@ -736,6 +865,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            border: 2px solid transparent;
         }
 
         .whatsapp-btn::before {
@@ -759,6 +889,11 @@
         .whatsapp-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .whatsapp-btn span:first-child {
+            font-size: 1.2em;
         }
 
         /* Modal */
@@ -821,6 +956,7 @@
             color: #333;
             font-size: 2em;
             margin-bottom: 10px;
+            text-shadow: none;
         }
 
         .modal-header .selected-number {
@@ -833,6 +969,7 @@
             font-weight: bold;
             margin-top: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
         /* Form Styles */
@@ -841,14 +978,13 @@
         }
 
         .form-group label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 10px;
             color: #333;
             font-weight: 600;
             font-size: 1.1em;
-            display: flex;
-            align-items: center;
-			gap: 8px;
         }
 
         .form-group input,
@@ -869,6 +1005,10 @@
             border-color: #FFD700;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
             transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
         }
 
         .phone-input {
@@ -928,6 +1068,16 @@
             transform: translateY(-3px);
         }
 
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #333;
@@ -944,10 +1094,18 @@
             box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
         }
 
+        .btn-cancel:hover {
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.5);
+        }
+
         .btn-submit {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
             box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
         }
 
         /* Results Panel */
@@ -1000,20 +1158,20 @@
 
         .results-table tbody tr:hover {
             background: rgba(255, 255, 255, 0.05);
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
 
         .winner-badge {
             display: inline-block;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #333;
-            padding: 3px 10px;
+            padding: 5px 12px;
             border-radius: 10px;
             font-size: 0.9em;
             font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-
-        /* Statistics Section */
+		/* Statistics Section */
         .stats-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1029,11 +1187,30 @@
             text-align: center;
             border: 2px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1), transparent);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
             border-color: var(--primary-gold);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .stat-number {
@@ -1041,12 +1218,16 @@
             font-weight: bold;
             color: #FFD700;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .stat-label {
             color: rgba(255, 255, 255, 0.8);
             margin-top: 10px;
             font-size: 1.1em;
+            position: relative;
+            z-index: 1;
         }
 
         /* Footer */
@@ -1057,6 +1238,7 @@
             border-radius: 30px 30px 0 0;
             margin-top: 50px;
             color: white;
+            backdrop-filter: blur(10px);
         }
 
         .footer-content {
@@ -1069,17 +1251,25 @@
             justify-content: center;
             gap: 30px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .footer-link {
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 8px;
         }
 
         .footer-link:hover {
             color: #FFD700;
             transform: translateY(-2px);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .footer p {
+            margin-bottom: 10px;
         }
 
         /* Toast Notifications */
@@ -1099,6 +1289,7 @@
             align-items: center;
             gap: 15px;
             max-width: 350px;
+            backdrop-filter: blur(20px);
         }
 
         .toast.show {
@@ -1107,6 +1298,20 @@
 
         .toast-icon {
             font-size: 1.5em;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .toast-message {
+            font-size: 0.9em;
+            opacity: 0.8;
         }
 
         .toast-success {
@@ -1133,6 +1338,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 3000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .loading-spinner.active {
@@ -1153,6 +1362,27 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Estado inactivo del sorteo */
+        .sorteo-no-activo {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sorteo-no-activo h3 {
+            color: #FFD700;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .sorteo-no-activo p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .main-content {
@@ -1171,9 +1401,24 @@
             .ruleta-container {
                 order: 1;
             }
+
+            .vip-status {
+                position: static;
+                margin: 0 auto 20px;
+                max-width: 350px;
+            }
+
+            .header {
+                text-align: center;
+                position: relative;
+            }
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
             .header h1 {
                 font-size: 2.5em;
             }
@@ -1182,15 +1427,49 @@
                 position: static;
                 margin: 20px auto;
                 max-width: 300px;
+                padding: 10px 15px;
+                gap: 10px;
+            }
+
+            .vip-level {
+                font-size: 1em;
+            }
+
+            .vip-progress {
+                width: 80px;
+                height: 5px;
+            }
+
+            .vip-points {
+                font-size: 0.8em;
             }
             
             .ruleta-wrapper {
                 width: 350px;
                 height: 350px;
             }
+
+            .ruleta-center {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
+            }
+
+            .segment-inner {
+                font-size: 18px;
+            }
             
             .stats-section {
                 grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2em;
             }
             
             .phone-input {
@@ -1200,11 +1479,36 @@
             .country-select {
                 width: 100%;
             }
+
+            .countdown {
+                font-size: 1.8em;
+                min-width: 250px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .benefit-item {
+                padding: 12px;
+            }
+
+            .benefit-icon {
+                font-size: 1.5em;
+                margin-bottom: 8px;
+            }
+
+            .toast {
+                max-width: 300px;
+                right: 15px;
+                top: 15px;
+            }
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 15px;
+                padding: 10px;
             }
             
             .header {
@@ -1214,19 +1518,57 @@
             .header h1 {
                 font-size: 2em;
             }
+
+            .vip-status {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+                padding: 15px;
+            }
+
+            .vip-progress {
+                width: 120px;
+            }
             
             .ruleta-wrapper {
                 width: 300px;
                 height: 300px;
+            }
+
+            .ruleta-center {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+
+            .segment-inner {
+                font-size: 16px;
             }
             
             .modal-content {
                 padding: 25px;
                 width: 95%;
             }
+
+            .modal-header h3 {
+                font-size: 1.5em;
+            }
+
+            .selected-number {
+                font-size: 1.2em !important;
+                padding: 8px 15px !important;
+            }
             
             .stats-section {
                 grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 1.8em;
             }
             
             .form-buttons {
@@ -1235,9 +1577,191 @@
             
             .btn {
                 width: 100%;
+                padding: 15px 25px;
+                font-size: 16px;
+            }
+
+            .countdown {
+                font-size: 1.5em;
+                min-width: 200px;
+                padding: 15px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .info-panel {
+                padding: 20px;
+            }
+
+            .levels-panel {
+                padding: 20px;
+            }
+
+            .participant {
+                padding: 12px;
+            }
+
+            .participant-info {
+                gap: 10px;
+            }
+
+            .participant-number {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+
+            .participant-name {
+                font-size: 1em;
+            }
+
+            .whatsapp-btn {
+                padding: 15px 20px;
+                font-size: 0.9em;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .toast {
+                max-width: 280px;
+                padding: 15px 20px;
+                right: 10px;
+                top: 10px;
+            }
+
+            .toast-icon {
+                font-size: 1.3em;
+            }
+
+            .loading-spinner {
+                padding: 20px;
+            }
+
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border-width: 4px;
             }
         }
-    </style>
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .modal-content {
+                background: linear-gradient(135deg, rgba(50, 50, 50, 0.95), rgba(40, 40, 40, 0.9));
+                color: white;
+            }
+
+            .modal-header h3 {
+                color: white;
+            }
+
+            .form-group label {
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            .form-group input,
+            .form-group select {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .form-group input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .vip-status,
+            .info-panel,
+            .stat-card {
+                border-width: 3px;
+            }
+
+            .btn {
+                border: 2px solid currentColor;
+            }
+
+            .participant,
+            .level-tier {
+                border-width: 2px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .particles,
+            .whatsapp-buttons,
+            .toast,
+            .loading-spinner,
+            .modal {
+                display: none !important;
+            }
+
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .header,
+            .results-panel,
+            .footer {
+                background: none !important;
+                box-shadow: none !important;
+                border: 1px solid #ccc;
+            }
+
+            * {
+                color: black !important;
+                background: white !important;
+            }
+        }
+
+        /* Focus management for accessibility */
+        .btn:focus,
+        .form-group input:focus,
+        .form-group select:focus,
+        .whatsapp-btn:focus,
+        .admin-menu-link:focus,
+        .vip-status:focus {
+            outline: 3px solid var(--primary-gold);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .header::before,
+            .stat-card::before,
+            .info-panel::before,
+            .particles,
+            .live-dot,
+            .ruleta-outer-ring {
+                animation: none !important;
+            }
+
+            .ruleta-spinning {
+                animation: none !important;
+                transform: rotate(360deg);
+            }
+        }
+		</style>
 </head>
 <body>
     <!-- Particles Background -->
@@ -1265,7 +1789,7 @@
                 <div class="vip-progress">
                     <div class="vip-progress-bar" id="vipProgressBar" style="width: 20%"></div>
                 </div>
-                <span id="userPoints">200/1000 pts</span>
+                <span class="vip-points" id="userPoints">200/1000 pts</span>
             </div>
             <h1>🎯 LaRuleta Premium 🎯</h1>
             <p>Sistema de Sorteos Exclusivo con Recompensas VIP</p>
@@ -1322,7 +1846,8 @@
                 <div class="stat-label">Próximo Sorteo</div>
             </div>
         </div>
-		<!-- Main Content -->
+
+        <!-- Main Content -->
         <div class="main-content">
             <!-- Ruleta Container -->
             <div class="ruleta-container">
@@ -1355,7 +1880,14 @@
 
                 <div id="sorteoInactivo" class="sorteo-no-activo" style="display: none;">
                     <h3>⏰ Próximo Sorteo</h3>
-                    <div id="proximoSorteo"></div>
+                    <div id="proximoSorteo">
+                        <p style="color: white; opacity: 0.8; font-size: 1.2em;">
+                            No hay sorteos activos en este momento.
+                        </p>
+                        <p style="color: #FFD700; margin-top: 15px; font-size: 1.1em;">
+                            ¡Mantente atento a nuestro canal de WhatsApp!
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -1364,35 +1896,35 @@
                 <!-- User Level Panel -->
                 <div class="levels-panel">
                     <h4>📊 Mi Nivel de Fidelidad</h4>
-                    <div class="level-tier current">
+                    <div class="level-tier current" id="currentLevelTier">
                         <div class="level-name">
                             <span>🥉</span>
                             <span>BRONCE</span>
                         </div>
                         <div class="level-benefits">5% desc.</div>
                     </div>
-                    <div class="level-tier">
+                    <div class="level-tier" id="silverTier">
                         <div class="level-name">
                             <span>🥈</span>
                             <span>PLATA</span>
                         </div>
                         <div class="level-benefits">1000 pts</div>
                     </div>
-                    <div class="level-tier">
+                    <div class="level-tier" id="goldTier">
                         <div class="level-name">
                             <span>🥇</span>
                             <span>ORO</span>
                         </div>
                         <div class="level-benefits">5000 pts</div>
                     </div>
-                    <div class="level-tier">
+                    <div class="level-tier" id="platinumTier">
                         <div class="level-name">
                             <span>💎</span>
                             <span>PLATINO</span>
                         </div>
                         <div class="level-benefits">10000 pts</div>
                     </div>
-                    <div class="level-tier">
+                    <div class="level-tier" id="diamondTier">
                         <div class="level-name">
                             <span>💠</span>
                             <span>DIAMANTE</span>
@@ -1436,11 +1968,11 @@
 
                 <!-- WhatsApp Buttons -->
                 <div class="whatsapp-buttons">
-                    <a href="https://wa.me/584129745777" class="whatsapp-btn" target="_blank">
+                    <a href="https://wa.me/584129745777" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
                         <span>💬</span>
                         <span>Soporte WhatsApp</span>
                     </a>
-                    <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" class="whatsapp-btn" target="_blank">
+                    <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
                         <span>📢</span>
                         <span>Canal de Noticias</span>
                     </a>
@@ -1463,7 +1995,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="5" style="text-align: center; opacity: 0.7;">Cargando resultados...</td>
+                        <td colspan="5" style="text-align: center; opacity: 0.7;">
+                            Cargando resultados...
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -1477,13 +2011,23 @@
                 <h3>Seleccionar Número</h3>
                 <div class="selected-number" id="numeroSeleccionado">#--</div>
             </div>
-            <form id="participantForm">
+            <form id="participantForm" novalidate>
                 <div class="form-group">
                     <label>
                         <span>👤</span>
                         <span>Nombre Completo</span>
                     </label>
-                    <input type="text" id="nombreCompleto" required placeholder="Juan Pérez">
+                    <input 
+                        type="text" 
+                        id="nombreCompleto" 
+                        required 
+                        placeholder="Juan Pérez"
+                        minlength="2"
+                        maxlength="50"
+                        pattern="[A-Za-zÀ-ÿ\s]+"
+                        title="Solo se permiten letras y espacios"
+                    >
+                    <div class="error-message" id="nombreError"></div>
                 </div>
                 <div class="form-group">
                     <label>
@@ -1500,19 +2044,42 @@
                             <option value="+54">🇦🇷 +54</option>
                             <option value="+56">🇨🇱 +56</option>
                         </select>
-                        <input type="tel" id="numeroTelefono" class="phone-number-input" required placeholder="4121234567">
+                        <input 
+                            type="tel" 
+                            id="numeroTelefono" 
+                            class="phone-number-input" 
+                            required 
+                            placeholder="4121234567"
+                            pattern="[0-9]{7,15}"
+                            title="Solo números, entre 7 y 15 dígitos"
+                        >
                     </div>
+                    <div class="error-message" id="telefonoError"></div>
                 </div>
                 <div class="form-group">
                     <label>
                         <span>💳</span>
                         <span>Referencia del Pago (últimos 6 dígitos)</span>
                     </label>
-                    <input type="text" id="codigoReferencia" required placeholder="123456" maxlength="6">
+                    <input 
+                        type="text" 
+                        id="codigoReferencia" 
+                        required 
+                        placeholder="123456" 
+                        maxlength="6"
+                        minlength="6"
+                        pattern="[0-9]{6}"
+                        title="Exactamente 6 dígitos numéricos"
+                    >
+                    <div class="error-message" id="referenciaError"></div>
                 </div>
                 <div class="form-buttons">
-                    <button type="button" class="btn btn-cancel" onclick="cerrarModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-submit">Confirmar Participación</button>
+                    <button type="button" class="btn btn-cancel" onclick="cerrarModal()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-submit" id="submitBtn">
+                        Confirmar Participación
+                    </button>
                 </div>
             </form>
         </div>
@@ -1524,6 +2091,7 @@
                 <a href="#" class="footer-link">Términos y Condiciones</a>
                 <a href="#" class="footer-link">Política de Privacidad</a>
                 <a href="#" class="footer-link">Contacto</a>
+                <a href="#" class="footer-link">Ayuda</a>
             </div>
             <p>&copy; 2025 GStar INK. Todos los derechos reservados.</p>
             <p style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
@@ -1536,7 +2104,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
-        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDH0eto3duCUC3y2VF-5NJiq70i8OLOXSY",
@@ -1558,10 +2126,33 @@
         let numeroSeleccionado = null;
         let ruletaGirando = false;
         let userInfo = null;
+        let countdownInterval = null;
+
+        // Error messages in Spanish
+        const errorMessages = {
+            nombre: {
+                valueMissing: 'El nombre es obligatorio',
+                tooShort: 'El nombre debe tener al menos 2 caracteres',
+                tooLong: 'El nombre no puede tener más de 50 caracteres',
+                patternMismatch: 'Solo se permiten letras y espacios'
+            },
+            telefono: {
+                valueMissing: 'El teléfono es obligatorio',
+                patternMismatch: 'El teléfono debe tener entre 7 y 15 dígitos'
+            },
+            referencia: {
+                valueMissing: 'La referencia de pago es obligatoria',
+                tooShort: 'La referencia debe tener exactamente 6 dígitos',
+                tooLong: 'La referencia debe tener exactamente 6 dígitos',
+                patternMismatch: 'La referencia debe contener solo números'
+            }
+        };
 
         // Initialize particles
         function createParticles() {
             const particles = document.getElementById('particles');
+            particles.innerHTML = ''; // Clear existing particles
+            
             for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -1598,7 +2189,48 @@
             }, 5000);
         }
 
-        // Toggle VIP Benefits Panel
+        // Form validation
+        function validateField(field) {
+            const fieldName = field.id.replace(/([A-Z])/g, ' $1').toLowerCase();
+            const errorDiv = document.getElementById(field.id.replace('numero', '').replace('codigo', 'referencia').replace('Completo', '') + 'Error');
+            
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            }
+
+            if (field.validity.valid) {
+                field.style.borderColor = '#28a745';
+                return true;
+            } else {
+                field.style.borderColor = '#dc3545';
+                
+                let errorMessage = '';
+                const fieldType = field.id.includes('nombre') ? 'nombre' : 
+                                field.id.includes('telefono') ? 'telefono' : 'referencia';
+                
+                if (field.validity.valueMissing) {
+                    errorMessage = errorMessages[fieldType].valueMissing;
+                } else if (field.validity.tooShort) {
+                    errorMessage = errorMessages[fieldType].tooShort;
+                } else if (field.validity.tooLong) {
+                    errorMessage = errorMessages[fieldType].tooLong;
+                } else if (field.validity.patternMismatch) {
+                    errorMessage = errorMessages[fieldType].patternMismatch;
+                }
+
+                if (errorDiv && errorMessage) {
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.style.display = 'block';
+                    errorDiv.style.color = '#dc3545';
+                    errorDiv.style.fontSize = '0.9em';
+                    errorDiv.style.marginTop = '5px';
+                }
+                
+                return false;
+            }
+        }
+		// Toggle VIP Benefits Panel
         window.toggleVipBenefits = function() {
             const panel = document.getElementById('vipBenefits');
             panel.classList.toggle('active');
@@ -1608,8 +2240,6 @@
         function initializeUserLevel() {
             const userId = localStorage.getItem('userId') || generateUserId();
             localStorage.setItem('userId', userId);
-            
-            // Load user data from Firebase
             loadUserData(userId);
         }
 
@@ -1619,9 +2249,11 @@
 
         async function loadUserData(userId) {
             try {
-                const userDoc = await getDocs(query(collection(db, 'users'), where('userId', '==', userId)));
+                const userQuery = query(collection(db, 'users'), where('userId', '==', userId));
+                const userDoc = await getDocs(userQuery);
+                
                 if (!userDoc.empty) {
-                    userInfo = userDoc.docs[0].data();
+                    userInfo = { id: userDoc.docs[0].id, ...userDoc.docs[0].data() };
                     updateUserLevelDisplay();
                 } else {
                     // Create new user
@@ -1630,12 +2262,16 @@
                         points: 0,
                         level: 'bronze',
                         totalParticipations: 0,
+                        wins: 0,
                         createdAt: new Date()
                     };
-                    await addDoc(collection(db, 'users'), userInfo);
+                    const docRef = await addDoc(collection(db, 'users'), userInfo);
+                    userInfo.id = docRef.id;
+                    updateUserLevelDisplay();
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
+                showToast('Error', 'No se pudo cargar la información del usuario', 'error');
             }
         }
 
@@ -1651,20 +2287,41 @@
             };
             
             const currentLevel = levels[userInfo.level] || levels.bronze;
-            const progress = ((userInfo.points - currentLevel.min) / (currentLevel.max - currentLevel.min)) * 100;
+            const progress = currentLevel.max === Infinity ? 100 : 
+                ((userInfo.points - currentLevel.min) / (currentLevel.max - currentLevel.min)) * 100;
             
             document.getElementById('userLevel').textContent = currentLevel.name;
             document.getElementById('userLevel').className = `vip-level ${currentLevel.class}`;
-            document.getElementById('vipProgressBar').style.width = Math.min(progress, 100) + '%';
-            document.getElementById('userPoints').textContent = `${userInfo.points}/${currentLevel.max} pts`;
+            document.getElementById('vipProgressBar').style.width = Math.min(Math.max(progress, 0), 100) + '%';
+            
+            const maxPoints = currentLevel.max === Infinity ? '∞' : currentLevel.max;
+            document.getElementById('userPoints').textContent = `${userInfo.points}/${maxPoints} pts`;
+            
+            // Update level tiers display
+            updateLevelTiersDisplay();
+        }
+
+        function updateLevelTiersDisplay() {
+            if (!userInfo) return;
+            
+            const tiers = ['currentLevelTier', 'silverTier', 'goldTier', 'platinumTier', 'diamondTier'];
+            const levels = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
+            
+            tiers.forEach((tierId, index) => {
+                const tierElement = document.getElementById(tierId);
+                if (tierElement) {
+                    tierElement.classList.toggle('current', levels[index] === userInfo.level);
+                }
+            });
         }
 
         // Generate ruleta segments
         function generarRuleta() {
-            if (!sorteoActual)return;
+            if (!sorteoActual) return;
             
             const ruleta = document.getElementById('ruleta');
-            ruleta.innerHTML = '';
+            const existingSegments = ruleta.querySelectorAll('.ruleta-segment');
+            existingSegments.forEach(segment => segment.remove());
             
             const cantidad = sorteoActual.cantidadNumeros;
             const angleStep = 360 / cantidad;
@@ -1688,19 +2345,25 @@
                 numberDisplay.style.transform = 'translate(-50%, -50%) rotate(' + (-(i - 1) * angleStep - angleStep / 2) + 'deg)';
                 numberDisplay.style.fontSize = '20px';
                 numberDisplay.style.fontWeight = 'bold';
+                numberDisplay.textContent = i;
                 
-                if (participantesData[i] && participantesData[i].verificado) {
-                    numberDisplay.textContent = i;
-                    inner.style.opacity = '0.7';
+                const participantData = participantesData[i];
+                
+                if (participantData?.verificado) {
+                    inner.classList.add('occupied', 'verified');
                     inner.style.cursor = 'not-allowed';
-                } else if (participantesData[i]) {
-                    numberDisplay.textContent = i;
-                    inner.style.opacity = '0.8';
+                    inner.title = `Número ocupado por ${participantData.nombre} (Verificado)`;
+                } else if (participantData) {
+                    inner.classList.add('occupied', 'pending');
                     inner.style.cursor = 'not-allowed';
+                    inner.title = `Número reservado por ${participantData.nombre} (Pendiente de verificación)`;
                 } else {
-                    numberDisplay.textContent = i;
-                    if (sorteoActual.estado === 'activo') {
+                    if (sorteoActual.estado === 'activo' || sorteoActual.estado === 'configurado') {
                         inner.onclick = () => seleccionarNumero(i);
+                        inner.title = `Seleccionar número ${i}`;
+                    } else {
+                        inner.style.cursor = 'not-allowed';
+                        inner.title = 'Sorteo no disponible para participar';
                     }
                 }
                 
@@ -1708,17 +2371,6 @@
                 segment.appendChild(inner);
                 ruleta.appendChild(segment);
             }
-            
-            // Add pointer and center
-            const pointer = document.createElement('div');
-            pointer.className = 'ruleta-pointer';
-            ruleta.appendChild(pointer);
-            
-            const center = document.createElement('div');
-            center.className = 'ruleta-center';
-            center.id = 'ruletaCenter';
-            center.textContent = '🎯';
-            ruleta.appendChild(center);
         }
 
         // Select number
@@ -1727,10 +2379,20 @@
                 showToast('Número Ocupado', 'Este número ya está reservado', 'warning');
                 return;
             }
+
+            if (!sorteoActual || (sorteoActual.estado !== 'activo' && sorteoActual.estado !== 'configurado')) {
+                showToast('Sorteo No Disponible', 'El sorteo no está disponible para participar', 'warning');
+                return;
+            }
             
             numeroSeleccionado = numero;
             document.getElementById('numeroSeleccionado').textContent = `#${numero}`;
             document.getElementById('numeroModal').classList.add('active');
+            
+            // Focus on first input
+            setTimeout(() => {
+                document.getElementById('nombreCompleto').focus();
+            }, 300);
         }
 
         // Close modal
@@ -1738,6 +2400,18 @@
             document.getElementById('numeroModal').classList.remove('active');
             document.getElementById('participantForm').reset();
             numeroSeleccionado = null;
+            
+            // Clear validation styles
+            const inputs = document.querySelectorAll('#participantForm input');
+            inputs.forEach(input => {
+                input.style.borderColor = '#ddd';
+            });
+            
+            // Clear error messages
+            const errorDivs = document.querySelectorAll('.error-message');
+            errorDivs.forEach(div => {
+                div.style.display = 'none';
+            });
         }
 
         // Initialize app
@@ -1745,6 +2419,7 @@
             createParticles();
             initializeUserLevel();
             inicializarApp();
+            setupFormValidation();
         });
 
         function inicializarApp() {
@@ -1764,6 +2439,9 @@
                 } else {
                     mostrarSorteoInactivo();
                 }
+            }, (error) => {
+                console.error('Error listening to sorteo:', error);
+                showToast('Error de Conexión', 'No se pudo conectar con el servidor', 'error');
             });
 
             // Listen to participants
@@ -1781,6 +2459,8 @@
                 actualizarParticipantes();
                 actualizarInfoPanel();
                 generarRuleta();
+            }, (error) => {
+                console.error('Error listening to participants:', error);
             });
 
             // Listen to results
@@ -1796,6 +2476,8 @@
                 });
                 cargarResultados(resultados);
                 actualizarEstadisticas(resultados);
+            }, (error) => {
+                console.error('Error listening to results:', error);
             });
         }
 
@@ -1805,7 +2487,7 @@
             document.getElementById('ruleta').classList.add('ruleta-spinning');
             document.getElementById('statusTitle').textContent = '🎲 ¡Sorteo en Vivo!';
             document.getElementById('statusDescription').textContent = 'La ruleta está girando...';
-            showToast('Sorteo en Vivo', '¡La ruleta está girando!', 'info');
+            showToast('Sorteo en Vivo', 'La ruleta está girando...', 'info');
         }
 
         function detenerRuleta() {
@@ -1819,12 +2501,16 @@
         }
 
         function mostrarGanador() {
-            document.getElementById('winnerAnnouncement').classList.add('show');
-            document.getElementById('winnerText').innerHTML = `
+            const winnerElement = document.getElementById('winnerAnnouncement');
+            const winnerText = document.getElementById('winnerText');
+            
+            winnerText.innerHTML = `
                 <strong style="font-size: 1.5em;">${sorteoActual.ganadorNombre}</strong><br>
                 <span style="font-size: 1.2em;">Número Ganador: #${sorteoActual.ganadorNumero}</span><br>
                 <span style="font-size: 1.3em; color: #FFD700;">Premio: $${sorteoActual.premio} USD</span>
             `;
+            
+            winnerElement.classList.add('show');
             showToast('¡Tenemos Ganador!', `${sorteoActual.ganadorNombre} ha ganado $${sorteoActual.premio} USD`, 'success');
         }
 
@@ -1835,23 +2521,53 @@
             const ahora = new Date();
             const fechaSorteo = new Date(`${sorteoActual.fecha}T${sorteoActual.hora}`);
 
+            // Clear previous countdown
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+
             if (sorteoActual.estado === 'finalizado') {
                 statusElement.className = 'sorteo-status status-finalizado';
                 document.getElementById('statusTitle').textContent = '🏆 Sorteo Finalizado';
                 document.getElementById('statusDescription').textContent = `Ganador: ${sorteoActual.ganador || 'Por anunciar'}`;
                 
-                if (sorteoActual.ganador) {
+                const countdownElement = document.getElementById('countdown');
+                countdownElement.innerHTML = '🎉 ¡Sorteo Finalizado!';
+                
+                if (sorteoActual.ganador && !document.getElementById('winnerAnnouncement').classList.contains('show')) {
                     mostrarGanador();
                 }
-            } else if (ahora < fechaSorteo) {
-                statusElement.className = 'sorteo-status status-activo';
-                document.getElementById('statusTitle').textContent = '🔥 Sorteo Activo';
-                document.getElementById('statusDescription').textContent = '¡Selecciona tu número de la suerte!';
-                iniciarCountdown(fechaSorteo);
+            } else if (sorteoActual.estado === 'activo' || sorteoActual.estado === 'configurado') {
+                if (ahora < fechaSorteo) {
+                    statusElement.className = 'sorteo-status status-activo';
+                    document.getElementById('statusTitle').textContent = '🔥 Sorteo Activo';
+                    document.getElementById('statusDescription').textContent = '¡Selecciona tu número de la suerte!';
+                    iniciarCountdown(fechaSorteo);
+                } else {
+                    statusElement.className = 'sorteo-status status-proximamente';
+                    document.getElementById('statusTitle').textContent = '⏰ Sorteo en Proceso';
+                    document.getElementById('statusDescription').textContent = 'El sorteo está siendo realizado';
+                    
+                    const countdownElement = document.getElementById('countdown');
+                    countdownElement.innerHTML = '🎲 ¡Sorteo en proceso!';
+                }
             } else {
                 statusElement.className = 'sorteo-status status-proximamente';
-                document.getElementById('statusTitle').textContent = '⏰ Sorteo en Proceso';
-                document.getElementById('statusDescription').textContent = 'El sorteo está siendo realizado';
+                document.getElementById('statusTitle').textContent = '⏰ Próximamente';
+                document.getElementById('statusDescription').textContent = 'Esperando configuración del sorteo';
+            }
+
+            // Show/hide appropriate sections
+            const sorteoActivo = document.getElementById('sorteoActivo');
+            const sorteoInactivo = document.getElementById('sorteoInactivo');
+            
+            if (sorteoActual.estado && sorteoActual.estado !== 'inactivo') {
+                sorteoActivo.style.display = 'block';
+                sorteoInactivo.style.display = 'none';
+            } else {
+                sorteoActivo.style.display = 'none';
+                sorteoInactivo.style.display = 'block';
             }
 
             actualizarInfoPanel();
@@ -1861,10 +2577,8 @@
         function mostrarSorteoInactivo() {
             document.getElementById('sorteoActivo').style.display = 'none';
             document.getElementById('sorteoInactivo').style.display = 'block';
-            document.getElementById('proximoSorteo').innerHTML = `
-                <p style="color: white; opacity: 0.8; font-size: 1.2em;">No hay sorteos activos en este momento.</p>
-                <p style="color: #FFD700; margin-top: 15px; font-size: 1.1em;">¡Mantente atento a nuestro canal de WhatsApp!</p>
-            `;
+            document.getElementById('statusTitle').textContent = '⏰ Sin Sorteo Activo';
+            document.getElementById('statusDescription').textContent = 'No hay sorteos disponibles en este momento';
         }
 
         function iniciarCountdown(fechaObjetivo) {
@@ -1887,36 +2601,62 @@
                     
                     countdownElement.innerHTML = countdownText;
                 } else {
-                    countdownElement.innerHTML = '🎲 ¡Sorteo en proceso!';
+                    countdownElement.innerHTML = '🎲 ¡Sorteo disponible!';
+                    if (countdownInterval) {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                    }
                 }
             }
 
             actualizarCountdown();
-            setInterval(actualizarCountdown, 1000);
+            countdownInterval = setInterval(actualizarCountdown, 1000);
         }
 
         function actualizarInfoPanel() {
-            if (!sorteoActual) return;
+            if (!sorteoActual) {
+                document.getElementById('infoPremio').textContent = '$-- USD';
+                document.getElementById('infoCosto').textContent = '$10 USD';
+                document.getElementById('infoDisponibles').textContent = '--/--';
+                document.getElementById('infoFecha').textContent = '--';
+                document.getElementById('infoHora').textContent = '--';
+                return;
+            }
 
-            document.getElementById('infoPremio').textContent = `$${sorteoActual.premio} USD`;
+            document.getElementById('infoPremio').textContent = `$${sorteoActual.premio || 0} USD`;
             
             // Apply user discount
             let costo = 10;
             if (userInfo) {
-                const discounts = { bronze: 0.95, silver: 0.90, gold: 0.85, platinum: 0.80, diamond: 0.75 };
+                const discounts = { 
+                    bronze: 0.95, 
+                    silver: 0.90, 
+                    gold: 0.85, 
+                    platinum: 0.80, 
+                    diamond: 0.75 
+                };
                 costo = costo * (discounts[userInfo.level] || 1);
             }
             document.getElementById('infoCosto').textContent = `$${costo.toFixed(2)} USD`;
             
+            const totalParticipantes = Object.keys(participantesData).length;
             const verificados = Object.values(participantesData).filter(p => p.verificado).length;
-            const disponibles = sorteoActual.cantidadNumeros - verificados;
-            document.getElementById('infoDisponibles').textContent = `${disponibles}/${sorteoActual.cantidadNumeros}`;
+            const disponibles = (sorteoActual.cantidadNumeros || 0) - verificados;
+            document.getElementById('infoDisponibles').textContent = `${disponibles}/${sorteoActual.cantidadNumeros || 0}`;
             
-            document.getElementById('infoFecha').textContent = new Date(sorteoActual.fecha).toLocaleDateString('es-ES');
-            document.getElementById('infoHora').textContent = sorteoActual.hora;
+            if (sorteoActual.fecha) {
+                try {
+                    document.getElementById('infoFecha').textContent = new Date(sorteoActual.fecha).toLocaleDateString('es-ES');
+                } catch (e) {
+                    document.getElementById('infoFecha').textContent = sorteoActual.fecha;
+                }
+            } else {
+                document.getElementById('infoFecha').textContent = '--';
+            }
+            
+            document.getElementById('infoHora').textContent = sorteoActual.hora || '--';
         }
-
-        function actualizarParticipantes() {
+		function actualizarParticipantes() {
             const container = document.getElementById('participantes');
             const participantes = Object.entries(participantesData);
             
@@ -1924,6 +2664,9 @@
                 container.innerHTML = '<p style="color: white; opacity: 0.7;">No hay participantes aún</p>';
                 return;
             }
+
+            // Sort participants by number
+            participantes.sort(([a], [b]) => parseInt(a) - parseInt(b));
 
             container.innerHTML = participantes
                 .map(([numero, data]) => `
@@ -1947,17 +2690,30 @@
                 return;
             }
 
-            tbody.innerHTML = resultados.map(resultado => `
-                <tr>
-                    <td>${new Date(resultado.fecha).toLocaleDateString('es-ES')}</td>
-                    <td>${resultado.hora}</td>
-                    <td>
-                        <span class="winner-badge">${resultado.ganadorNombre}</span>
-                    </td>
-                    <td>#${resultado.ganadorNumero}</td>
-                    <td style="color: #FFD700; font-weight: bold;">$${resultado.premio}</td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = resultados.map(resultado => {
+                let fecha = '--';
+                try {
+                    if (resultado.timestamp && resultado.timestamp.seconds) {
+                        fecha = new Date(resultado.timestamp.seconds * 1000).toLocaleDateString('es-ES');
+                    } else if (resultado.fecha) {
+                        fecha = new Date(resultado.fecha).toLocaleDateString('es-ES');
+                    }
+                } catch (e) {
+                    fecha = resultado.fecha || '--';
+                }
+
+                return `
+                    <tr>
+                        <td>${fecha}</td>
+                        <td>${resultado.hora || '--'}</td>
+                        <td>
+                            <span class="winner-badge">${resultado.ganadorNombre || 'N/A'}</span>
+                        </td>
+                        <td>#${resultado.ganadorNumero || '--'}</td>
+                        <td style="color: #FFD700; font-weight: bold;">$${resultado.premio || 0}</td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function actualizarEstadisticas(resultados) {
@@ -1971,22 +2727,78 @@
             
             if (sorteoActual && sorteoActual.hora) {
                 document.getElementById('proximoSorteoTime').textContent = sorteoActual.hora;
+            } else {
+                document.getElementById('proximoSorteoTime').textContent = '--:--';
             }
+        }
+
+        // Form validation setup
+        function setupFormValidation() {
+            const form = document.getElementById('participantForm');
+            const inputs = form.querySelectorAll('input[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => validateField(input));
+                input.addEventListener('input', () => {
+                    if (input.classList.contains('invalid')) {
+                        validateField(input);
+                    }
+                });
+            });
         }
 
         // Handle form submission
         document.getElementById('participantForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const nombre = document.getElementById('nombreCompleto').value;
+            // Validate all fields
+            const form = e.target;
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                    input.classList.add('invalid');
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Formulario Incompleto', 'Por favor corrige los errores indicados', 'error');
+                return;
+            }
+            
+            const nombre = document.getElementById('nombreCompleto').value.trim();
             const codigoPais = document.getElementById('codigoPais').value;
-            const telefono = document.getElementById('numeroTelefono').value;
-            const referencia = document.getElementById('codigoReferencia').value;
+            const telefono = document.getElementById('numeroTelefono').value.trim();
+            const referencia = document.getElementById('codigoReferencia').value.trim();
+            
+            // Additional validations
+            if (nombre.length < 2) {
+                showToast('Error', 'El nombre debe tener al menos 2 caracteres', 'error');
+                return;
+            }
+            
+            if (!/^\d{7,15}$/.test(telefono)) {
+                showToast('Error', 'El teléfono debe tener entre 7 y 15 dígitos', 'error');
+                return;
+            }
+            
+            if (!/^\d{6}$/.test(referencia)) {
+                showToast('Error', 'La referencia debe tener exactamente 6 dígitos', 'error');
+                return;
+            }
 
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando...';
             document.getElementById('loadingSpinner').classList.add('active');
 
             try {
-                await addDoc(collection(db, 'participantes'), {
+                // Create participant document
+                const participantData = {
                     sorteoId: 'activo',
                     numeroSeleccionado: numeroSeleccionado,
                     nombre: nombre,
@@ -1994,39 +2806,179 @@
                     codigoReferencia: referencia,
                     verificado: false,
                     timestamp: new Date(),
-                    userId: localStorage.getItem('userId')
-                });
+                    userId: localStorage.getItem('userId'),
+                    userLevel: userInfo?.level || 'bronze'
+                };
 
-                // Award points to user
-                if (userInfo) {
-                    userInfo.points += 100;
-                    userInfo.totalParticipations += 1;
+                await addDoc(collection(db, 'participantes'), participantData);
+
+                // Update user points and stats
+                if (userInfo && userInfo.id) {
+                    const newPoints = userInfo.points + 100;
+                    const newLevel = calculateUserLevel(newPoints);
+                    
+                    await updateDoc(doc(db, 'users', userInfo.id), {
+                        points: newPoints,
+                        level: newLevel,
+                        totalParticipations: (userInfo.totalParticipations || 0) + 1,
+                        lastParticipation: new Date()
+                    });
+                    
+                    // Update local user info
+                    userInfo.points = newPoints;
+                    userInfo.level = newLevel;
+                    userInfo.totalParticipations = (userInfo.totalParticipations || 0) + 1;
                     updateUserLevelDisplay();
+                    
+                    if (newLevel !== userInfo.level) {
+                        showToast('¡Nivel VIP Mejorado!', `Has alcanzado el nivel ${newLevel.toUpperCase()}`, 'success');
+                    }
                 }
 
                 cerrarModal();
-                showToast('¡Éxito!', `Número ${numeroSeleccionado} reservado para ${nombre}`, 'success');
+                showToast('¡Participación Exitosa!', `Número ${numeroSeleccionado} reservado para ${nombre}`, 'success');
 
-                // Open WhatsApp
-                const mensaje = `🎯 NUEVA PARTICIPACIÓN - LaRuleta Premium\n\n👤 Participante: ${nombre}\n🎲 Número: #${numeroSeleccionado}\n📱 Teléfono: ${codigoPais} ${telefono}\n💳 Referencia: ${referencia}\n\nPor favor verificar el pago.`;
-                window.open(`https://wa.me/584129745777?text=${encodeURIComponent(mensaje)}`, '_blank');
+                // Open WhatsApp with participation details
+                const mensaje = encodeURIComponent(
+                    `🎯 NUEVA PARTICIPACIÓN - LaRuleta Premium\n\n` +
+                    `👤 Participante: ${nombre}\n` +
+                    `🎲 Número: #${numeroSeleccionado}\n` +
+                    `📱 Teléfono: ${codigoPais} ${telefono}\n` +
+                    `💳 Referencia: ${referencia}\n` +
+                    `⭐ Nivel VIP: ${(userInfo?.level || 'bronze').toUpperCase()}\n\n` +
+                    `Por favor verificar el pago para confirmar la participación.`
+                );
+                
+                // Delay to show success message first
+                setTimeout(() => {
+                    window.open(`https://wa.me/584129745777?text=${mensaje}`, '_blank');
+                }, 1000);
 
             } catch (error) {
-                console.error('Error:', error);
-                showToast('Error', 'No se pudo registrar la participación', 'error');
+                console.error('Error al registrar participación:', error);
+                let errorMessage = 'No se pudo registrar la participación';
+                
+                if (error.code === 'permission-denied') {
+                    errorMessage = 'No tienes permisos para participar';
+                } else if (error.code === 'unavailable') {
+                    errorMessage = 'Servicio temporalmente no disponible';
+                }
+                
+                showToast('Error', errorMessage, 'error');
             } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
                 document.getElementById('loadingSpinner').classList.remove('active');
             }
         });
 
+        // Calculate user level based on points
+        function calculateUserLevel(points) {
+            if (points >= 20000) return 'diamond';
+            if (points >= 10000) return 'platinum';
+            if (points >= 5000) return 'gold';
+            if (points >= 1000) return 'silver';
+            return 'bronze';
+        }
+
         // Modal close on outside click
-        window.onclick = function(event) {
+        window.addEventListener('click', function(event) {
             const modal = document.getElementById('numeroModal');
             if (event.target === modal) {
                 cerrarModal();
             }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('numeroModal');
+            
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                cerrarModal();
+            }
+            
+            // Tab navigation within modal
+            if (e.key === 'Tab' && modal.classList.contains('active')) {
+                const focusableElements = modal.querySelectorAll('input, select, button');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (e.shiftKey && document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                } else if (!e.shiftKey && document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        });
+
+        // Performance optimization: Debounce particle creation
+        let particleTimeout;
+        function recreateParticles() {
+            if (particleTimeout) clearTimeout(particleTimeout);
+            particleTimeout = setTimeout(createParticles, 100);
         }
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            recreateParticles();
+            
+            // Adjust countdown font size on mobile
+            const countdown = document.getElementById('countdown');
+            if (countdown && window.innerWidth <= 480) {
+                countdown.style.fontSize = '1.5em';
+                countdown.style.minWidth = '200px';
+            } else if (countdown) {
+                countdown.style.fontSize = '2.2em';
+                countdown.style.minWidth = '280px';
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+        });
+
+        // Service worker registration for PWA capabilities
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // Only register if we have a service worker file
+                // navigator.serviceWorker.register('/sw.js')
+                //     .then(registration => console.log('SW registered'))
+                //     .catch(error => console.log('SW registration failed'));
+            });
+        }
+
+        // Online/offline status
+        window.addEventListener('online', function() {
+            showToast('Conexión Restaurada', 'Ya estás conectado nuevamente', 'success');
+        });
+
+        window.addEventListener('offline', function() {
+            showToast('Sin Conexión', 'Verifica tu conexión a internet', 'warning');
+        });
+
+        // Console welcome message
+        console.log('%c🎯 LaRuleta Premium', 'color: #FFD700; font-size: 20px; font-weight: bold;');
+        console.log('%cSistema de sorteos premium cargado correctamente', 'color: #28a745; font-size: 14px;');
+        console.log('%cDesarrollado por GStar INK', 'color: #17a2b8; font-size: 12px;');
+        
+        // Debug helpers (only in development)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            window.debugRuleta = {
+                sorteoActual,
+                participantesData,
+                userInfo,
+                showToast,
+                generarRuleta,
+                actualizarInterfazSorteo
+            };
+            console.log('%cModo debug activado. Usa window.debugRuleta para herramientas de desarrollo.', 'color: #ffc107;');
+        }
+
     </script>
 </body>
 </html>
-			
