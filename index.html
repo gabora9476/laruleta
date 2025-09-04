@@ -426,6 +426,20 @@
             box-shadow: inset 0 0 20px rgba(255, 193, 7, 0.3);
         }
 
+        /* Números visibles en segmentos */
+        .segment-number {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
+            z-index: 5;
+            pointer-events: none;
+        }
+
         /* Colores de segmentos alternados */
         .segment-red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
         .segment-black { background: linear-gradient(135deg, #2c3e50, #1a1a1a); }
@@ -555,7 +569,8 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
         }
-		/* Winner Announcement */
+
+        /* Winner Announcement */
         .winner-announcement {
             background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(46, 204, 113, 0.3));
             border: 3px solid rgba(40, 167, 69, 0.6);
@@ -841,8 +856,7 @@
             color: #F1C40F;
             border: 1px solid rgba(241, 196, 15, 0.5);
         }
-
-        /* WhatsApp Buttons */
+		        /* WhatsApp Buttons */
         .whatsapp-buttons {
             display: flex;
             flex-direction: column;
@@ -1011,19 +1025,32 @@
             color: rgba(0, 0, 0, 0.4);
         }
 
-        .phone-input {
-            display: flex;
-            gap: 10px;
-            align-items: stretch;
+        /* Campo de teléfono simplificado */
+        .phone-input-wrapper {
+            position: relative;
         }
 
-        .country-select {
-            width: 110px;
-            flex-shrink: 0;
+        .phone-input-wrapper input {
+            padding-left: 50px;
         }
 
-        .phone-number-input {
-            flex: 1;
+        .phone-prefix {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Error messages */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
         }
 
         /* Form Buttons */
@@ -1260,6 +1287,7 @@
             transition: all 0.3s ease;
             padding: 5px 10px;
             border-radius: 8px;
+            cursor: pointer;
         }
 
         .footer-link:hover {
@@ -1270,6 +1298,125 @@
 
         .footer p {
             margin-bottom: 10px;
+        }
+
+        /* Footer Modals */
+        .footer-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .footer-modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+            position: relative;
+            color: #333;
+        }
+
+        .footer-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .footer-modal-header h2 {
+            color: #333;
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #FFD700;
+        }
+
+        .footer-modal-content h3 {
+            color: #FFD700;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .footer-modal-content p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .footer-modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .footer-modal-content li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        /* Contact Info Styles */
+        .contact-info {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .contact-phone {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #25D366;
+            margin: 10px 0;
+        }
+
+        .contact-whatsapp-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .contact-whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
         }
 
         /* Toast Notifications */
@@ -1458,6 +1605,10 @@
             .segment-inner {
                 font-size: 18px;
             }
+
+            .segment-number {
+                font-size: 20px;
+            }
             
             .stats-section {
                 grid-template-columns: 1fr 1fr;
@@ -1472,12 +1623,8 @@
                 font-size: 2em;
             }
             
-            .phone-input {
-                flex-direction: column;
-            }
-            
-            .country-select {
-                width: 100%;
+            .phone-input-wrapper input {
+                padding-left: 45px;
             }
 
             .countdown {
@@ -1504,9 +1651,13 @@
                 right: 15px;
                 top: 15px;
             }
-        }
 
-        @media (max-width: 480px) {
+            .footer-modal-content {
+                padding: 25px;
+                width: 95%;
+            }
+        }
+		@media (max-width: 480px) {
             .container {
                 padding: 10px;
             }
@@ -1544,9 +1695,13 @@
             .segment-inner {
                 font-size: 16px;
             }
+
+            .segment-number {
+                font-size: 18px;
+            }
             
-            .modal-content {
-                padding: 25px;
+            .footer-modal-content {
+                padding: 20px;
                 width: 95%;
             }
 
@@ -1591,63 +1746,6 @@
                 flex-direction: column;
                 gap: 15px;
             }
-
-            .info-panel {
-                padding: 20px;
-            }
-
-            .levels-panel {
-                padding: 20px;
-            }
-
-            .participant {
-                padding: 12px;
-            }
-
-            .participant-info {
-                gap: 10px;
-            }
-
-            .participant-number {
-                padding: 6px 10px;
-                font-size: 0.9em;
-            }
-
-            .participant-name {
-                font-size: 1em;
-            }
-
-            .whatsapp-btn {
-                padding: 15px 20px;
-                font-size: 0.9em;
-            }
-
-            .results-table th,
-            .results-table td {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .toast {
-                max-width: 280px;
-                padding: 15px 20px;
-                right: 10px;
-                top: 10px;
-            }
-
-            .toast-icon {
-                font-size: 1.3em;
-            }
-
-            .loading-spinner {
-                padding: 20px;
-            }
-
-            .spinner {
-                width: 50px;
-                height: 50px;
-                border-width: 4px;
-            }
         }
 
         /* Accessibility improvements */
@@ -1659,109 +1757,17 @@
             }
         }
 
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .modal-content {
-                background: linear-gradient(135deg, rgba(50, 50, 50, 0.95), rgba(40, 40, 40, 0.9));
-                color: white;
-            }
-
-            .modal-header h3 {
-                color: white;
-            }
-
-            .form-group label {
-                color: rgba(255, 255, 255, 0.9);
-            }
-
-            .form-group input,
-            .form-group select {
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                border-color: rgba(255, 255, 255, 0.3);
-            }
-
-            .form-group input::placeholder {
-                color: rgba(255, 255, 255, 0.5);
-            }
-        }
-
-        /* High contrast mode */
-        @media (prefers-contrast: high) {
-            .vip-status,
-            .info-panel,
-            .stat-card {
-                border-width: 3px;
-            }
-
-            .btn {
-                border: 2px solid currentColor;
-            }
-
-            .participant,
-            .level-tier {
-                border-width: 2px;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            .particles,
-            .whatsapp-buttons,
-            .toast,
-            .loading-spinner,
-            .modal {
-                display: none !important;
-            }
-
-            .container {
-                max-width: none;
-                margin: 0;
-                padding: 0;
-            }
-
-            .header,
-            .results-panel,
-            .footer {
-                background: none !important;
-                box-shadow: none !important;
-                border: 1px solid #ccc;
-            }
-
-            * {
-                color: black !important;
-                background: white !important;
-            }
-        }
-
         /* Focus management for accessibility */
         .btn:focus,
         .form-group input:focus,
         .form-group select:focus,
         .whatsapp-btn:focus,
-        .admin-menu-link:focus,
+        .footer-link:focus,
         .vip-status:focus {
             outline: 3px solid var(--primary-gold);
             outline-offset: 2px;
         }
-
-        /* Reduced motion preferences */
-        @media (prefers-reduced-motion: reduce) {
-            .header::before,
-            .stat-card::before,
-            .info-panel::before,
-            .particles,
-            .live-dot,
-            .ruleta-outer-ring {
-                animation: none !important;
-            }
-
-            .ruleta-spinning {
-                animation: none !important;
-                transform: rotate(360deg);
-            }
-        }
-		</style>
+    </style>
 </head>
 <body>
     <!-- Particles Background -->
@@ -1820,7 +1826,7 @@
                     <p>20% descuento + 3 números gratis</p>
                 </div>
                 <div class="benefit-item">
-                    <div class="benefit-icon">💠</div>
+                    <div class="benefit-icon">💍</div>
                     <strong>Diamante</strong>
                     <p>25% descuento + 5 números gratis</p>
                 </div>
@@ -1866,7 +1872,7 @@
                         <div class="ruleta" id="ruleta">
                             <div class="ruleta-pointer"></div>
                             <div class="ruleta-center" id="ruletaCenter">🎯</div>
-                            <!-- Segments generated dynamically -->
+                            <!-- Segments generated dynamically with visible numbers -->
                         </div>
                     </div>
                     
@@ -1926,7 +1932,7 @@
                     </div>
                     <div class="level-tier" id="diamondTier">
                         <div class="level-name">
-                            <span>💠</span>
+                            <span>💍</span>
                             <span>DIAMANTE</span>
                         </div>
                         <div class="level-benefits">20000 pts</div>
@@ -2034,24 +2040,15 @@
                         <span>📱</span>
                         <span>Teléfono</span>
                     </label>
-                    <div class="phone-input">
-                        <select id="codigoPais" class="country-select">
-                            <option value="+58">🇻🇪 +58</option>
-                            <option value="+57">🇨🇴 +57</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+52">🇲🇽 +52</option>
-                            <option value="+51">🇵🇪 +51</option>
-                            <option value="+54">🇦🇷 +54</option>
-                            <option value="+56">🇨🇱 +56</option>
-                        </select>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">+</span>
                         <input 
                             type="tel" 
                             id="numeroTelefono" 
-                            class="phone-number-input" 
                             required 
-                            placeholder="4121234567"
-                            pattern="[0-9]{7,15}"
-                            title="Solo números, entre 7 y 15 dígitos"
+                            placeholder="58 4121234567"
+                            pattern="[0-9\s]+"
+                            title="Formato: código país + número (ej: 58 4121234567)"
                         >
                     </div>
                     <div class="error-message" id="telefonoError"></div>
@@ -2085,13 +2082,208 @@
         </div>
     </div>
 
+    <!-- Footer Modals -->
+    <div id="terminosModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2>📋 Términos y Condiciones</h2>
+                <button class="close-modal" onclick="closeFooterModal('terminosModal')">&times;</button>
+            </div>
+            <h3>1. Aceptación de Términos</h3>
+            <p>Al participar en LaRuleta Premium, aceptas estos términos y condiciones en su totalidad.</p>
+            
+            <h3>2. Elegibilidad</h3>
+            <p>Debes ser mayor de 18 años para participar en nuestros sorteos.</p>
+            <ul>
+                <li>Tener una identificación válida</li>
+                <li>Proporcionar información veraz y actualizada</li>
+                <li>Cumplir con las leyes locales aplicables</li>
+            </ul>
+
+            <h3>3. Proceso de Sorteo</h3>
+            <p>Todos los sorteos se realizan de manera transparente y equitativa:</p>
+            <ul>
+                <li>Los números se asignan por orden de pago verificado</li>
+                <li>El sorteo se realiza en vivo a la hora programada</li>
+                <li>Los resultados son inmutables una vez anunciados</li>
+            </ul>
+
+            <h3>4. Pagos y Reembolsos</h3>
+            <p>Los pagos deben ser verificados antes del sorteo. No se aceptan reembolsos una vez iniciado el sorteo.</p>
+
+            <h3>5. Responsabilidades</h3>
+            <p>Los participantes son responsables de proporcionar información correcta y mantener sus datos actualizados.</p>
+
+            <h3>6. Modificaciones</h3>
+            <p>Nos reservamos el derecho de modificar estos términos en cualquier momento, notificando a través de nuestros canales oficiales.</p>
+        </div>
+    </div>
+
+    <div id="privacidadModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2>🔒 Política de Privacidad</h2>
+                <button class="close-modal" onclick="closeFooterModal('privacidadModal')">&times;</button>
+            </div>
+            <h3>Información que Recopilamos</h3>
+            <p>Recopilamos la siguiente información para procesar tu participación:</p>
+            <ul>
+                <li>Nombre completo</li>
+                <li>Número de teléfono</li>
+                <li>Referencia de pago</li>
+                <li>Historial de participaciones</li>
+            </ul>
+
+            <h3>Uso de la Información</h3>
+            <p>Utilizamos tu información para:</p>
+            <ul>
+                <li>Procesar tu participación en sorteos</li>
+                <li>Contactarte en caso de resultar ganador</li>
+                <li>Enviarte actualizaciones sobre sorteos</li>
+                <li>Mejorar nuestros servicios</li>
+            </ul>
+
+            <h3>Protección de Datos</h3>
+            <p>Implementamos medidas de seguridad para proteger tu información personal:</p>
+            <ul>
+                <li>Encriptación de datos sensibles</li>
+                <li>Acceso restringido a información personal</li>
+                <li>Copias de seguridad regulares</li>
+            </ul>
+
+            <h3>Compartir Información</h3>
+            <p>No vendemos, comercializamos o transferimos tu información personal a terceros, excepto:</p>
+            <ul>
+                <li>Cuando sea requerido por ley</li>
+                <li>Para procesar pagos (con procesadores seguros)</li>
+                <li>Con tu consentimiento explícito</li>
+            </ul>
+
+            <h3>Tus Derechos</h3>
+            <p>Tienes derecho a:</p>
+            <ul>
+                <li>Acceder a tu información personal</li>
+                <li>Solicitar correcciones</li>
+                <li>Solicitar eliminación de datos</li>
+                <li>Limitar el procesamiento</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="contactoModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2>📞 Contacto</h2>
+                <button class="close-modal" onclick="closeFooterModal('contactoModal')">&times;</button>
+            </div>
+            <div class="contact-info">
+                <h3>🏢 GStar INK</h3>
+                <p>Tu plataforma de confianza para sorteos premium</p>
+                
+                <div class="contact-phone">📱 +58 412-974-5777</div>
+                
+                <a href="https://wa.me/584129745777" class="contact-whatsapp-btn" target="_blank">
+                    💬 Contactar por WhatsApp
+                </a>
+            </div>
+
+            <h3>🕐 Horario de Atención</h3>
+            <p><strong>Lunes a Domingo:</strong> 8:00 AM - 10:00 PM (Hora de Venezuela)</p>
+
+            <h3>📧 Otros Canales</h3>
+            <ul>
+                <li><strong>Canal de Noticias:</strong> <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" target="_blank" style="color: #FFD700;">WhatsApp Channel</a></li>
+                <li><strong>Soporte Técnico:</strong> Disponible 24/7 vía WhatsApp</li>
+                <li><strong>Reclamos:</strong> Respuesta en menos de 24 horas</li>
+            </ul>
+
+            <h3>🎯 ¿En qué podemos ayudarte?</h3>
+            <ul>
+                <li>Información sobre sorteos</li>
+                <li>Verificación de pagos</li>
+                <li>Consultas sobre niveles VIP</li>
+                <li>Reportar problemas técnicos</li>
+                <li>Sugerencias y comentarios</li>
+            </ul>
+
+            <p style="margin-top: 20px; font-style: italic;">
+                Estamos aquí para brindarte la mejor experiencia en sorteos premium. 
+                No dudes en contactarnos para cualquier consulta.
+            </p>
+        </div>
+    </div>
+
+    <div id="ayudaModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2>❓ Centro de Ayuda</h2>
+                <button class="close-modal" onclick="closeFooterModal('ayudaModal')">&times;</button>
+            </div>
+            <h3>🚀 Cómo Participar</h3>
+            <p><strong>Paso 1:</strong> Espera a que un sorteo esté activo</p>
+            <p><strong>Paso 2:</strong> Haz clic en un número disponible (color brillante)</p>
+            <p><strong>Paso 3:</strong> Completa tus datos personales</p>
+            <p><strong>Paso 4:</strong> Realiza el pago según las instrucciones</p>
+            <p><strong>Paso 5:</strong> Envía tu comprobante vía WhatsApp</p>
+            <p><strong>Paso 6:</strong> Espera la verificación y el sorteo</p>
+
+            <h3>💰 Sistema de Niveles VIP</h3>
+            <ul>
+                <li><strong>🥉 Bronce (0-999 pts):</strong> 5% descuento</li>
+                <li><strong>🥈 Plata (1000-4999 pts):</strong> 10% descuento + 1 número gratis</li>
+                <li><strong>🥇 Oro (5000-9999 pts):</strong> 15% descuento + 2 números gratis</li>
+                <li><strong>💎 Platino (10000-19999 pts):</strong> 20% descuento + 3 números gratis</li>
+                <li><strong>💍 Diamante (20000+ pts):</strong> 25% descuento + 5 números gratis</li>
+            </ul>
+            <p><em>Ganas 100 puntos por cada participación verificada.</em></p>
+
+            <h3>🎯 Estados de los Números</h3>
+            <ul>
+                <li><strong>Brillante:</strong> Disponible para seleccionar</li>
+                <li><strong>Amarillo:</strong> Reservado (pago pendiente de verificación)</li>
+                <li><strong>Verde:</strong> Ocupado (pago verificado)</li>
+                <li><strong>Gris:</strong> No disponible</li>
+            </ul>
+
+            <h3>💳 Métodos de Pago Aceptados</h3>
+            <ul>
+                <li>Pago Móvil</li>
+                <li>Zelle (USD)</li>
+                <li>PayPal</li>
+                <li>Transferencias bancarias</li>
+                <li>Binance Pay</li>
+            </ul>
+
+            <h3>❓ Preguntas Frecuentes</h3>
+            <p><strong>¿Cuándo se realizan los sorteos?</strong><br>
+            Los sorteos se realizan en las fechas y horas programadas, siempre en vivo.</p>
+
+            <p><strong>¿Cómo sé si mi pago fue verificado?</strong><br>
+            Tu número cambiará de amarillo (pendiente) a verde (verificado).</p>
+
+            <p><strong>¿Puedo cancelar mi participación?</strong><br>
+            Solo antes de que inicie el sorteo y sujeto a políticas de reembolso.</p>
+
+            <p><strong>¿Cómo recibo mi premio si gano?</strong><br>
+            Te contactaremos inmediatamente vía WhatsApp para coordinar la entrega.</p>
+
+            <h3>📞 ¿Necesitas más ayuda?</h3>
+            <p>Si no encuentras la respuesta a tu pregunta, contáctanos directamente:</p>
+            <div class="contact-info">
+                <a href="https://wa.me/584129745777" class="contact-whatsapp-btn" target="_blank">
+                    💬 Soporte WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-links">
-                <a href="#" class="footer-link">Términos y Condiciones</a>
-                <a href="#" class="footer-link">Política de Privacidad</a>
-                <a href="#" class="footer-link">Contacto</a>
-                <a href="#" class="footer-link">Ayuda</a>
+                <a class="footer-link" onclick="openFooterModal('terminosModal')">Términos y Condiciones</a>
+                <a class="footer-link" onclick="openFooterModal('privacidadModal')">Política de Privacidad</a>
+                <a class="footer-link" onclick="openFooterModal('contactoModal')">Contacto</a>
+                <a class="footer-link" onclick="openFooterModal('ayudaModal')">Ayuda</a>
             </div>
             <p>&copy; 2025 GStar INK. Todos los derechos reservados.</p>
             <p style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
@@ -2106,15 +2298,15 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
         import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDYDxqsCtPUegCCDUNhvQcvLahJzNTvQtY",
-  authDomain: "laruleta2025.firebaseapp.com",
-  projectId: "laruleta2025",
-  storageBucket: "laruleta2025.firebasestorage.app",
-  messagingSenderId: "970855213972",
-  appId: "1:970855213972:web:b1cd025e0bf989e877bd81",
-  measurementId: "G-Q9W8FL69P2"
-};
+        const firebaseConfig = {
+          apiKey: "AIzaSyDYDxqsCtPUegCCDUNhvQcvLahJzNTvQtY",
+          authDomain: "laruleta2025.firebaseapp.com",
+          projectId: "laruleta2025",
+          storageBucket: "laruleta2025.firebasestorage.app",
+          messagingSenderId: "970855213972",
+          appId: "1:970855213972:web:b1cd025e0bf989e877bd81",
+          measurementId: "G-Q9W8FL69P2"
+        };
 
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
@@ -2128,6 +2320,49 @@ const firebaseConfig = {
         let userInfo = null;
         let countdownInterval = null;
 
+        // Auto-capitalize name function
+        function capitalizeName(str) {
+            return str.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        // Format phone number function
+        function formatPhoneNumber(value) {
+            // Remove all non-digits
+            let numbers = value.replace(/\D/g, '');
+            
+            // Venezuelan mobile prefixes
+            const venezuelanPrefixes = ['412', '422', '414', '424', '416', '426', '212'];
+            
+            // If starts with venezuelan prefix, add 58
+            if (venezuelanPrefixes.some(prefix => numbers.startsWith(prefix)) && numbers.length >= 10) {
+                if (!numbers.startsWith('58')) {
+                    numbers = '58' + numbers;
+                }
+            }
+            
+            // Format with spaces for readability
+            if (numbers.length > 2) {
+                if (numbers.length <= 4) {
+                    return numbers.slice(0, 2) + ' ' + numbers.slice(2);
+                } else if (numbers.length <= 7) {
+                    return numbers.slice(0, 2) + ' ' + numbers.slice(2, 5) + ' ' + numbers.slice(5);
+                } else {
+                    return numbers.slice(0, 2) + ' ' + numbers.slice(2, 5) + ' ' + numbers.slice(5, 8) + ' ' + numbers.slice(8);
+                }
+            }
+            
+            return numbers;
+        }
+
+        // Footer modal functions
+window.openFooterModal = function(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        window.closeFooterModal = function(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
         // Error messages in Spanish
         const errorMessages = {
             nombre: {
@@ -2138,7 +2373,7 @@ const firebaseConfig = {
             },
             telefono: {
                 valueMissing: 'El teléfono es obligatorio',
-                patternMismatch: 'El teléfono debe tener entre 7 y 15 dígitos'
+                patternMismatch: 'Formato inválido. Ejemplo: 58 4121234567'
             },
             referencia: {
                 valueMissing: 'La referencia de pago es obligatoria',
@@ -2151,7 +2386,7 @@ const firebaseConfig = {
         // Initialize particles
         function createParticles() {
             const particles = document.getElementById('particles');
-            particles.innerHTML = ''; // Clear existing particles
+            particles.innerHTML = '';
             
             for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
@@ -2191,7 +2426,6 @@ const firebaseConfig = {
 
         // Form validation
         function validateField(field) {
-            const fieldName = field.id.replace(/([A-Z])/g, ' $1').toLowerCase();
             const errorDiv = document.getElementById(field.id.replace('numero', '').replace('codigo', 'referencia').replace('Completo', '') + 'Error');
             
             if (errorDiv) {
@@ -2230,7 +2464,8 @@ const firebaseConfig = {
                 return false;
             }
         }
-		// Toggle VIP Benefits Panel
+
+        // Toggle VIP Benefits Panel
         window.toggleVipBenefits = function() {
             const panel = document.getElementById('vipBenefits');
             panel.classList.toggle('active');
@@ -2256,7 +2491,6 @@ const firebaseConfig = {
                     userInfo = { id: userDoc.docs[0].id, ...userDoc.docs[0].data() };
                     updateUserLevelDisplay();
                 } else {
-                    // Create new user
                     userInfo = {
                         userId: userId,
                         points: 0,
@@ -2283,7 +2517,7 @@ const firebaseConfig = {
                 silver: { name: '🥈 PLATA', min: 1000, max: 5000, class: 'vip-silver' },
                 gold: { name: '🥇 ORO', min: 5000, max: 10000, class: 'vip-gold' },
                 platinum: { name: '💎 PLATINO', min: 10000, max: 20000, class: 'vip-platinum' },
-                diamond: { name: '💠 DIAMANTE', min: 20000, max: Infinity, class: 'vip-diamond' }
+                diamond: { name: '💍 DIAMANTE', min: 20000, max: Infinity, class: 'vip-diamond' }
             };
             
             const currentLevel = levels[userInfo.level] || levels.bronze;
@@ -2297,7 +2531,6 @@ const firebaseConfig = {
             const maxPoints = currentLevel.max === Infinity ? '∞' : currentLevel.max;
             document.getElementById('userPoints').textContent = `${userInfo.points}/${maxPoints} pts`;
             
-            // Update level tiers display
             updateLevelTiersDisplay();
         }
 
@@ -2315,7 +2548,7 @@ const firebaseConfig = {
             });
         }
 
-        // Generate ruleta segments
+        // Generate ruleta segments with visible numbers
         function generarRuleta() {
             if (!sorteoActual) return;
             
@@ -2338,13 +2571,10 @@ const firebaseConfig = {
                 inner.className = `segment-inner ${colors[i % colors.length]}`;
                 inner.style.transform = `rotate(${angleStep / 2}deg)`;
                 
+                // Add visible number
                 const numberDisplay = document.createElement('div');
-                numberDisplay.style.position = 'absolute';
-                numberDisplay.style.top = '30%';
-                numberDisplay.style.left = '50%';
-                numberDisplay.style.transform = 'translate(-50%, -50%) rotate(' + (-(i - 1) * angleStep - angleStep / 2) + 'deg)';
-                numberDisplay.style.fontSize = '20px';
-                numberDisplay.style.fontWeight = 'bold';
+                numberDisplay.className = 'segment-number';
+                numberDisplay.style.transform = `rotate(${-(i - 1) * angleStep - angleStep / 2}deg)`;
                 numberDisplay.textContent = i;
                 
                 const participantData = participantesData[i];
@@ -2389,7 +2619,6 @@ const firebaseConfig = {
             document.getElementById('numeroSeleccionado').textContent = `#${numero}`;
             document.getElementById('numeroModal').classList.add('active');
             
-            // Focus on first input
             setTimeout(() => {
                 document.getElementById('nombreCompleto').focus();
             }, 300);
@@ -2401,13 +2630,11 @@ const firebaseConfig = {
             document.getElementById('participantForm').reset();
             numeroSeleccionado = null;
             
-            // Clear validation styles
             const inputs = document.querySelectorAll('#participantForm input');
             inputs.forEach(input => {
                 input.style.borderColor = '#ddd';
             });
             
-            // Clear error messages
             const errorDivs = document.querySelectorAll('.error-message');
             errorDivs.forEach(div => {
                 div.style.display = 'none';
@@ -2430,7 +2657,6 @@ const firebaseConfig = {
                     sorteoActual = doc.data();
                     actualizarInterfazSorteo();
                     
-                    // Detect if ruleta is spinning
                     if (sorteoActual.girando === true && !ruletaGirando) {
                         mostrarRuletaGirando();
                     } else if (sorteoActual.girando === false && ruletaGirando) {
@@ -2521,7 +2747,6 @@ const firebaseConfig = {
             const ahora = new Date();
             const fechaSorteo = new Date(`${sorteoActual.fecha}T${sorteoActual.hora}`);
 
-            // Clear previous countdown
             if (countdownInterval) {
                 clearInterval(countdownInterval);
                 countdownInterval = null;
@@ -2558,7 +2783,6 @@ const firebaseConfig = {
                 document.getElementById('statusDescription').textContent = 'Esperando configuración del sorteo';
             }
 
-            // Show/hide appropriate sections
             const sorteoActivo = document.getElementById('sorteoActivo');
             const sorteoInactivo = document.getElementById('sorteoInactivo');
             
@@ -2625,7 +2849,6 @@ const firebaseConfig = {
 
             document.getElementById('infoPremio').textContent = `$${sorteoActual.premio || 0} USD`;
             
-            // Apply user discount
             let costo = 10;
             if (userInfo) {
                 const discounts = { 
@@ -2656,7 +2879,8 @@ const firebaseConfig = {
             
             document.getElementById('infoHora').textContent = sorteoActual.hora || '--';
         }
-		function actualizarParticipantes() {
+
+        function actualizarParticipantes() {
             const container = document.getElementById('participantes');
             const participantes = Object.entries(participantesData);
             
@@ -2665,7 +2889,6 @@ const firebaseConfig = {
                 return;
             }
 
-            // Sort participants by number
             participantes.sort(([a], [b]) => parseInt(a) - parseInt(b));
 
             container.innerHTML = participantes
@@ -2737,6 +2960,25 @@ const firebaseConfig = {
             const form = document.getElementById('participantForm');
             const inputs = form.querySelectorAll('input[required]');
             
+            // Name input auto-capitalization
+            const nombreInput = document.getElementById('nombreCompleto');
+            nombreInput.addEventListener('input', function(e) {
+                const cursorPos = e.target.selectionStart;
+                e.target.value = capitalizeName(e.target.value);
+                e.target.setSelectionRange(cursorPos, cursorPos);
+            });
+
+            // Phone input formatting
+            const phoneInput = document.getElementById('numeroTelefono');
+            phoneInput.addEventListener('input', function(e) {
+                const cursorPos = e.target.selectionStart;
+                const oldLength = e.target.value.length;
+                e.target.value = formatPhoneNumber(e.target.value);
+                const newLength = e.target.value.length;
+                const newCursorPos = cursorPos + (newLength - oldLength);
+                e.target.setSelectionRange(newCursorPos, newCursorPos);
+            });
+            
             inputs.forEach(input => {
                 input.addEventListener('blur', () => validateField(input));
                 input.addEventListener('input', () => {
@@ -2747,11 +2989,10 @@ const firebaseConfig = {
             });
         }
 
-        // Handle form submission
+        // Handle form submission with corrected WhatsApp message
         document.getElementById('participantForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Validate all fields
             const form = e.target;
             const inputs = form.querySelectorAll('input[required]');
             let isValid = true;
@@ -2769,18 +3010,11 @@ const firebaseConfig = {
             }
             
             const nombre = document.getElementById('nombreCompleto').value.trim();
-            const codigoPais = document.getElementById('codigoPais').value;
             const telefono = document.getElementById('numeroTelefono').value.trim();
             const referencia = document.getElementById('codigoReferencia').value.trim();
             
-            // Additional validations
             if (nombre.length < 2) {
                 showToast('Error', 'El nombre debe tener al menos 2 caracteres', 'error');
-                return;
-            }
-            
-            if (!/^\d{7,15}$/.test(telefono)) {
-                showToast('Error', 'El teléfono debe tener entre 7 y 15 dígitos', 'error');
                 return;
             }
             
@@ -2797,12 +3031,11 @@ const firebaseConfig = {
             document.getElementById('loadingSpinner').classList.add('active');
 
             try {
-                // Create participant document
                 const participantData = {
                     sorteoId: 'activo',
                     numeroSeleccionado: numeroSeleccionado,
                     nombre: nombre,
-                    telefono: codigoPais + telefono,
+                    telefono: '+' + telefono.replace(/\s/g, ''),
                     codigoReferencia: referencia,
                     verificado: false,
                     timestamp: new Date(),
@@ -2812,7 +3045,6 @@ const firebaseConfig = {
 
                 await addDoc(collection(db, 'participantes'), participantData);
 
-                // Update user points and stats
                 if (userInfo && userInfo.id) {
                     const newPoints = userInfo.points + 100;
                     const newLevel = calculateUserLevel(newPoints);
@@ -2824,7 +3056,6 @@ const firebaseConfig = {
                         lastParticipation: new Date()
                     });
                     
-                    // Update local user info
                     userInfo.points = newPoints;
                     userInfo.level = newLevel;
                     userInfo.totalParticipations = (userInfo.totalParticipations || 0) + 1;
@@ -2838,18 +3069,18 @@ const firebaseConfig = {
                 cerrarModal();
                 showToast('¡Participación Exitosa!', `Número ${numeroSeleccionado} reservado para ${nombre}`, 'success');
 
-                // Open WhatsApp with participation details
+                // Fixed WhatsApp message with correct number
+// Fixed WhatsApp message with correct number
                 const mensaje = encodeURIComponent(
                     `🎯 NUEVA PARTICIPACIÓN - LaRuleta Premium\n\n` +
                     `👤 Participante: ${nombre}\n` +
                     `🎲 Número: #${numeroSeleccionado}\n` +
-                    `📱 Teléfono: ${codigoPais} ${telefono}\n` +
+                    `📱 Teléfono: +${telefono.replace(/\s/g, '')}\n` +
                     `💳 Referencia: ${referencia}\n` +
                     `⭐ Nivel VIP: ${(userInfo?.level || 'bronze').toUpperCase()}\n\n` +
                     `Por favor verificar el pago para confirmar la participación.`
                 );
                 
-                // Delay to show success message first
                 setTimeout(() => {
                     window.open(`https://wa.me/584129745777?text=${mensaje}`, '_blank');
                 }, 1000);
@@ -2887,14 +3118,34 @@ const firebaseConfig = {
             if (event.target === modal) {
                 cerrarModal();
             }
+            
+            // Close footer modals on outside click
+            const footerModals = ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'];
+            footerModals.forEach(modalId => {
+                const footerModal = document.getElementById(modalId);
+                if (event.target === footerModal) {
+                    closeFooterModal(modalId);
+                }
+            });
         });
 
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             const modal = document.getElementById('numeroModal');
             
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                cerrarModal();
+            if (e.key === 'Escape') {
+                if (modal.classList.contains('active')) {
+                    cerrarModal();
+                }
+                
+                // Close any open footer modal
+                const footerModals = ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'];
+                footerModals.forEach(modalId => {
+                    const footerModal = document.getElementById(modalId);
+                    if (footerModal.classList.contains('active')) {
+                        closeFooterModal(modalId);
+                    }
+                });
             }
             
             // Tab navigation within modal
@@ -2924,7 +3175,6 @@ const firebaseConfig = {
         window.addEventListener('resize', function() {
             recreateParticles();
             
-            // Adjust countdown font size on mobile
             const countdown = document.getElementById('countdown');
             if (countdown && window.innerWidth <= 480) {
                 countdown.style.fontSize = '1.5em';
@@ -2941,16 +3191,6 @@ const firebaseConfig = {
                 clearInterval(countdownInterval);
             }
         });
-
-        // Service worker registration for PWA capabilities
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Only register if we have a service worker file
-                // navigator.serviceWorker.register('/sw.js')
-                //     .then(registration => console.log('SW registered'))
-                //     .catch(error => console.log('SW registration failed'));
-            });
-        }
 
         // Online/offline status
         window.addEventListener('online', function() {
@@ -2974,7 +3214,8 @@ const firebaseConfig = {
                 userInfo,
                 showToast,
                 generarRuleta,
-                actualizarInterfazSorteo
+                actualizarInterfazSorteo,
+                numeroSeleccionado
             };
             console.log('%cModo debug activado. Usa window.debugRuleta para herramientas de desarrollo.', 'color: #ffc107;');
         }
