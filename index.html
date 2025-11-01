@@ -2229,7 +2229,7 @@
 
             <h3>💰 Sistema de Niveles VIP</h3>
             <ul>
-                <li><strong>🥉 Bronce (0-999 pts):</strong> 5% descuento</li>
+                <li><strong>🥉 Bronce (500-999 pts):</strong> 5% descuento</li>
                 <li><strong>🥈 Plata (1000-4999 pts):</strong> 10% descuento + 1 número gratis</li>
                 <li><strong>🥇 Oro (5000-9999 pts):</strong> 15% descuento + 2 números gratis</li>
                 <li><strong>💎 Platino (10000-19999 pts):</strong> 20% descuento + 3 números gratis</li>
@@ -2298,15 +2298,15 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
         import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, setDoc, query, orderBy, limit, where, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyDYDxqsCtPUegCCDUNhvQcvLahJzNTvQtY",
-          authDomain: "laruleta2025.firebaseapp.com",
-          projectId: "laruleta2025",
-          storageBucket: "laruleta2025.firebasestorage.app",
-          messagingSenderId: "970855213972",
-          appId: "1:970855213972:web:b1cd025e0bf989e877bd81",
-          measurementId: "G-Q9W8FL69P2"
-        };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBo0GpmW2QJx-utQB-oSi0U6xAVGoX8eFc",
+    authDomain: "laruletatemp.firebaseapp.com",
+    projectId: "laruletatemp",
+    storageBucket: "laruletatemp.firebasestorage.app",
+    messagingSenderId: "231476639096",
+    appId: "1:231476639096:web:85ad9fafb4ae5923e1448d",
+    measurementId: "G-4DNVY5KFC5"
+  };
 
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
@@ -2513,7 +2513,7 @@ window.openFooterModal = function(modalId) {
             if (!userInfo) return;
             
             const levels = {
-                bronze: { name: '🥉 BRONCE', min: 0, max: 1000, class: 'vip-bronze' },
+                bronze: { name: '🥉 BRONCE', min: 500, max: 1000, class: 'vip-bronze' },
                 silver: { name: '🥈 PLATA', min: 1000, max: 5000, class: 'vip-silver' },
                 gold: { name: '🥇 ORO', min: 5000, max: 10000, class: 'vip-gold' },
                 platinum: { name: '💎 PLATINO', min: 10000, max: 20000, class: 'vip-platinum' },
@@ -2860,7 +2860,8 @@ window.openFooterModal = function(modalId) {
                 };
                 costo = costo * (discounts[userInfo.level] || 1);
             }
-            document.getElementById('infoCosto').textContent = `$${costo.toFixed(2)} USD`;
+            //MONITOR DEL COSTO
+			//document.getElementById('infoCosto').textContent = `$${costo.toFixed(2)} USD`;
             
             const totalParticipantes = Object.keys(participantesData).length;
             const verificados = Object.values(participantesData).filter(p => p.verificado).length;
