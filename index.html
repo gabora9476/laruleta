@@ -2,8 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaRuletaVE - Sorteos Exclusivos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>LaRuletaVE - Sorteos Exclusivos</title>
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+	<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -556,6 +558,62 @@
             .sidebar { order: 2; }
             .ruleta-wrapper { width: 350px; height: 350px; }
         }
+		/* --- INICIO DE PARCHE RESPONSIVE --- */
+
+		/* 1. Contenedor flexible para centrar y escalar la ruleta */
+		.ruleta-responsive-container {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			overflow: visible;
+			padding: 20px 0;
+		}
+
+		/* 2. Hacemos que la tabla de ganadores tenga scroll horizontal en móvil */
+		.table-responsive {
+			width: 100%;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		.custom-table {
+			min-width: 500px; /* Fuerza el ancho para que no se aplaste */
+		}
+
+		/* 3. Ajustes específicos para Celulares */
+		@media (max-width: 768px) {
+			/* Ajustamos el layout principal a una sola columna */
+			.main-content { grid-template-columns: 1fr; }
+			.ruleta-section { order: 1; padding: 20px 5px; }
+			.sidebar { order: 2; }
+			
+			/* TRUCO DE MAGIA: Escalamos la ruleta visualmente sin cambiar su tamaño real */
+			.ruleta-wrapper {
+				/* El JS sigue viendo 500px, pero el usuario ve el 65% del tamaño */
+				transform: scale(0.65);
+				transform-origin: center center;
+				/* Márgenes negativos para eliminar el espacio vacío que deja al encogerse */
+				margin-top: -80px;
+				margin-bottom: -80px;
+			}
+			
+			/* Ajustamos tamaños de letra gigantes */
+			.header h1 { font-size: 2.2em; }
+			#countdown { font-size: 2.5em !important; }
+			
+			/* Evitamos que el formulario haga zoom en iPhone */
+			.form-input, .form-select { font-size: 16px; }
+		}
+
+		@media (max-width: 380px) {
+			/* Para pantallas muy pequeñas (iPhone SE, etc) */
+			.ruleta-wrapper { 
+				transform: scale(0.55); 
+				margin-top: -110px;
+				margin-bottom: -110px;
+			}
+		}
+		/* --- FIN DE PARCHE RESPONSIVE --- */
     </style>
 </head>
 <body>
@@ -576,19 +634,21 @@
         <div class="main-content">
             
             <div class="ruleta-section">
-                <div id="statusBanner" class="status-banner status-active">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
-                </div>
+			<div id="statusBanner" class="status-banner status-active">
+				<i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
+			</div>
 
-                <div class="ruleta-wrapper">
-                    <div class="pointer"><i class="fa-solid fa-sort-down"></i></div>
-                    
-                    <div class="ruleta-inner" id="ruletaInner"></div>
+			<div class="ruleta-responsive-container">
+				<div class="ruleta-wrapper">
+					<div class="pointer"><i class="fa-solid fa-sort-down"></i></div>
+					
+					<div class="ruleta-inner" id="ruletaInner"></div>
 
-                    <div class="ruleta-center">
-                        <i class="fa-solid fa-gem"></i>
-                    </div>
-                </div>
+					<div class="ruleta-center">
+						<i class="fa-solid fa-gem"></i>
+					</div>
+				</div>
+			</div>
 
                 <div style="margin-top: 40px; text-align: center;">
                     <div style="color: var(--primary); font-size: 1.1em; letter-spacing: 2px; margin-bottom: 5px;">TIEMPO RESTANTE</div>
@@ -652,22 +712,25 @@
         </div>
 
         <div class="winners-section">
-            <h3 style="color: var(--gold); margin-bottom: 20px; font-size: 1.5em; text-shadow: 0 0 10px rgba(255,215,0,0.3);">
-                <i class="fa-solid fa-trophy"></i> Ganadores Recientes
-            </h3>
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Ganador</th>
-                        <th>Número</th>
-                        <th>Premio</th>
-                    </tr>
-                </thead>
-                <tbody id="winnersTable"></tbody>
-            </table>
-        </div>
+			<h3 style="color: var(--gold); margin-bottom: 20px; font-size: 1.5em; text-shadow: 0 0 10px rgba(255,215,0,0.3);">
+				<i class="fa-solid fa-trophy"></i> Ganadores Recientes
+			</h3>
+			
+			<div class="table-responsive">
+				<table class="custom-table">
+					<thead>
+						<tr>
+							<th>Fecha</th>
+							<th>Hora</th>
+							<th>Ganador</th>
+							<th>Número</th>
+							<th>Premio</th>
+						</tr>
+					</thead>
+					<tbody id="winnersTable"></tbody>
+				</table>
+			</div>
+		</div>
 
         <footer class="footer">
             <div class="footer-content">
