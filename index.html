@@ -2,13 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>LaRuletaVE - Sorteos Exclusivos</title>
-	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
-	<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaRuletaVE - Sorteos Exclusivos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <link rel="preconnect" href="https://xcpsryvvszwxiqdujgjr.supabase.co">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; overflow-x: hidden; width: 100%; }
 
         :root {
             --primary: #00E5FF;
@@ -23,6 +27,7 @@
             --gold: #FFD700;
             --diamond: #B9F2FF;
             --rodio: #E1BEE7;
+            --space: clamp(12px, 2.6vw, 20px);
         }
 
         body {
@@ -32,7 +37,11 @@
             color: #fff;
             overflow-x: hidden;
             position: relative;
+            -webkit-font-smoothing: antialiased;
         }
+
+        button, input, select { font-family: inherit; }
+        a { -webkit-tap-highlight-color: rgba(0,229,255,0.25); }
 
         .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .particle {
@@ -53,18 +62,18 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--space);
             position: relative;
             z-index: 2;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: clamp(20px, 4vw, 40px);
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px;
+            border-radius: clamp(16px, 4vw, 30px);
+            padding: clamp(46px, 10vw, 40px) clamp(16px, 5vw, 40px) clamp(22px, 5vw, 40px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 50px rgba(0, 229, 255, 0.1);
             position: relative;
@@ -79,62 +88,70 @@
         @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(45deg); } 100% { transform: translate(100%, 100%) rotate(45deg); } }
 
         .header h1 {
-            font-size: 3.5em; font-weight: 800;
+            font-size: clamp(1.7rem, 6vw, 3.5em);
+            font-weight: 800;
+            line-height: 1.15;
             background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
+        .header p { font-size: clamp(0.85rem, 2.4vw, 1.2em); color: rgba(255,255,255,0.8); }
 
         .vip-badge-header {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 20px;
+            top: clamp(8px, 2vw, 20px);
+            right: clamp(8px, 2vw, 20px);
+            background: rgba(0,0,0,0.35);
+            padding: clamp(5px, 1.4vw, 8px) clamp(10px, 3vw, 20px);
             border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border: 1px solid var(--primary);
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: clamp(0.68rem, 2vw, 0.9em);
             color: white;
             z-index: 10;
+            white-space: nowrap;
         }
-        .vip-badge-header:hover { 
-            background: var(--primary); 
-            color: #0f172a; 
+        .vip-badge-header:hover {
+            background: var(--primary);
+            color: #0f172a;
             box-shadow: 0 0 15px var(--primary);
         }
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 30px;
+            grid-template-columns: 1fr min(400px, 38%);
+            gap: var(--space);
+            align-items: start;
         }
 
         .ruleta-section {
             background: var(--bg-card);
             backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px;
+            border-radius: clamp(16px, 4vw, 30px);
+            padding: clamp(18px, 4vw, 40px);
             border: 1px solid var(--glass-border);
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             text-align: center;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             position: relative;
+            min-width: 0;
         }
 
         .status-banner {
-            padding: 12px 30px; border-radius: 15px;
-            font-weight: bold; font-size: 1.2em; text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 30px;
+            padding: clamp(8px, 2vw, 12px) clamp(14px, 4vw, 30px);
+            border-radius: 15px;
+            font-weight: bold; font-size: clamp(0.72rem, 2.4vw, 1.2em); text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: clamp(18px, 4vw, 30px);
             border: 1px solid rgba(255,255,255,0.1);
             position: relative; overflow: hidden;
             display: inline-flex; align-items: center; gap: 10px;
+            max-width: 100%;
         }
         .status-active {
             background: rgba(0, 229, 255, 0.1); color: var(--primary);
@@ -144,14 +161,24 @@
         }
         @keyframes pulse-green { 0%,100% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); } 50% { box-shadow: 0 0 40px rgba(0, 229, 255, 0.5); } }
 
-        /* RULETA CON BOTONES MÁS PEQUEÑOS */
+        /* ---------- RULETA: contenedor 100% fluido, sin hacks de scale() ---------- */
+        .ruleta-responsive-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(6px, 2vw, 20px) 0;
+        }
+
         .ruleta-wrapper {
-            width: 500px; height: 500px;
-            position: relative; margin: 0 auto;
+            width: min(100%, 440px);
+            aspect-ratio: 1 / 1;
+            position: relative;
+            margin: 0 auto;
             border-radius: 50%;
-            box-shadow: 
-                0 0 0 10px rgba(15, 23, 42, 1),
-                0 0 0 12px var(--primary),
+            box-shadow:
+                0 0 0 clamp(6px, 2vw, 10px) rgba(15, 23, 42, 1),
+                0 0 0 calc(clamp(6px, 2vw, 10px) + 2px) var(--primary),
                 0 0 60px rgba(0, 229, 255, 0.4);
         }
 
@@ -161,25 +188,8 @@
             overflow: visible;
             position: relative;
             background: #1e293b;
-            transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1);
-        }
-
-        .ruleta-inner.spinning {
-            animation: spin-fast 0.3s linear infinite;
-        }
-
-        .ruleta-inner.slowing {
-            animation: spin-slow 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-
-        @keyframes spin-fast {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes spin-slow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(1800deg); }
+            transform: rotate(0deg);
+            will-change: transform;
         }
 
         .segment {
@@ -190,43 +200,39 @@
 
         .segment-number {
             position: absolute;
-            width: 35px;
-            height: 35px;
-            background: rgba(0, 229, 255, 0.3);
             border-radius: 50%;
+            background: rgba(0, 229, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.1em;
             color: white;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.5);
+            pointer-events: none;
         }
 
         .segment-button {
             position: absolute;
-            width: 35px;
-            height: 35px;
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.3);
             background: rgba(0, 229, 255, 0.2);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             z-index: 10;
-            font-size: 0.9em;
             color: white;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            touch-action: manipulation;
         }
 
         .segment-button:hover {
             background: var(--primary);
             border-color: white;
-            transform: scale(1.3);
+            transform: scale(1.25);
             box-shadow: 0 0 20px var(--primary);
             color: #000;
         }
@@ -252,29 +258,30 @@
 
         .ruleta-center {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90px; height: 90px;
+            width: 18%; height: 18%;
+            min-width: 46px; min-height: 46px;
             background: radial-gradient(circle, #fff, var(--primary));
             border-radius: 50%;
             box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
             z-index: 20;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2em; color: #000;
+            font-size: clamp(1.1rem, 4vw, 2rem); color: #000;
             border: 4px solid #fff;
         }
 
         .pointer {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-            z-index: 30; font-size: 4em; color: #ff3366;
+            position: absolute; top: clamp(-22px, -6vw, -30px); left: 50%; transform: translateX(-50%);
+            z-index: 30; font-size: clamp(2rem, 7vw, 4em); color: #ff3366;
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
         }
 
-        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .sidebar { display: flex; flex-direction: column; gap: var(--space); min-width: 0; }
 
         .info-panel {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 20px;
+            padding: clamp(14px, 3vw, 20px);
             transition: transform 0.3s;
             max-height: 300px;
             overflow: hidden;
@@ -282,338 +289,175 @@
         .info-panel:hover { transform: translateY(-5px); border-color: var(--primary); }
 
         .panel-header {
-            font-size: 1.2em; color: var(--primary); margin-bottom: 15px;
+            font-size: clamp(1rem, 2.6vw, 1.2em); color: var(--primary); margin-bottom: 15px;
             display: flex; align-items: center; gap: 10px; font-weight: bold;
             text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;
         }
 
         .detail-row {
-            display: flex; justify-content: space-between; padding: 10px 0;
+            display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .detail-label { color: rgba(255,255,255,0.6); font-size: 0.95em; }
-        .detail-value { font-weight: bold; color: white; font-size: 0.95em; }
+        .detail-label { color: rgba(255,255,255,0.6); font-size: clamp(0.8rem, 2.2vw, 0.95em); }
+        .detail-value { font-weight: bold; color: white; font-size: clamp(0.8rem, 2.2vw, 0.95em); text-align: right; }
 
-        .participants-list { max-height: 250px; overflow-y: auto; padding-right: 10px; }
+        .participants-list { max-height: 250px; overflow-y: auto; padding-right: 6px; }
         .p-item {
             background: rgba(255,255,255,0.05); border-radius: 10px; padding: 8px;
             margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
             transition: 0.2s;
         }
         .p-item:hover { background: rgba(0, 229, 255, 0.1); }
-        .p-badge { 
-            background: var(--primary); color: #000; width: 28px; height: 28px; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; 
-            font-size: 0.9em;
+        .p-badge {
+            background: var(--primary); color: #000; width: 28px; height: 28px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+            font-size: 0.85em; flex-shrink: 0;
         }
 
         .btn-action {
-            width: 100%; padding: 15px; border-radius: 15px; border: none;
-            color: white; font-weight: bold; font-size: 1.1em; cursor: pointer;
+            width: 100%; padding: clamp(11px, 2.6vw, 15px); border-radius: 15px; border: none;
+            color: white; font-weight: bold; font-size: clamp(0.85rem, 2.4vw, 1.1em); cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 10px;
             transition: all 0.3s ease; text-decoration: none; margin-bottom: 10px;
             position: relative; overflow: hidden;
+            min-height: 44px;
         }
         .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
         .btn-whatsapp:hover { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); transform: translateY(-3px); }
-        
+
         .btn-news { background: linear-gradient(135deg, #00E5FF, #00B8D4); color: #000; box-shadow: 0 5px 15px rgba(0, 229, 255, 0.3); }
         .btn-news:hover { box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5); transform: translateY(-3px); }
 
         .winners-section {
-            margin-top: 30px;
+            margin-top: var(--space);
             background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: clamp(16px, 4vw, 20px);
+            padding: clamp(16px, 4vw, 25px);
             border: 1px solid var(--glass-border);
         }
-        .custom-table { width: 100%; border-collapse: collapse; }
-        .custom-table th { text-align: left; padding: 12px; color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); }
-        .custom-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .tag-number { background: rgba(0,229,255,0.2); color: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold; }
+        .winners-section h3 { font-size: clamp(1.05rem, 3vw, 1.5em); }
+        .custom-table { width: 100%; border-collapse: collapse; font-size: clamp(0.78rem, 2.2vw, 1rem); }
+        .custom-table th { text-align: left; padding: 10px 12px; color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); white-space: nowrap; }
+        .custom-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tag-number { background: rgba(0,229,255,0.2); color: var(--primary); padding: 4px 9px; border-radius: 5px; font-weight: bold; white-space: nowrap; }
+
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .custom-table { min-width: 480px; }
 
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000;
             align-items: center; justify-content: center;
+            padding: 16px;
         }
         .modal.active { display: flex; animation: fade-in 0.3s; }
         @keyframes fade-in { from {opacity:0;} to {opacity:1;} }
 
         .modal-card {
             background: linear-gradient(145deg, #1e293b, #0f172a);
-            padding: 25px;
-            border-radius: 25px; width: 90%; max-width: 500px;
+            padding: clamp(18px, 4vw, 25px);
+            border-radius: clamp(18px, 4vw, 25px); width: 100%; max-width: 480px;
             border: 1px solid var(--primary);
             box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
             position: relative;
             max-height: 90vh;
-            overflow-y: hidden;
+            overflow-y: auto;
         }
-        
+
         .form-input, .form-select {
             width: 100%; padding: 12px; margin-bottom: 15px;
             background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px; color: white; font-size: 0.95em;
+            border-radius: 10px; color: white; font-size: 16px; /* 16px fijo evita zoom automático en iOS */
         }
-        .form-input:focus, .form-select:focus { 
-            outline: none; 
-            border-color: var(--primary); 
-            box-shadow: 0 0 10px rgba(0,229,255,0.2); 
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0,229,255,0.2);
         }
+        .form-select option { background: #1e293b; color: white; }
+        .form-label-inline { display:block; margin-bottom:5px; color:var(--primary); font-weight: bold; font-size: 0.92em; }
 
-        .form-select option {
-            background: #1e293b;
-            color: white;
-        }
-
-        /* Footer Styles */
         .footer {
             text-align: center;
-            padding: 40px;
+            padding: clamp(24px, 6vw, 40px);
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 30px 30px 0 0;
-            margin-top: 50px;
+            border-radius: clamp(18px, 4vw, 30px) clamp(18px, 4vw, 30px) 0 0;
+            margin-top: clamp(30px, 6vw, 50px);
             color: white;
             backdrop-filter: blur(10px);
         }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; justify-content: center; gap: clamp(10px, 3vw, 30px); margin-bottom: 20px; flex-wrap: wrap; }
         .footer-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease;
+            padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: clamp(0.78rem, 2.2vw, 1rem);
         }
+        .footer-link:hover { color: var(--primary); transform: translateY(-2px); background: rgba(0, 229, 255, 0.1); }
+        .footer p { margin-bottom: 10px; font-size: clamp(0.75rem, 2.1vw, 1rem); }
 
-        .footer-link:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
-            background: rgba(0, 229, 255, 0.1);
-        }
-
-        .footer p {
-            margin-bottom: 10px;
-        }
-
-        /* Footer Modals - COMPACTOS */
         .footer-modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px);
+            padding: 16px;
         }
-
-        .footer-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: modalFadeIn 0.3s ease;
-        }
-
+        .footer-modal.active { display: flex; align-items: center; justify-content: center; animation: modalFadeIn 0.3s ease; }
         .footer-modal-content {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.93));
             backdrop-filter: blur(20px);
-            padding: 25px;
-            border-radius: 30px;
-            width: 90%;
+            padding: clamp(18px, 4vw, 25px);
+            border-radius: clamp(18px, 4vw, 30px);
+            width: 100%;
             max-width: 600px;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             border: 2px solid var(--primary);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: modalSlideIn 0.3s ease;
             position: relative;
             color: #333;
-            font-size: 0.95em;
-            max-height: 90vh;
-            overflow-y: auto;
+            font-size: clamp(0.85rem, 2.2vw, 0.95em);
         }
-
         .footer-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(0, 229, 255, 0.2);
         }
+        .footer-modal-header h2 { color: #333; font-size: clamp(1.15rem, 3.4vw, 1.6em); margin: 0; padding-right: 10px; }
+        .close-modal { background: none; border: none; font-size: 2em; cursor: pointer; color: #666; transition: color 0.3s ease; line-height: 1; }
+        .close-modal:hover { color: var(--primary); }
+        .footer-modal-content h3 { color: var(--primary); margin-top: 20px; margin-bottom: 12px; font-size: clamp(1rem, 2.8vw, 1.3em); }
+        .footer-modal-content p { line-height: 1.5; margin-bottom: 12px; }
+        .footer-modal-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .footer-modal-content li { margin-bottom: 6px; line-height: 1.4; }
 
-        .footer-modal-header h2 {
-            color: #333;
-            font-size: 1.6em;
-            margin: 0;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 2em;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.3s ease;
-        }
-
-        .close-modal:hover {
-            color: var(--primary);
-        }
-
-        .footer-modal-content h3 {
-            color: var(--primary);
-            margin-top: 20px;
-            margin-bottom: 12px;
-            font-size: 1.3em;
-        }
-
-        .footer-modal-content p {
-            line-height: 1.5;
-            margin-bottom: 12px;
-            font-size: 0.95em;
-        }
-
-        .footer-modal-content ul {
-            margin-left: 20px;
-            margin-bottom: 12px;
-        }
-
-        .footer-modal-content li {
-            margin-bottom: 6px;
-            line-height: 1.4;
-            font-size: 0.95em;
-        }
-
-        /* Contact Info Styles */
-        .contact-info {
-            background: rgba(0, 229, 255, 0.1);
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
-            text-align: center;
-            border: 2px solid rgba(0, 229, 255, 0.3);
-        }
-
-        .contact-phone {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #25D366;
-            margin: 8px 0;
-        }
-
+        .contact-info { background: rgba(0, 229, 255, 0.1); padding: 15px; border-radius: 12px; margin: 15px 0; text-align: center; border: 2px solid rgba(0, 229, 255, 0.3); }
+        .contact-phone { font-size: clamp(1.05rem, 3vw, 1.3em); font-weight: bold; color: #25D366; margin: 8px 0; }
         .contact-whatsapp-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            margin-top: 12px;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            font-size: 0.95em;
+            display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: white;
+            text-decoration: none; padding: 10px 20px; border-radius: 25px; margin-top: 12px;
+            transition: all 0.3s ease; font-weight: bold; font-size: 0.95em;
+        }
+        .contact-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
+
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalSlideIn { from { transform: translateY(-50px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+        /* Foco visible para navegación por teclado */
+        a:focus-visible, button:focus-visible, .segment-button:focus-visible,
+        input:focus-visible, select:focus-visible {
+            outline: 3px solid var(--primary); outline-offset: 2px;
         }
 
-        .contact-whatsapp-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes modalSlideIn {
-            from { 
-                transform: translateY(-50px) scale(0.9);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 1024px) {
+        /* ---------- Layout: una sola columna en tablet / móvil ---------- */
+        @media (max-width: 900px) {
             .main-content { grid-template-columns: 1fr; }
             .ruleta-section { order: 1; }
             .sidebar { order: 2; }
-            .ruleta-wrapper { width: 350px; height: 350px; }
         }
-		/* --- INICIO DE PARCHE RESPONSIVE --- */
 
-		/* 1. Contenedor flexible para centrar y escalar la ruleta */
-		.ruleta-responsive-container {
-			width: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			overflow: visible;
-			padding: 20px 0;
-		}
-
-		/* 2. Hacemos que la tabla de ganadores tenga scroll horizontal en móvil */
-		.table-responsive {
-			width: 100%;
-			overflow-x: auto;
-			-webkit-overflow-scrolling: touch;
-		}
-		.custom-table {
-			min-width: 500px; /* Fuerza el ancho para que no se aplaste */
-		}
-
-		/* 3. Ajustes específicos para Celulares */
-		@media (max-width: 768px) {
-			/* Ajustamos el layout principal a una sola columna */
-			.main-content { grid-template-columns: 1fr; }
-			.ruleta-section { order: 1; padding: 20px 5px; }
-			.sidebar { order: 2; }
-			
-			/* TRUCO DE MAGIA: Escalamos la ruleta visualmente sin cambiar su tamaño real */
-			.ruleta-wrapper {
-				/* El JS sigue viendo 500px, pero el usuario ve el 65% del tamaño */
-				transform: scale(0.65);
-				transform-origin: center center;
-				/* Márgenes negativos para eliminar el espacio vacío que deja al encogerse */
-				margin-top: -80px;
-				margin-bottom: -80px;
-			}
-			
-			/* Ajustamos tamaños de letra gigantes */
-			.header h1 { font-size: 2.2em; }
-			#countdown { font-size: 2.5em !important; }
-			
-			/* Evitamos que el formulario haga zoom en iPhone */
-			.form-input, .form-select { font-size: 16px; }
-		}
-
-		@media (max-width: 380px) {
-			/* Para pantallas muy pequeñas (iPhone SE, etc) */
-			.ruleta-wrapper { 
-				transform: scale(0.55); 
-				margin-top: -110px;
-				margin-bottom: -110px;
-			}
-		}
-		/* --- FIN DE PARCHE RESPONSIVE --- */
+        @media (max-width: 480px) {
+            .header { padding-top: 60px; }
+            .vip-badge-header { top: 10px; right: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -628,36 +472,34 @@
             </div>
 
             <h1>LaRuleta Premium</h1>
-            <p style="font-size: 1.2em; color: rgba(255,255,255,0.8);">Sorteos Transparentes & Exclusivos</p>
+            <p>Sorteos Transparentes &amp; Exclusivos</p>
         </header>
 
         <div class="main-content">
-            
+
             <div class="ruleta-section">
-			<div id="statusBanner" class="status-banner status-active">
-				<i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
-			</div>
+                <div id="statusBanner" class="status-banner status-active">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
+                </div>
 
-			<div class="ruleta-responsive-container">
-				<div class="ruleta-wrapper">
-					<div class="pointer"><i class="fa-solid fa-sort-down"></i></div>
-					
-					<div class="ruleta-inner" id="ruletaInner"></div>
+                <div class="ruleta-responsive-container">
+                    <div class="ruleta-wrapper" id="ruletaWrapper">
+                        <div class="pointer"><i class="fa-solid fa-sort-down"></i></div>
+                        <div class="ruleta-inner" id="ruletaInner"></div>
+                        <div class="ruleta-center">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                    </div>
+                </div>
 
-					<div class="ruleta-center">
-						<i class="fa-solid fa-gem"></i>
-					</div>
-				</div>
-			</div>
-
-                <div style="margin-top: 40px; text-align: center;">
-                    <div style="color: var(--primary); font-size: 1.1em; letter-spacing: 2px; margin-bottom: 5px;">TIEMPO RESTANTE</div>
-                    <div id="countdown" style="font-size: 3em; font-weight: 800; font-family: monospace; text-shadow: 0 0 20px rgba(255,255,255,0.3);">--:--:--</div>
+                <div style="margin-top: clamp(20px,5vw,40px); text-align: center;">
+                    <div style="color: var(--primary); font-size: clamp(0.75rem,2.2vw,1.1em); letter-spacing: 2px; margin-bottom: 5px;">TIEMPO RESTANTE</div>
+                    <div id="countdown" style="font-size: clamp(1.7rem,7vw,3em); font-weight: 800; font-family: monospace; text-shadow: 0 0 20px rgba(255,255,255,0.3);">--:--:--</div>
                 </div>
             </div>
 
             <aside class="sidebar">
-                
+
                 <div class="info-panel">
                     <div class="panel-header"><i class="fa-solid fa-circle-info"></i> Información</div>
                     <div class="detail-row">
@@ -680,7 +522,7 @@
 
                 <div class="info-panel">
                     <div class="panel-header"><i class="fa-solid fa-layer-group"></i> Niveles VIP</div>
-                    <div style="font-size: 0.9em; display: grid; gap: 8px;">
+                    <div style="font-size: clamp(0.78rem,2.2vw,0.9em); display: grid; gap: 8px;">
                         <div class="detail-row" style="padding: 5px 0;"><span><i class="fa-regular fa-user"></i> Nuevo</span> <span style="opacity:0.7">0-3 turnos</span></div>
                         <div class="detail-row" style="padding: 5px 0; color: var(--bronze);"><span><i class="fa-solid fa-medal"></i> Bronce</span> <span>Nivel 1</span></div>
                         <div class="detail-row" style="padding: 5px 0; color: var(--silver);"><span><i class="fa-solid fa-medal"></i> Plata</span> <span>Nivel 2</span></div>
@@ -701,10 +543,10 @@
                 </div>
 
                 <div>
-                    <a href="https://wa.me/584228745777" target="_blank" class="btn-action btn-whatsapp">
+                    <a href="https://wa.me/584228745777" target="_blank" rel="noopener" class="btn-action btn-whatsapp">
                         <i class="fa-brands fa-whatsapp" style="font-size: 1.3em;"></i> Soporte vía Whatsapp
                     </a>
-                    <a href="https://whatsapp.com/channel/0029Vb7PUGJGE56guOnS6x2j" target="_blank" class="btn-action btn-news">
+                    <a href="https://whatsapp.com/channel/0029Vb7PUGJGE56guOnS6x2j" target="_blank" rel="noopener" class="btn-action btn-news">
                         <i class="fa-solid fa-bullhorn"></i> Canal de Noticias
                     </a>
                 </div>
@@ -712,25 +554,25 @@
         </div>
 
         <div class="winners-section">
-			<h3 style="color: var(--gold); margin-bottom: 20px; font-size: 1.5em; text-shadow: 0 0 10px rgba(255,215,0,0.3);">
-				<i class="fa-solid fa-trophy"></i> Ganadores Recientes
-			</h3>
-			
-			<div class="table-responsive">
-				<table class="custom-table">
-					<thead>
-						<tr>
-							<th>Fecha</th>
-							<th>Hora</th>
-							<th>Ganador</th>
-							<th>Número</th>
-							<th>Premio</th>
-						</tr>
-					</thead>
-					<tbody id="winnersTable"></tbody>
-				</table>
-			</div>
-		</div>
+            <h3 style="color: var(--gold); margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                <i class="fa-solid fa-trophy"></i> Ganadores Recientes
+            </h3>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Ganador</th>
+                            <th>Número</th>
+                            <th>Premio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="winnersTable"></tbody>
+                </table>
+            </div>
+        </div>
 
         <footer class="footer">
             <div class="footer-content">
@@ -750,31 +592,31 @@
 
     <div class="modal" id="registroModal">
         <div class="modal-card">
-            <div style="display:flex; justify-content:space-between; margin-bottom: 20px;">
-                <h2 style="color:white">Reservar <span style="color:var(--primary)">#<span id="modalNum"></span></span></h2>
-                <i class="fa-solid fa-xmark" style="font-size: 1.5em; cursor: pointer;" onclick="closeModal()"></i>
+            <div style="display:flex; justify-content:space-between; margin-bottom: 20px; gap: 10px;">
+                <h2 style="color:white; font-size: clamp(1.1rem,3.4vw,1.5rem);">Reservar <span style="color:var(--primary)">#<span id="modalNum"></span></span></h2>
+                <i class="fa-solid fa-xmark" style="font-size: 1.5em; cursor: pointer; flex-shrink:0;" onclick="closeModal()"></i>
             </div>
             <form id="formRegistro">
-                <label style="display:block; margin-bottom:5px; color:var(--primary); font-weight: bold;">Nombre Completo</label>
-                <input type="text" class="form-input" id="regNombre" required placeholder="Ej: Juan Pérez">
-                
-                <label style="display:block; margin-bottom:5px; color:var(--primary); font-weight: bold;">WhatsApp</label>
-                <input type="tel" class="form-input" id="regTel" required placeholder="Ej: 4121234567">
-                
-                <label style="display:block; margin-bottom:5px; color:var(--primary); font-weight: bold;">Método de Pago</label>
+                <label class="form-label-inline">Nombre Completo</label>
+                <input type="text" class="form-input" id="regNombre" required placeholder="Ej: Juan Pérez" maxlength="80">
+
+                <label class="form-label-inline">WhatsApp</label>
+                <input type="tel" class="form-input" id="regTel" required placeholder="Ej: 4121234567" maxlength="20">
+
+                <label class="form-label-inline">Método de Pago</label>
                 <select class="form-select" id="regMetodoPago" required>
                     <option value="">Seleccionar método...</option>
                     <option value="PayPal">PayPal</option>
                     <option value="Binance">Binance</option>
                     <option value="Cuenta Bancaria">Cuenta Bancaria</option>
                 </select>
-                
-                <label style="display:block; margin-bottom:5px; color:var(--primary); font-weight: bold;">Referencia de Pago</label>
-                <input type="text" class="form-input" id="regRef" required placeholder="Últimos 4 dígitos o código">
-                
-                <label style="display:block; margin-bottom:5px; color:var(--primary); font-weight: bold;">Código de Referido <span style="opacity: 0.6; font-size: 0.9em;">(Opcional)</span></label>
-                <input type="text" class="form-input" id="regCodigoRef" placeholder="Ej: REFABC12345" style="text-transform: uppercase;">
-                
+
+                <label class="form-label-inline">Referencia de Pago</label>
+                <input type="text" class="form-input" id="regRef" required placeholder="Últimos 4 dígitos o código" maxlength="60">
+
+                <label class="form-label-inline">Código de Referido <span style="opacity: 0.6; font-size: 0.9em;">(Opcional)</span></label>
+                <input type="text" class="form-input" id="regCodigoRef" placeholder="Ej: REFABC12345" style="text-transform: uppercase;" maxlength="20">
+
                 <button type="submit" class="btn-action btn-news" style="margin-top: 10px;">
                     <i class="fa-solid fa-check"></i> Confirmar Reserva
                 </button>
@@ -791,7 +633,7 @@
             </div>
             <h3><i class="fa-solid fa-handshake"></i> Aceptación</h3>
             <p>Al participar en LaRuleta Premium, aceptas estos términos y condiciones.</p>
-            
+
             <h3><i class="fa-solid fa-user-check"></i> Elegibilidad</h3>
             <p>Debes ser mayor de 18 años para participar en nuestros sorteos.</p>
             <ul>
@@ -846,7 +688,7 @@
             <h3><i class="fa-solid fa-key"></i> Protección de Datos</h3>
             <p>Implementamos medidas de seguridad para proteger tu información personal:</p>
             <ul>
-                <li>Encriptación de datos sensibles</li>
+                <li>Tu teléfono, método de pago y referencia nunca se exponen públicamente</li>
                 <li>Acceso restringido a información personal</li>
                 <li>Copias de seguridad regulares</li>
             </ul>
@@ -879,10 +721,10 @@
             <div class="contact-info">
                 <h3><i class="fa-solid fa-building"></i> GStar INK</h3>
                 <p>Tu plataforma de confianza para sorteos premium</p>
-                
+
                 <div class="contact-phone"><i class="fa-solid fa-phone"></i> +58 422-874-5777</div>
-                
-                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank">
+
+                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank" rel="noopener">
                     <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
                 </a>
             </div>
@@ -892,7 +734,7 @@
 
             <h3><i class="fa-solid fa-envelope"></i> Otros Canales</h3>
             <ul>
-                <li><strong>Canal de Noticias:</strong> <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" target="_blank" style="color: var(--primary);">WhatsApp Channel</a></li>
+                <li><strong>Canal de Noticias:</strong> <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" target="_blank" rel="noopener" style="color: var(--primary);">WhatsApp Channel</a></li>
                 <li><strong>Soporte Técnico:</strong> Disponible 24/7 vía WhatsApp</li>
                 <li><strong>Reclamos:</strong> Respuesta en menos de 24 horas</li>
             </ul>
@@ -906,8 +748,8 @@
                 <li>Sugerencias y comentarios</li>
             </ul>
 
-            <p style="margin-top: 15px; font-style: italic; font-size: 0.95em;">
-                Estamos aquí para brindarte la mejor experiencia en sorteos premium. 
+            <p style="margin-top: 15px; font-style: italic;">
+                Estamos aquí para brindarte la mejor experiencia en sorteos premium.
                 No dudes en contactarnos para cualquier consulta.
             </p>
         </div>
@@ -971,7 +813,7 @@
             <h3><i class="fa-solid fa-headset"></i> ¿Necesitas más ayuda?</h3>
             <p>Si no encuentras la respuesta a tu pregunta, contáctanos directamente:</p>
             <div class="contact-info">
-                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank">
+                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank" rel="noopener">
                     <i class="fa-brands fa-whatsapp"></i> Soporte WhatsApp
                 </a>
             </div>
@@ -979,164 +821,261 @@
     </div>
 
     <script>
-        const API_CONFIG = {
-            binId: '6961c681d0ea881f40610159', 
-            apiKey: '$2a$10$rk2gczqeuxUYbLHMzKhMvOu72BP395L.ksboqrskxsLMJ72e/atHq',
-            url: 'https://api.jsonbin.io/v3/b'
-        };
+    (function () {
+        'use strict';
 
+        // ==================================================================
+        // CONFIGURACIÓN DE SUPABASE
+        // Usa la clave "publishable" (equivalente pública al anon key):
+        // segura para el navegador porque todo el acceso está limitado por
+        // Row Level Security (ver supabase_setup.sql).
+        // ==================================================================
+        const SUPABASE_URL = 'https://xcpsryvvszwxiqdujgjr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjcHNyeXZ2c3p3eGlxZHVqZ2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDg5OTksImV4cCI6MjA3NzU4NDk5OX0.zeSNs_7tDpN9MFmYOdERS4Bg7QQuMXtqW7iE8HMJNw8';
+        const WHATSAPP_SOPORTE = '584228745777';
+
+        // Si el CDN de Supabase no cargó (red bloqueada, adblock, CDN caído),
+        // seguimos mostrando la página en vez de romper todo el script.
+        const db = (window.supabase && typeof window.supabase.createClient === 'function')
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            : null;
+
+        // ==================================================================
+        // ESTADO LOCAL
+        // ==================================================================
         let appState = {
             config: {
-                estado: 'activo', premio: 100, costoTicket: 0, 
-                fecha: '2026-01-30', hora: '20:00', cantidadNumeros: 20, 
-                girando: false, desacelerando: false, numeroGanador: null
+                estado: 'activo', premio: 0, costo_ticket: 0,
+                fecha: '', hora: '', cantidad_numeros: 20,
+                girando: false, desacelerando: false, numero_ganador: null,
+                spin_duracion_ms: 6000
             },
             participantes: [],
             historial: []
         };
 
         let selectedNumber = null;
+        let lastSpinId = null;
+        let currentCantidadNumeros = null;
+        let resizeTimer = null;
 
+        // -------- Motor de animación de la ruleta (independiente de CSS keyframes) --------
+        let spinAnimFrame = null;
+        let currentRotation = 0;
+        const FAST_SPIN_SPEED = 14; // grados por frame ~60fps
+
+        function startFastSpin() {
+            stopFastSpin();
+            const inner = document.getElementById('ruletaInner');
+            inner.style.transition = 'none';
+            const tick = () => {
+                currentRotation += FAST_SPIN_SPEED;
+                inner.style.transform = `rotate(${currentRotation}deg)`;
+                spinAnimFrame = requestAnimationFrame(tick);
+            };
+            spinAnimFrame = requestAnimationFrame(tick);
+        }
+
+        function stopFastSpin() {
+            if (spinAnimFrame) {
+                cancelAnimationFrame(spinAnimFrame);
+                spinAnimFrame = null;
+            }
+        }
+
+        function landOnWinner(numeroGanador, cantidadNumeros, duracionMs) {
+            stopFastSpin();
+            const inner = document.getElementById('ruletaInner');
+            const total = cantidadNumeros || currentCantidadNumeros || 1;
+            const angleStep = 360 / total;
+            const centroSegmento = (numeroGanador - 1) * angleStep + angleStep / 2;
+
+            // Ángulo para que el puntero (fijo arriba) quede exactamente sobre el número ganador
+            const objetivo = (360 - centroSegmento) % 360;
+            const vueltasExtra = 6;
+            let finalAngle = (currentRotation - (currentRotation % 360)) + 360 * vueltasExtra + objetivo;
+            while (finalAngle <= currentRotation) finalAngle += 360;
+
+            inner.style.transition = `transform ${Math.max(duracionMs, 60)}ms cubic-bezier(0.12, 0.72, 0.15, 1)`;
+            void inner.offsetWidth; // fuerza reflow para que la transición se aplique correctamente
+            inner.style.transform = `rotate(${finalAngle}deg)`;
+            currentRotation = finalAngle;
+        }
+
+        // ==================================================================
+        // UTILIDADES
+        // ==================================================================
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // ==================================================================
+        // CARGA INICIAL
+        // ==================================================================
         document.addEventListener('DOMContentLoaded', () => {
             initParticles();
-            startPolling();
             setupFormatters();
+            cargarInicial();
+            suscribirRealtime();
+            window.addEventListener('resize', onResize);
         });
 
-        // FORMATEO AUTOMÁTICO
-        function setupFormatters() {
-            const inputNombre = document.getElementById('regNombre');
-            const inputTel = document.getElementById('regTel');
-            const inputRef = document.getElementById('regCodigoRef');
-
-            inputNombre.addEventListener('input', formatNombre);
-            inputTel.addEventListener('input', formatTelefono);
-            inputRef.addEventListener('input', (e) => {
-                e.target.value = e.target.value.toUpperCase();
-            });
+        function mostrarErrorConexion(detalle) {
+            layoutRuleta(appState.config.cantidad_numeros);
+            const banner = document.getElementById('statusBanner');
+            banner.className = 'status-banner';
+            banner.style.borderColor = '#FF4136';
+            banner.style.color = '#FF4136';
+            banner.style.whiteSpace = 'normal';
+            banner.style.textAlign = 'left';
+            banner.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>Error de conexión: ${escapeHtml(detalle || 'desconocido')}</span>`;
         }
 
-        function formatNombre(e) {
-            let value = e.target.value;
-            value = value.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-            e.target.value = value;
-        }
-
-        function formatTelefono(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            const vzCodes = ['412', '422', '424', '414', '416', '426', '212'];
-            const coCodes = ['300', '301', '302', '303', '304', '305', '310', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321', '322', '323', '324', '350', '351'];
-            
-            if (value.startsWith('58')) {
-                value = value.substring(2);
-            } else if (value.startsWith('57')) {
-                value = value.substring(2);
-            } else if (value.startsWith('1')) {
-                value = value.substring(1);
-            } else if (value.startsWith('0')) {
-                value = value.substring(1);
+        async function cargarInicial() {
+            if (!db) {
+                mostrarErrorConexion('no se pudo cargar la librería de Supabase (CDN bloqueado o sin internet)');
+                return;
             }
-
-            const prefix = value.substring(0, 3);
-            
-            if (vzCodes.includes(prefix)) {
-                e.target.value = '+58 ' + value;
-            } else if (coCodes.includes(prefix)) {
-                e.target.value = '+57 ' + value;
-            } else if (value.length === 10 && !isNaN(value)) {
-                e.target.value = '+1 ' + value;
-            } else {
-                e.target.value = value;
-            }
-        }
-
-        async function fetchData() {
             try {
-                const res = await fetch(`${API_CONFIG.url}/${API_CONFIG.binId}/latest`, {
-                    headers: { 'X-Master-Key': API_CONFIG.apiKey }
-                });
-                if(!res.ok) throw new Error("API Error");
-                const json = await res.json();
-                return json.record;
-            } catch (e) {
-                console.warn("Usando fallback local");
-                return appState;
+                const [{ data: cfg, error: e1 }, { data: parts, error: e2 }, { data: hist, error: e3 }] = await Promise.all([
+                    db.from('sorteo_config').select('*').eq('id', 1).single(),
+                    db.from('participantes').select('numero, nombre, verificado').order('numero', { ascending: true }),
+                    db.from('historial').select('ganador_nombre, ganador_numero, premio, sorteado_en').order('sorteado_en', { ascending: false }).limit(10)
+                ]);
+                if (e1) throw e1;
+                if (e2) console.error('Error cargando participantes:', e2);
+                if (e3) console.error('Error cargando historial:', e3);
+
+                appState.config = cfg || appState.config;
+                appState.participantes = parts || [];
+                appState.historial = hist || [];
+
+                layoutRuleta(appState.config.cantidad_numeros);
+                renderParticipantsList();
+                renderWinnersTable();
+                handleConfigChange(appState.config);
+            } catch (err) {
+                console.error('No se pudo conectar con Supabase:', err);
+                mostrarErrorConexion(err && (err.message || err.details || err.hint) || JSON.stringify(err));
             }
         }
 
-        async function updateData(newData) {
-            try {
-                await fetch(`${API_CONFIG.url}/${API_CONFIG.binId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_CONFIG.apiKey },
-                    body: JSON.stringify(newData)
-                });
-            } catch (e) { console.error(e); }
+        // ==================================================================
+        // TIEMPO REAL — reacciona al instante a lo que hace el panel admin
+        // ==================================================================
+        function suscribirRealtime() {
+            if (!db) return;
+            db.channel('ruleta-publico')
+                .on('postgres_changes',
+                    { event: 'UPDATE', schema: 'public', table: 'sorteo_config' },
+                    (payload) => handleConfigChange(payload.new)
+                )
+                .on('postgres_changes',
+                    { event: '*', schema: 'public', table: 'participantes', select: ['id', 'numero', 'nombre', 'verificado'] },
+                    () => refreshParticipantes()
+                )
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'historial' },
+                    () => refreshHistorial()
+                )
+                .subscribe();
         }
 
-        function startPolling() {
-            loadApp();
-            setInterval(loadApp, 3000);
-        }
+        function handleConfigChange(cfg) {
+            if (!cfg) return;
+            appState.config = cfg;
 
-        async function loadApp() {
-            const data = await fetchData();
-            const previousGirando = appState.config.girando;
-            const previousDesacelerando = appState.config.desacelerando;
-            
-            appState = { ...appState, ...data };
-            renderApp();
+            if (cfg.cantidad_numeros && cfg.cantidad_numeros !== currentCantidadNumeros) {
+                layoutRuleta(cfg.cantidad_numeros);
+            }
 
-            const ruletaInner = document.getElementById('ruletaInner');
-            
-            if (appState.config.girando && !previousGirando) {
-                ruletaInner.classList.remove('slowing');
-                ruletaInner.classList.add('spinning');
-            } else if (appState.config.desacelerando && !previousDesacelerando) {
-                ruletaInner.classList.remove('spinning');
-                ruletaInner.classList.add('slowing');
-                
-                if (appState.config.numeroGanador) {
-                    const anglePerNumber = 360 / appState.config.cantidadNumeros;
-                    const targetAngle = (appState.config.numeroGanador - 1) * anglePerNumber;
-                    const finalRotation = 1800 + targetAngle;
-                    ruletaInner.style.transform = `rotate(${finalRotation}deg)`;
-                }
-            } else if (!appState.config.girando && !appState.config.desacelerando) {
-                ruletaInner.classList.remove('spinning', 'slowing');
+            renderInfoPanel(cfg);
+
+            if (cfg.girando && cfg.spin_id && cfg.spin_id !== lastSpinId) {
+                lastSpinId = cfg.spin_id;
+                startFastSpin();
+            }
+
+            if (cfg.desacelerando && cfg.numero_ganador && cfg.decel_iniciado_en) {
+                const duracion = cfg.spin_duracion_ms || 6000;
+                const transcurrido = Date.now() - new Date(cfg.decel_iniciado_en).getTime();
+                const restante = Math.max(duracion - transcurrido, 60);
+                landOnWinner(cfg.numero_ganador, cfg.cantidad_numeros, restante);
+            }
+
+            if (!cfg.girando && !cfg.desacelerando) {
+                stopFastSpin();
             }
         }
 
-        function renderApp() {
-            const { config, participantes, historial } = appState;
+        async function refreshParticipantes() {
+            const { data, error } = await db
+                .from('participantes')
+                .select('numero, nombre, verificado')
+                .order('numero', { ascending: true });
+            if (error) { console.error(error); return; }
+            appState.participantes = data || [];
+            updateRuletaEstados(appState.participantes);
+            renderParticipantsList();
+        }
 
-            document.getElementById('infoPremio').innerText = `${config.premio} USD`;
-            document.getElementById('infoCosto').innerText = config.costoTicket == 0 ? "GRATIS" : `${config.costoTicket}`;
-            document.getElementById('infoFecha').innerText = config.fecha;
-            document.getElementById('infoDisp').innerText = `${config.cantidadNumeros - participantes.length}/${config.cantidadNumeros}`;
-            document.getElementById('partCount').innerText = participantes.length;
+        async function refreshHistorial() {
+            const { data, error } = await db
+                .from('historial')
+                .select('ganador_nombre, ganador_numero, premio, sorteado_en')
+                .order('sorteado_en', { ascending: false })
+                .limit(10);
+            if (error) { console.error(error); return; }
+            appState.historial = data || [];
+            renderWinnersTable();
+        }
+
+        // ==================================================================
+        // RENDER
+        // ==================================================================
+        function renderInfoPanel(cfg) {
+            document.getElementById('infoPremio').textContent = `${cfg.premio ?? 0} USD`;
+            document.getElementById('infoCosto').textContent = (!cfg.costo_ticket || cfg.costo_ticket == 0) ? 'GRATIS' : `${cfg.costo_ticket}`;
+            document.getElementById('infoFecha').textContent = cfg.fecha || '--/--';
+            document.getElementById('infoDisp').textContent =
+                `${Math.max((cfg.cantidad_numeros || 0) - appState.participantes.length, 0)}/${cfg.cantidad_numeros || 0}`;
 
             const banner = document.getElementById('statusBanner');
-            if(config.estado === 'activo') {
+            if (cfg.estado === 'activo') {
                 banner.className = 'status-banner status-active';
                 banner.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> SORTEO EN VIVO';
+            } else if (cfg.estado === 'finalizado') {
+                banner.className = 'status-banner';
+                banner.style.borderColor = 'var(--gold)';
+                banner.style.color = 'var(--gold)';
+                banner.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> FINALIZADO';
             } else {
                 banner.className = 'status-banner';
-                banner.style.borderColor = 'orange'; 
+                banner.style.borderColor = 'orange';
                 banner.style.color = 'orange';
                 banner.innerHTML = '<i class="fa-solid fa-lock"></i> CERRADO';
             }
 
-            renderRuleta(config.cantidadNumeros, participantes);
+            updateCountdown(cfg.fecha, cfg.hora);
+        }
 
+        function renderParticipantsList() {
             const pList = document.getElementById('participantsList');
+            const participantes = appState.participantes;
+            document.getElementById('partCount').textContent = participantes.length;
+
             pList.innerHTML = participantes.length ? participantes.map(p => `
                 <div class="p-item">
                     <div style="display:flex; align-items:center; gap:10px;">
                         <div class="p-badge">#${p.numero}</div>
                         <div>
-                            <div style="font-weight:bold">${p.nombre}</div>
+                            <div style="font-weight:bold">${escapeHtml(p.nombre)}</div>
                             <div style="font-size:0.8em; color:${p.verificado ? 'var(--primary)' : 'orange'}">
                                 ${p.verificado ? 'Verificado' : 'Pendiente'}
                             </div>
@@ -1144,139 +1083,179 @@
                     </div>
                 </div>
             `).join('') : '<div style="text-align:center; opacity:0.5; padding:20px;">Sin participantes</div>';
+        }
 
+        function renderWinnersTable() {
             const wTable = document.getElementById('winnersTable');
-            if(historial && historial.length > 0) {
-                wTable.innerHTML = historial.slice(0, 5).map(h => `
+            const historial = appState.historial;
+            if (historial && historial.length > 0) {
+                wTable.innerHTML = historial.slice(0, 5).map(h => {
+                    const d = new Date(h.sorteado_en);
+                    const fecha = isNaN(d) ? '--' : d.toLocaleDateString('es-VE');
+                    const hora = isNaN(d) ? '--' : d.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+                    return `
                     <tr>
-                        <td>${h.fecha}</td>
-                        <td>${h.hora}</td>
-                        <td>${h.ganadorNombre}</td>
-                        <td><span class="tag-number">#${h.ganadorNumero}</span></td>
-                        <td style="color:var(--gold)">${h.premio}</td>
-                    </tr>
-                `).join('');
+                        <td>${fecha}</td>
+                        <td>${hora}</td>
+                        <td>${escapeHtml(h.ganador_nombre)}</td>
+                        <td><span class="tag-number">#${h.ganador_numero}</span></td>
+                        <td style="color:var(--gold)">${h.premio} USD</td>
+                    </tr>`;
+                }).join('');
             } else {
                 wTable.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No hay historial reciente</td></tr>';
             }
-
-            updateCountdown(config.fecha, config.hora);
         }
 
-        function renderRuleta(total, parts) {
+        // ---------- Ruleta: layout 100% fluido según el tamaño real del contenedor ----------
+        function layoutRuleta(total) {
+            const wrapper = document.getElementById('ruletaWrapper');
             const container = document.getElementById('ruletaInner');
-            
-            if(container.children.length !== total * 2) { 
-                container.innerHTML = '';
-                const angleStep = 360 / total;
-                const colors = ['#00B8D4', '#E0F7FA'];
+            if (!wrapper || !container || !total) return;
 
-                for(let i = 1; i <= total; i++) {
-                    const seg = document.createElement('div');
-                    seg.className = 'segment';
-                    seg.style.backgroundColor = i % 2 === 0 ? colors[0] : colors[1];
-                    seg.style.transform = `rotate(${(i-1) * angleStep}deg)`;
-                    
-                    const participante = parts.find(p => p.numero == i);
-                    const radius = 180;
-                    const angle = ((i - 1) * angleStep + (angleStep / 2)) * (Math.PI / 180);
-                    const x = 250 + radius * Math.cos(angle - Math.PI / 2);
-                    const y = 250 + radius * Math.sin(angle - Math.PI / 2);
-                    
-                    // NÚMERO EN CÍRCULO DENTRO DEL SEGMENTO
-                    const numberCircle = document.createElement('div');
-                    numberCircle.className = 'segment-number';
-                    numberCircle.style.left = `${x - 17.5}px`;
-                    numberCircle.style.top = `${y - 17.5}px`;
-                    numberCircle.textContent = i;
-                    
-                    const btn = document.createElement('div');
-                    btn.className = 'segment-button';
-                    btn.style.left = `${x - 17.5}px`;
-                    btn.style.top = `${y - 17.5}px`;
-                    btn.style.position = 'absolute';
-                    btn.innerText = i;
-                    
-                    if(participante) {
-                        btn.classList.add('occupied');
-                        if(participante.verificado) {
-                            btn.classList.add('verified');
-                        }
-                        btn.title = `Ocupado: ${participante.nombre}`;
-                        btn.onclick = null;
-                        btn.style.cursor = 'not-allowed';
-                    } else {
-                        btn.title = `Seleccionar #${i}`;
-                        btn.onclick = () => openModal(i);
-                    }
-                    
-                    container.appendChild(seg);
-                    container.appendChild(numberCircle);
-                    container.appendChild(btn);
-                }
+            const size = wrapper.clientWidth;
+            if (!size) return;
+
+            const center = size / 2;
+            const radius = size * 0.37;
+            const angleStep = 360 / total;
+            const arcLength = (2 * Math.PI * radius) / total;
+            const btnSize = Math.max(14, Math.min(34, arcLength * 0.82, size * 0.085));
+            const fontSize = Math.max(8, btnSize * 0.42);
+            const colors = ['#00B8D4', '#E0F7FA'];
+
+            const frag = document.createDocumentFragment();
+
+            for (let i = 1; i <= total; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'segment';
+                seg.style.backgroundColor = i % 2 === 0 ? colors[0] : colors[1];
+                seg.style.transform = `rotate(${(i - 1) * angleStep}deg)`;
+
+                const angle = ((i - 1) * angleStep + angleStep / 2) * (Math.PI / 180);
+                const x = center + radius * Math.cos(angle - Math.PI / 2);
+                const y = center + radius * Math.sin(angle - Math.PI / 2);
+
+                const numberCircle = document.createElement('div');
+                numberCircle.className = 'segment-number';
+                numberCircle.style.width = numberCircle.style.height = btnSize + 'px';
+                numberCircle.style.left = `${x - btnSize / 2}px`;
+                numberCircle.style.top = `${y - btnSize / 2}px`;
+                numberCircle.style.fontSize = fontSize + 'px';
+                numberCircle.textContent = i;
+
+                const btn = document.createElement('div');
+                btn.className = 'segment-button';
+                btn.dataset.numero = String(i);
+                btn.style.width = btn.style.height = btnSize + 'px';
+                btn.style.left = `${x - btnSize / 2}px`;
+                btn.style.top = `${y - btnSize / 2}px`;
+                btn.style.fontSize = fontSize + 'px';
+                btn.textContent = i;
+                btn.title = `Seleccionar #${i}`;
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+                btn.addEventListener('click', () => onSegmentClick(i));
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSegmentClick(i); }
+                });
+
+                frag.appendChild(seg);
+                frag.appendChild(numberCircle);
+                frag.appendChild(btn);
             }
+
+            container.innerHTML = '';
+            container.appendChild(frag);
+            currentCantidadNumeros = total;
+            updateRuletaEstados(appState.participantes);
         }
 
+        function updateRuletaEstados(participantes) {
+            const ocupados = new Map((participantes || []).map(p => [Number(p.numero), p]));
+            document.querySelectorAll('.segment-button').forEach(btn => {
+                const numero = Number(btn.dataset.numero);
+                const p = ocupados.get(numero);
+                btn.classList.toggle('occupied', !!p);
+                btn.classList.toggle('verified', !!(p && p.verificado));
+                if (p) {
+                    btn.title = `Ocupado: ${p.nombre}`;
+                } else {
+                    btn.title = `Seleccionar #${numero}`;
+                }
+            });
+            document.getElementById('infoDisp').textContent =
+                `${Math.max((appState.config.cantidad_numeros || 0) - (participantes || []).length, 0)}/${appState.config.cantidad_numeros || 0}`;
+            document.getElementById('partCount').textContent = (participantes || []).length;
+        }
+
+        function onSegmentClick(numero) {
+            const btn = document.querySelector(`.segment-button[data-numero="${numero}"]`);
+            if (btn && btn.classList.contains('occupied')) return;
+            openModal(numero);
+        }
+
+        function onResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (currentCantidadNumeros) layoutRuleta(currentCantidadNumeros);
+            }, 150);
+        }
+
+        // ==================================================================
+        // MODAL DE RESERVA
+        // ==================================================================
         function openModal(num) {
-            if(appState.config.estado !== 'activo') { 
-                alert("Sorteo cerrado."); 
-                return; 
+            if (appState.config.estado !== 'activo') {
+                alert('Sorteo cerrado.');
+                return;
             }
             selectedNumber = num;
-            document.getElementById('modalNum').innerText = num;
+            document.getElementById('modalNum').textContent = num;
             document.getElementById('registroModal').classList.add('active');
         }
-
-        function closeModal() { 
-            document.getElementById('registroModal').classList.remove('active'); 
-        }
+        window.closeModal = function () {
+            document.getElementById('registroModal').classList.remove('active');
+        };
 
         document.getElementById('formRegistro').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
-            btn.disabled = true;
 
-            const fresh = await fetchData();
-            if(fresh.participantes.find(p => p.numero == selectedNumber)) {
-                alert("Número ocupado hace un momento.");
-                closeModal(); 
-                btn.innerHTML = originalText;
-                btn.disabled = false; 
+            if (!db) {
+                alert('No hay conexión con el servidor. Recarga la página e intenta de nuevo.');
                 return;
             }
 
-            const nombre = document.getElementById('regNombre').value;
-            const telefonoRaw = document.getElementById('regTel').value;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
+            btn.disabled = true;
+
+            const nombre = document.getElementById('regNombre').value.trim();
+            const telefonoRaw = document.getElementById('regTel').value.trim();
             const metodoPago = document.getElementById('regMetodoPago').value;
-            const referencia = document.getElementById('regRef').value;
+            const referencia = document.getElementById('regRef').value.trim();
             const codigoRef = document.getElementById('regCodigoRef').value.trim().toUpperCase();
 
-            const nuevo = {
-                id: Date.now(),
-                numero: selectedNumber,
-                nombre: nombre,
-                telefono: telefonoRaw,
-                metodoPago: metodoPago,
-                referencia: referencia,
-                codigoReferido: codigoRef || null,
-                verificado: false,
-                fecha: new Date().toISOString()
-            };
+            const { error } = await db.rpc('registrar_participante', {
+                p_numero: selectedNumber,
+                p_nombre: nombre,
+                p_telefono: telefonoRaw,
+                p_metodo_pago: metodoPago,
+                p_referencia: referencia,
+                p_codigo_referido: codigoRef || null
+            });
 
-            fresh.participantes.push(nuevo);
-
-            if(codigoRef && fresh.codigosReferido) {
-                const refCode = fresh.codigosReferido.find(c => c.codigo === codigoRef && c.activo);
-                if(refCode) {
-                    refCode.usos = (refCode.usos || 0) + 1;
-                }
+            if (error) {
+                alert(`No se pudo completar la reserva: ${error.message || 'intenta de nuevo.'}`);
+                await refreshParticipantes();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
             }
 
-            await updateData(fresh);
+            await refreshParticipantes();
 
-            const telefonoLimpio = telefonoRaw.replace(/\D/g, '');
             const msg = encodeURIComponent(`🎰 *NUEVA RESERVA LARULETA*
 
 👤 *Nombre:* ${nombre}
@@ -1284,112 +1263,133 @@
 📱 *WhatsApp:* ${telefonoRaw}
 💳 *Método de Pago:* ${metodoPago}
 🔖 *Referencia:* ${referencia}
- ${codigoRef ? `🎁 *Código Referido:* ${codigoRef}` : ''}
+${codigoRef ? `🎁 *Código Referido:* ${codigoRef}` : ''}
 
 💰 *Premio:* ${appState.config.premio} USD
 📅 *Fecha Sorteo:* ${appState.config.fecha} a las ${appState.config.hora}
 
 ✅ _Esperando verificación de pago..._`);
 
-            window.open(`https://wa.me/584228745777?text=${msg}`, '_blank');
+            window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${msg}`, '_blank');
 
-            alert("✅ Reserva enviada exitosamente!\n\nTe contactaremos pronto para verificar tu pago.");
+            alert('✅ Reserva enviada exitosamente!\n\nTe contactaremos pronto para verificar tu pago.');
             closeModal();
             btn.innerHTML = originalText;
             btn.disabled = false;
             document.getElementById('formRegistro').reset();
-            loadApp();
         });
 
-        function updateCountdown(d, t) {
-            const target = new Date(`${d}T${t}`).getTime();
-            const now = new Date().getTime();
-            const diff = target - now;
-            const el = document.getElementById('countdown');
-            
-            if(diff <= 0) { 
-                el.innerText = "00:00:00"; 
-                return; 
-            }
-            
-            const h = Math.floor((diff % (86400000)) / (3600000));
-            const m = Math.floor((diff % (3600000)) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            el.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        // ==================================================================
+        // FORMATEO DE CAMPOS
+        // ==================================================================
+        function setupFormatters() {
+            document.getElementById('regNombre').addEventListener('input', formatNombre);
+            document.getElementById('regTel').addEventListener('input', formatTelefono);
+            document.getElementById('regCodigoRef').addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase();
+            });
         }
 
+        function formatNombre(e) {
+            e.target.value = e.target.value.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatTelefono(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            const vzCodes = ['412', '422', '424', '414', '416', '426', '212'];
+            const coCodes = ['300', '301', '302', '303', '304', '305', '310', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321', '322', '323', '324', '350', '351'];
+
+            if (value.startsWith('58')) value = value.substring(2);
+            else if (value.startsWith('57')) value = value.substring(2);
+            else if (value.startsWith('1')) value = value.substring(1);
+            else if (value.startsWith('0')) value = value.substring(1);
+
+            const prefix = value.substring(0, 3);
+            if (vzCodes.includes(prefix)) e.target.value = '+58 ' + value;
+            else if (coCodes.includes(prefix)) e.target.value = '+57 ' + value;
+            else if (value.length === 10 && !isNaN(value)) e.target.value = '+1 ' + value;
+            else e.target.value = value;
+        }
+
+        // ==================================================================
+        // CUENTA REGRESIVA
+        // ==================================================================
+        function updateCountdown(d, t) {
+            const el = document.getElementById('countdown');
+            if (!d || !t) { el.textContent = '--:--:--'; return; }
+            const target = new Date(`${d}T${t}`).getTime();
+            const diff = target - Date.now();
+
+            if (isNaN(target)) { el.textContent = '--:--:--'; return; }
+            if (diff <= 0) { el.textContent = '00:00:00'; return; }
+
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            el.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        setInterval(() => updateCountdown(appState.config.fecha, appState.config.hora), 1000);
+
+        // ==================================================================
+        // PARTÍCULAS DECORATIVAS (menos elementos en pantallas chicas)
+        // ==================================================================
         function initParticles() {
             const c = document.getElementById('particles');
-            for(let i = 0; i < 40; i++) {
+            const count = window.innerWidth < 640 ? 16 : window.innerWidth < 1024 ? 26 : 40;
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < count; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + '%';
                 p.style.top = Math.random() * 100 + '%';
                 p.style.animationDelay = Math.random() * 5 + 's';
-                c.appendChild(p);
+                frag.appendChild(p);
             }
+            c.appendChild(frag);
         }
 
-        // Footer modal functions
-        window.openFooterModal = function(modalId) {
+        // ==================================================================
+        // MODALES DEL FOOTER
+        // ==================================================================
+        window.openFooterModal = function (modalId) {
             document.getElementById(modalId).classList.add('active');
-        }
-
-        window.closeFooterModal = function(modalId) {
+        };
+        window.closeFooterModal = function (modalId) {
             document.getElementById(modalId).classList.remove('active');
-        }
+        };
 
-        // Modal close on outside click
-        window.addEventListener('click', function(event) {
+        window.addEventListener('click', function (event) {
             const modal = document.getElementById('registroModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-            
-            // Close any open footer modal
-            const footerModals = ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'];
-            footerModals.forEach(modalId => {
+            if (event.target === modal) closeModal();
+
+            ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'].forEach(modalId => {
                 const footerModal = document.getElementById(modalId);
-                if (event.target === footerModal) {
-                    closeFooterModal(modalId);
-                }
+                if (event.target === footerModal) closeFooterModal(modalId);
             });
         });
 
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             const modal = document.getElementById('registroModal');
-            
             if (e.key === 'Escape') {
-                if (modal.classList.contains('active')) {
-                    closeModal();
-                }
-                
-                // Close any open footer modal
-                const footerModals = ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'];
-                footerModals.forEach(modalId => {
+                if (modal.classList.contains('active')) closeModal();
+                ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'].forEach(modalId => {
                     const footerModal = document.getElementById(modalId);
-                    if (footerModal.classList.contains('active')) {
-                        closeFooterModal(modalId);
-                    }
+                    if (footerModal.classList.contains('active')) closeFooterModal(modalId);
                 });
             }
-            
-            // Tab navigation within modal
+
             if (e.key === 'Tab' && modal.classList.contains('active')) {
                 const focusableElements = modal.querySelectorAll('input, select, button');
                 const firstElement = focusableElements[0];
                 const lastElement = focusableElements[focusableElements.length - 1];
-                
                 if (e.shiftKey && document.activeElement === firstElement) {
-                    e.preventDefault();
-                    lastElement.focus();
+                    e.preventDefault(); lastElement.focus();
                 } else if (!e.shiftKey && document.activeElement === lastElement) {
-                    e.preventDefault();
-                    firstElement.focus();
+                    e.preventDefault(); firstElement.focus();
                 }
             }
         });
+    })();
     </script>
 </body>
 </html>
