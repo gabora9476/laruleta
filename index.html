@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#0f172a">
+    <title>Ronda Club - Sorteos Diarios</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230f172a%22/><circle cx=%2250%22 cy=%2250%22 r=%2234%22 fill=%22none%22 stroke=%22%2300E5FF%22 stroke-width=%228%22 stroke-dasharray=%22150 80%22/><circle cx=%2250%22 cy=%2250%22 r=%2210%22 fill=%22%2300E5FF%22/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230f172a%22/><circle cx=%2250%22 cy=%2250%22 r=%2234%22 fill=%22none%22 stroke=%22%2300E5FF%22 stroke-width=%228%22 stroke-dasharray=%22150 80%22/><circle cx=%2250%22 cy=%2250%22 r=%2210%22 fill=%22%2300E5FF%22/></svg>">
+    <link rel="preconnect" href="https://xcpsryvvszwxiqdujgjr.supabase.co">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; overflow-x: hidden; width: 100%; }
+
+        :root {
+            --primary: #00E5FF;
+            --primary-dark: #00B8D4;
+            --secondary: #FFFFFF;
+            --accent: #1DE9B6;
+            --bg-dark: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --bronze: #CD7F32;
+            --silver: #E0E0E0;
+            --gold: #FFD700;
+            --diamond: #B9F2FF;
+            --rodio: #E1BEE7;
+            --space: clamp(12px, 2.6vw, 20px);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top center, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input, select { font-family: inherit; }
+        a { -webkit-tap-highlight-color: rgba(0,229,255,0.25); }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            border-radius: 50%;
+            animation: float-up 15s infinite linear;
+            opacity: 0.3;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: clamp(20px, 4vw, 40px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: clamp(16px, 4vw, 30px);
+            padding: clamp(46px, 10vw, 40px) clamp(16px, 5vw, 40px) clamp(22px, 5vw, 40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: shimmer 6s infinite;
+            pointer-events: none;
+        }
+        @keyframes shimmer { 0% { transform: translate(-100%, -100%) rotate(45deg); } 100% { transform: translate(100%, 100%) rotate(45deg); } }
+
+        .header h1 {
+            font-size: clamp(1.7rem, 6vw, 3.5em);
+            font-weight: 800;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            margin-bottom: 8px;
+        }
+        .header p { font-size: clamp(0.85rem, 2.4vw, 1.2em); color: rgba(255,255,255,0.8); }
+
+        .vip-badge-header {
+            position: absolute;
+            top: clamp(8px, 2vw, 20px);
+            right: clamp(8px, 2vw, 20px);
+            background: rgba(0,0,0,0.35);
+            padding: clamp(5px, 1.4vw, 8px) clamp(10px, 3vw, 20px);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            font-size: clamp(0.68rem, 2vw, 0.9em);
+            color: white;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        .vip-badge-header:hover {
+            background: var(--primary);
+            color: #0f172a;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr min(400px, 38%);
+            gap: var(--space);
+            align-items: start;
+        }
+
+        .ruleta-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: clamp(16px, 4vw, 30px);
+            padding: clamp(18px, 4vw, 40px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative;
+            min-width: 0;
+        }
+
+        .status-banner {
+            padding: clamp(8px, 2vw, 12px) clamp(14px, 4vw, 30px);
+            border-radius: 15px;
+            font-weight: bold; font-size: clamp(0.72rem, 2.4vw, 1.2em); text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: clamp(18px, 4vw, 30px);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative; overflow: hidden;
+            display: inline-flex; align-items: center; gap: 10px;
+            max-width: 100%;
+        }
+        .status-active {
+            background: rgba(0, 229, 255, 0.1); color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green { 0%,100% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); } 50% { box-shadow: 0 0 40px rgba(0, 229, 255, 0.5); } }
+
+        /* ---------- RULETA: contenedor 100% fluido, sin hacks de scale() ---------- */
+        .ruleta-responsive-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(6px, 2vw, 20px) 0;
+        }
+
+        .ruleta-wrapper {
+            width: min(100%, 440px);
+            aspect-ratio: 1 / 1;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 clamp(6px, 2vw, 10px) rgba(15, 23, 42, 1),
+                0 0 0 calc(clamp(6px, 2vw, 10px) + 2px) var(--primary),
+                0 0 60px rgba(0, 229, 255, 0.4);
+        }
+
+        .ruleta-inner {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            overflow: visible;
+            position: relative;
+            background: #1e293b;
+            transform: rotate(0deg);
+            will-change: transform;
+        }
+
+        .segment {
+            position: absolute; top: 0; left: 50%; width: 50%; height: 50%;
+            transform-origin: 0% 100%;
+            clip-path: polygon(0 0, 60% 0, 0 100%);
+        }
+
+        .segment-number {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 229, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+        }
+
+        .segment-button {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 229, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 10;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            touch-action: manipulation;
+        }
+
+        .segment-button:hover {
+            background: var(--primary);
+            border-color: white;
+            transform: scale(1.25);
+            box-shadow: 0 0 20px var(--primary);
+            color: #000;
+        }
+
+        .segment-button.occupied {
+            background: rgba(255, 65, 54, 0.3);
+            border-color: rgba(255, 65, 54, 0.5);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .segment-button.occupied:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 65, 54, 0.3);
+            color: white;
+        }
+
+        .segment-button.verified {
+            background: rgba(0, 229, 255, 0.4);
+            border-color: var(--primary);
+        }
+
+        .ruleta-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 18%; height: 18%;
+            min-width: 46px; min-height: 46px;
+            background: radial-gradient(circle, #fff, var(--primary));
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+            z-index: 20;
+            display: flex; align-items: center; justify-content: center;
+            font-size: clamp(1.1rem, 4vw, 2rem); color: #000;
+            border: 4px solid #fff;
+        }
+
+        .pointer {
+            position: absolute; top: clamp(-22px, -6vw, -30px); left: 50%; transform: translateX(-50%);
+            z-index: 30; font-size: clamp(2rem, 7vw, 4em); color: #ff3366;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+        }
+
+        .sidebar { display: flex; flex-direction: column; gap: var(--space); min-width: 0; }
+
+        .info-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: clamp(14px, 3vw, 20px);
+            transition: transform 0.3s;
+            max-height: 300px;
+            overflow: hidden;
+        }
+        .info-panel:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .panel-header {
+            font-size: clamp(1rem, 2.6vw, 1.2em); color: var(--primary); margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px; font-weight: bold;
+            text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;
+        }
+
+        .detail-row {
+            display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .detail-label { color: rgba(255,255,255,0.6); font-size: clamp(0.8rem, 2.2vw, 0.95em); }
+        .detail-value { font-weight: bold; color: white; font-size: clamp(0.8rem, 2.2vw, 0.95em); text-align: right; }
+
+        .participants-list { max-height: 250px; overflow-y: auto; padding-right: 6px; }
+        .p-item {
+            background: rgba(255,255,255,0.05); border-radius: 10px; padding: 8px;
+            margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;
+            transition: 0.2s;
+        }
+        .p-item:hover { background: rgba(0, 229, 255, 0.1); }
+        .p-badge {
+            background: var(--primary); color: #000; width: 28px; height: 28px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;
+            font-size: 0.85em; flex-shrink: 0;
+        }
+
+        .btn-action {
+            width: 100%; padding: clamp(11px, 2.6vw, 15px); border-radius: 15px; border: none;
+            color: white; font-weight: bold; font-size: clamp(0.85rem, 2.4vw, 1.1em); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s ease; text-decoration: none; margin-bottom: 10px;
+            position: relative; overflow: hidden;
+            min-height: 44px;
+        }
+        .btn-whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        .btn-whatsapp:hover { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); transform: translateY(-3px); }
+
+        .btn-news { background: linear-gradient(135deg, #00E5FF, #00B8D4); color: #000; box-shadow: 0 5px 15px rgba(0, 229, 255, 0.3); }
+        .btn-news:hover { box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5); transform: translateY(-3px); }
+
+        .winners-section {
+            margin-top: var(--space);
+            background: rgba(255,255,255,0.03);
+            border-radius: clamp(16px, 4vw, 20px);
+            padding: clamp(16px, 4vw, 25px);
+            border: 1px solid var(--glass-border);
+        }
+        .winners-section h3 { font-size: clamp(1.05rem, 3vw, 1.5em); }
+        .custom-table { width: 100%; border-collapse: collapse; font-size: clamp(0.78rem, 2.2vw, 1rem); }
+        .custom-table th { text-align: left; padding: 10px 12px; color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); white-space: nowrap; }
+        .custom-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tag-number { background: rgba(0,229,255,0.2); color: var(--primary); padding: 4px 9px; border-radius: 5px; font-weight: bold; white-space: nowrap; }
+
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .custom-table { min-width: 480px; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000;
+            align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        .modal.active { display: flex; animation: fade-in 0.3s; }
+        @keyframes fade-in { from {opacity:0;} to {opacity:1;} }
+
+        .modal-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: clamp(18px, 4vw, 25px);
+            border-radius: clamp(18px, 4vw, 25px); width: 100%; max-width: 480px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.2);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-input, .form-select {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px; color: white; font-size: 16px; /* 16px fijo evita zoom automático en iOS */
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0,229,255,0.2);
+        }
+        .form-select option { background: #1e293b; color: white; }
+        .form-label-inline { display:block; margin-bottom:5px; color:var(--primary); font-weight: bold; font-size: 0.92em; }
+
+        .footer {
+            text-align: center;
+            padding: clamp(24px, 6vw, 40px);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: clamp(18px, 4vw, 30px) clamp(18px, 4vw, 30px) 0 0;
+            margin-top: clamp(30px, 6vw, 50px);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; justify-content: center; gap: clamp(10px, 3vw, 30px); margin-bottom: 20px; flex-wrap: wrap; }
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease;
+            padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: clamp(0.78rem, 2.2vw, 1rem);
+        }
+        .footer-link:hover { color: var(--primary); transform: translateY(-2px); background: rgba(0, 229, 255, 0.1); }
+        .footer p { margin-bottom: 10px; font-size: clamp(0.75rem, 2.1vw, 1rem); }
+
+        .footer-modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px);
+            padding: 16px;
+        }
+        .footer-modal.active { display: flex; align-items: center; justify-content: center; animation: modalFadeIn 0.3s ease; }
+        .footer-modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.93));
+            backdrop-filter: blur(20px);
+            padding: clamp(18px, 4vw, 25px);
+            border-radius: clamp(18px, 4vw, 30px);
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 2px solid var(--primary);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+            position: relative;
+            color: #333;
+            font-size: clamp(0.85rem, 2.2vw, 0.95em);
+        }
+        .footer-modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid rgba(0, 229, 255, 0.2);
+        }
+        .footer-modal-header h2 { color: #333; font-size: clamp(1.15rem, 3.4vw, 1.6em); margin: 0; padding-right: 10px; }
+        .close-modal { background: none; border: none; font-size: 2em; cursor: pointer; color: #666; transition: color 0.3s ease; line-height: 1; }
+        .close-modal:hover { color: var(--primary); }
+        .footer-modal-content h3 { color: var(--primary); margin-top: 20px; margin-bottom: 12px; font-size: clamp(1rem, 2.8vw, 1.3em); }
+        .footer-modal-content p { line-height: 1.5; margin-bottom: 12px; }
+        .footer-modal-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .footer-modal-content li { margin-bottom: 6px; line-height: 1.4; }
+
+        .contact-info { background: rgba(0, 229, 255, 0.1); padding: 15px; border-radius: 12px; margin: 15px 0; text-align: center; border: 2px solid rgba(0, 229, 255, 0.3); }
+        .contact-phone { font-size: clamp(1.05rem, 3vw, 1.3em); font-weight: bold; color: #25D366; margin: 8px 0; }
+        .contact-whatsapp-btn {
+            display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: white;
+            text-decoration: none; padding: 10px 20px; border-radius: 25px; margin-top: 12px;
+            transition: all 0.3s ease; font-weight: bold; font-size: 0.95em;
+        }
+        .contact-whatsapp-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
+
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalSlideIn { from { transform: translateY(-50px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+        /* Foco visible para navegación por teclado */
+        a:focus-visible, button:focus-visible, .segment-button:focus-visible,
+        input:focus-visible, select:focus-visible {
+            outline: 3px solid var(--primary); outline-offset: 2px;
+        }
+
+        /* ---------- Layout: una sola columna en tablet / móvil ---------- */
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            .ruleta-section { order: 1; }
+            .sidebar { order: 2; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding-top: 60px; }
+            .vip-badge-header { top: 10px; right: 10px; }
+        }
+    </style>
+<style id="ronda-club-theme">
+/* ===== RONDA CLUB: tema neón casino + diseño adaptativo (solo estilos; la lógica JS no se toca) ===== */
+:root{--primary:#00E5FF;--primary-dark:#00B8D4;--mint:#1DE9B6;--bg-dark:#0f172a;--glass-border:rgba(0,229,255,.28)}
+html,body{font-family:'Montserrat','Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body{background:radial-gradient(ellipse at 50% 0,#1e3a5f 0,#0f172a 55%,#070b17 100%) fixed;min-height:100vh;min-height:100dvh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-conic-gradient(from 0deg at 50% 28%,rgba(0,229,255,.07) 0 6deg,transparent 6deg 15deg);-webkit-mask-image:radial-gradient(circle at 50% 28%,#000 0,transparent 70%);mask-image:radial-gradient(circle at 50% 28%,#000 0,transparent 70%)}
+.container{padding-left:max(var(--space),env(safe-area-inset-left));padding-right:max(var(--space),env(safe-area-inset-right));padding-bottom:max(var(--space),env(safe-area-inset-bottom))}
+.particle:nth-child(3n){background:var(--mint);box-shadow:0 0 10px var(--mint)}
+/* Encabezado */
+.header{border:2px solid rgba(0,229,255,.55);background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.02));box-shadow:0 0 40px rgba(0,229,255,.35),inset 0 0 60px rgba(0,229,255,.12);padding-bottom:clamp(44px,7vw,64px)}
+.header::after{content:"";position:absolute;left:5%;right:5%;bottom:12px;height:18px;background:radial-gradient(circle,#fff 0 2.5px,#00E5FF 3px 4.5px,transparent 5px) 0 0/26px 18px repeat-x;filter:drop-shadow(0 0 5px #00E5FF);pointer-events:none}
+.header h1{display:flex;align-items:center;justify-content:center;gap:.3em;flex-wrap:wrap;background:none;-webkit-text-fill-color:#fff;color:#fff;font-weight:900;letter-spacing:-1px;text-shadow:0 0 6px #fff,0 0 22px #00E5FF,0 0 55px #00E5FF}
+.rc-mark{width:1.05em;height:1.05em;flex:none;filter:drop-shadow(0 0 10px #00E5FF);animation:rc-spin 16s linear infinite}
+@keyframes rc-spin{to{transform:rotate(360deg)}}
+.header p{font-weight:600;letter-spacing:.4px}
+.vip-badge-header{background:rgba(15,23,42,.8);border:2px solid var(--primary);box-shadow:0 0 14px rgba(0,229,255,.4)}
+.vip-badge-header i{color:var(--primary)!important}
+/* Ruleta */
+.ruleta-section{border:2px solid rgba(0,229,255,.35);box-shadow:0 0 50px rgba(0,229,255,.18),inset 0 0 80px rgba(0,229,255,.06)}
+.ruleta-section::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(0,229,255,.08) 0 6deg,transparent 6deg 15deg);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 66%);mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 66%)}
+.ruleta-wrapper{box-shadow:0 0 0 clamp(6px,2vw,10px) #0f172a,0 0 0 calc(clamp(6px,2vw,10px) + 3px) var(--primary),0 0 40px rgba(0,229,255,.7),0 0 110px rgba(0,229,255,.4)}
+.ruleta-wrapper::before{content:"";position:absolute;inset:calc(-1*clamp(16px,3.4vw,24px));border-radius:50%;pointer-events:none;background:repeating-conic-gradient(#fff 0 1.6deg,transparent 1.6deg 7.5deg);-webkit-mask-image:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));mask-image:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));filter:drop-shadow(0 0 4px #00E5FF)}
+.ruleta-inner>.segment:nth-child(6n+1){background-color:#0b1226!important}
+.ruleta-inner>.segment:nth-child(6n+4){background-color:#00B8D4!important}
+.segment-button{background:rgba(15,23,42,.9);border:2px solid rgba(0,229,255,.75);box-shadow:0 0 10px rgba(0,229,255,.5)}
+.segment-button:hover{background:var(--primary);color:#0f172a;box-shadow:0 0 22px var(--primary),0 0 40px rgba(0,229,255,.6)}
+.segment-button.occupied{background:rgba(255,51,102,.35);border-color:rgba(255,51,102,.75);box-shadow:none}
+.segment-button.occupied:hover{background:rgba(255,51,102,.35);color:#fff;box-shadow:none}
+.segment-button.verified{background:rgba(29,233,182,.35);border-color:var(--mint);box-shadow:0 0 12px rgba(29,233,182,.6)}
+.ruleta-center{background:radial-gradient(circle,#1e293b,#0f172a);border:4px solid var(--primary);color:var(--primary);box-shadow:0 0 30px var(--primary),inset 0 0 18px rgba(0,229,255,.5)}
+.pointer{color:#fff;filter:drop-shadow(0 0 8px #00E5FF) drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+#countdown{display:inline-block;padding:.1em .55em;border-radius:18px;border:2px solid rgba(0,229,255,.55);background:rgba(0,0,0,.35);letter-spacing:.06em;font-family:'Montserrat',monospace!important;font-variant-numeric:tabular-nums;text-shadow:0 0 6px #fff,0 0 22px #00E5FF!important;box-shadow:0 0 30px rgba(0,229,255,.3),inset 0 0 20px rgba(0,229,255,.15)}
+/* Paneles, tabla y botones */
+.info-panel,.winners-section{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:2px solid rgba(0,229,255,.35);box-shadow:0 0 30px rgba(0,229,255,.12),inset 0 0 24px rgba(0,229,255,.06)}
+.info-panel:hover{border-color:var(--primary);box-shadow:0 0 40px rgba(0,229,255,.35)}
+.panel-header{text-shadow:0 0 14px rgba(0,229,255,.7);border-bottom-color:rgba(0,229,255,.25)}
+#infoPremio{color:#fff!important;font-size:1.25em;text-shadow:0 0 6px #fff,0 0 20px #00E5FF!important}
+.winners-section h3{color:#fff!important;text-shadow:0 0 6px #fff,0 0 22px #00E5FF!important}
+.custom-table th{border-bottom:2px solid rgba(0,229,255,.5)}
+.custom-table tbody tr:hover{background:rgba(0,229,255,.07)}
+.tag-number{background:rgba(0,229,255,.18);border:1px solid rgba(0,229,255,.6);box-shadow:0 0 10px rgba(0,229,255,.35)}
+.btn-news{background:linear-gradient(135deg,#00E5FF,#1DE9B6);color:#0f172a;box-shadow:0 0 28px rgba(0,229,255,.6),inset 0 2px 0 rgba(255,255,255,.5)}
+.btn-news:hover{box-shadow:0 0 40px rgba(0,229,255,.9),0 0 80px rgba(29,233,182,.5)}
+.btn-whatsapp{box-shadow:0 0 24px rgba(37,211,102,.45)}
+.modal{background:rgba(3,7,18,.86)}
+.modal-card,.footer-modal-content{border:2px solid var(--primary);box-shadow:0 0 40px rgba(0,229,255,.5),0 0 100px rgba(0,229,255,.2)}
+.modal-card{max-height:92vh;max-height:92dvh}
+.form-input:focus,.form-select:focus{box-shadow:0 0 0 3px rgba(0,229,255,.35),0 0 20px rgba(0,229,255,.4)}
+.footer-link:hover{text-shadow:0 0 12px var(--primary)}
+a:focus-visible,button:focus-visible,.segment-button:focus-visible,.vip-badge-header:focus-visible,.footer-link:focus-visible,.close-modal:focus-visible{outline:3px solid #fff;outline-offset:3px}
+/* Adaptativo: PC grande, laptop, tablet, móvil */
+@media (min-width:1600px){.container{max-width:1500px}.ruleta-wrapper{width:min(100%,600px)}}
+@media (min-width:1200px){.ruleta-wrapper{width:min(100%,540px)}.main-content{grid-template-columns:1fr min(420px,36%)}}
+@media (min-width:901px) and (max-width:1199px){.main-content{grid-template-columns:1fr 340px}}
+@media (min-width:600px) and (max-width:900px){.sidebar{display:grid;grid-template-columns:1fr 1fr;align-items:start}.sidebar>.info-panel:nth-child(3),.sidebar>div:last-child{grid-column:1/-1}.ruleta-wrapper{width:min(100%,500px)}}
+@media (max-width:480px){.header::after{left:8%;right:8%}.ruleta-wrapper::before{inset:-16px}}
+@media (hover:none){.info-panel:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.particle,.header::before,.status-active,.rc-mark{animation:none!important}}
+</style>
+</head>
+<body>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="vip-badge-header">
+                <i class="fa-solid fa-crown" style="color: var(--gold);"></i>
+                <span id="headerLevel">Nivel: Nuevo</span>
+            </div>
+
+            <h1><svg class="rc-mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="43" fill="none" stroke="#00E5FF" stroke-width="7" stroke-dasharray="150 120" transform="rotate(-60 50 50)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#fff" stroke-width="3"/><path d="M50 19V81M19 50H81M28 28L72 72M72 28L28 72" stroke="#fff" stroke-width="2"/><circle cx="50" cy="50" r="10" fill="#00E5FF"/></svg><span>Ronda Club</span></h1>
+            <p>Sorteos transparentes. Tu ronda diaria de suerte.</p>
+        </header>
+
+        <div class="main-content">
+
+            <div class="ruleta-section">
+                <div id="statusBanner" class="status-banner status-active">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
+                </div>
+
+                <div class="ruleta-responsive-container">
+                    <div class="ruleta-wrapper" id="ruletaWrapper">
+                        <div class="pointer"><i class="fa-solid fa-sort-down"></i></div>
+                        <div class="ruleta-inner" id="ruletaInner"></div>
+                        <div class="ruleta-center">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: clamp(20px,5vw,40px); text-align: center;">
+                    <div style="color: var(--primary); font-size: clamp(0.75rem,2.2vw,1.1em); letter-spacing: 2px; margin-bottom: 5px;">TIEMPO RESTANTE</div>
+                    <div id="countdown" style="font-size: clamp(1.7rem,7vw,3em); font-weight: 800; font-family: monospace; text-shadow: 0 0 20px rgba(255,255,255,0.3);">--:--:--</div>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+
+                <div class="info-panel">
+                    <div class="panel-header"><i class="fa-solid fa-circle-info"></i> Información</div>
+                    <div class="detail-row">
+                        <span class="detail-label">Premio Actual</span>
+                        <span class="detail-value" style="color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.5);" id="infoPremio">$0 USD</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Costo Ticket</span>
+                        <span class="detail-value" style="color: var(--primary);" id="infoCosto">GRATIS</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Disponibles</span>
+                        <span class="detail-value" id="infoDisp">0/0</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Fecha Sorteo</span>
+                        <span class="detail-value" id="infoFecha">--/--</span>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="panel-header"><i class="fa-solid fa-layer-group"></i> Niveles VIP</div>
+                    <div style="font-size: clamp(0.78rem,2.2vw,0.9em); display: grid; gap: 8px;">
+                        <div class="detail-row" style="padding: 5px 0;"><span><i class="fa-regular fa-user"></i> Nuevo</span> <span style="opacity:0.7">0-3 turnos</span></div>
+                        <div class="detail-row" style="padding: 5px 0; color: var(--bronze);"><span><i class="fa-solid fa-medal"></i> Bronce</span> <span>Nivel 1</span></div>
+                        <div class="detail-row" style="padding: 5px 0; color: var(--silver);"><span><i class="fa-solid fa-medal"></i> Plata</span> <span>Nivel 2</span></div>
+                        <div class="detail-row" style="padding: 5px 0; color: var(--gold);"><span><i class="fa-solid fa-medal"></i> Oro</span> <span>Nivel 3</span></div>
+                        <div class="detail-row" style="padding: 5px 0; color: var(--diamond);"><span><i class="fa-regular fa-gem"></i> Diamante</span> <span>Nivel 4</span></div>
+                        <div class="detail-row" style="padding: 5px 0; color: var(--rodio); font-weight:bold; text-shadow: 0 0 5px white;"><span><i class="fa-solid fa-crown"></i> Rodio</span> <span>MAX</span></div>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-users"></i> Participantes
+                        <span style="font-size:0.6em; background:var(--primary); color:black; padding:2px 8px; border-radius:10px; margin-left:auto" id="partCount">0</span>
+                    </div>
+                    <div class="participants-list" id="participantsList">
+                        <div style="text-align:center; padding:10px; color:rgba(255,255,255,0.3)">Cargando...</div>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="https://wa.me/584228745777" target="_blank" rel="noopener" class="btn-action btn-whatsapp">
+                        <i class="fa-brands fa-whatsapp" style="font-size: 1.3em;"></i> Soporte vía Whatsapp
+                    </a>
+                    <a href="https://whatsapp.com/channel/0029Vb7PUGJGE56guOnS6x2j" target="_blank" rel="noopener" class="btn-action btn-news">
+                        <i class="fa-solid fa-bullhorn"></i> Canal de Noticias
+                    </a>
+                </div>
+            </aside>
+        </div>
+
+        <div class="winners-section">
+            <h3 style="color: var(--gold); margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,215,0,0.3);">
+                <i class="fa-solid fa-trophy"></i> Ganadores Recientes
+            </h3>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Ganador</th>
+                            <th>Número</th>
+                            <th>Premio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="winnersTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a class="footer-link" onclick="openFooterModal('terminosModal')">Términos y Condiciones</a>
+                    <a class="footer-link" onclick="openFooterModal('privacidadModal')">Política de Privacidad</a>
+                    <a class="footer-link" onclick="openFooterModal('contactoModal')">Contacto</a>
+                    <a class="footer-link" onclick="openFooterModal('ayudaModal')">Ayuda</a>
+                </div>
+                <p>&copy; 2026 Ronda Club. Todos los derechos reservados.</p>
+                <p style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
+                    Sistema de sorteos premium con tecnología blockchain y transparencia garantizada
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <div class="modal" id="registroModal">
+        <div class="modal-card">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 20px; gap: 10px;">
+                <h2 style="color:white; font-size: clamp(1.1rem,3.4vw,1.5rem);">Reservar <span style="color:var(--primary)">#<span id="modalNum"></span></span></h2>
+                <i class="fa-solid fa-xmark" style="font-size: 1.5em; cursor: pointer; flex-shrink:0;" onclick="closeModal()"></i>
+            </div>
+            <form id="formRegistro">
+                <label class="form-label-inline">Nombre Completo</label>
+                <input type="text" class="form-input" id="regNombre" required placeholder="Ej: Juan Pérez" maxlength="80">
+
+                <label class="form-label-inline">WhatsApp</label>
+                <input type="tel" class="form-input" id="regTel" required placeholder="Ej: 4121234567" maxlength="20">
+
+                <label class="form-label-inline">Método de Pago</label>
+                <select class="form-select" id="regMetodoPago" required>
+                    <option value="">Seleccionar método...</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Binance">Binance</option>
+                    <option value="Cuenta Bancaria">Cuenta Bancaria</option>
+                </select>
+
+                <label class="form-label-inline">Referencia de Pago</label>
+                <input type="text" class="form-input" id="regRef" required placeholder="Últimos 4 dígitos o código" maxlength="60">
+
+                <label class="form-label-inline">Código de Referido <span style="opacity: 0.6; font-size: 0.9em;">(Opcional)</span></label>
+                <input type="text" class="form-input" id="regCodigoRef" placeholder="Ej: REFABC12345" style="text-transform: uppercase;" maxlength="20">
+
+                <button type="submit" class="btn-action btn-news" style="margin-top: 10px;">
+                    <i class="fa-solid fa-check"></i> Confirmar Reserva
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Modals -->
+    <div id="terminosModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2><i class="fa-solid fa-file-contract"></i> Términos y Condiciones</h2>
+                <button class="close-modal" onclick="closeFooterModal('terminosModal')">&times;</button>
+            </div>
+            <h3><i class="fa-solid fa-handshake"></i> Aceptación</h3>
+            <p>Al participar en Ronda Club, aceptas estos términos y condiciones.</p>
+
+            <h3><i class="fa-solid fa-user-check"></i> Elegibilidad</h3>
+            <p>Debes ser mayor de 18 años para participar en nuestros sorteos.</p>
+            <ul>
+                <li>Tener identificación válida</li>
+                <li>Proporcionar información veraz</li>
+                <li>Cumplir con leyes locales</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-dice"></i> Proceso de Sorteo</h3>
+            <p>Todos los sorteos se realizan de manera transparente:</p>
+            <ul>
+                <li>Números asignados por orden de pago verificado</li>
+                <li>Sorteo en vivo a la hora programada</li>
+                <li>Resultados inmutables una vez anunciados</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-credit-card"></i> Pagos y Reembolsos</h3>
+            <p>Pagos deben ser verificados antes del sorteo. No se aceptan reembolsos una vez iniciado.</p>
+
+            <h3><i class="fa-solid fa-shield-alt"></i> Responsabilidades</h3>
+            <p>Participantes son responsables de información correcta y datos actualizados.</p>
+
+            <h3><i class="fa-solid fa-cog"></i> Modificaciones</h3>
+            <p>Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>
+        </div>
+    </div>
+
+    <div id="privacidadModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2><i class="fa-solid fa-shield-halved"></i> Política de Privacidad</h2>
+                <button class="close-modal" onclick="closeFooterModal('privacidadModal')">&times;</button>
+            </div>
+            <h3><i class="fa-solid fa-database"></i> Información Recopilada</h3>
+            <p>Recopilamos la siguiente información para procesar tu participación:</p>
+            <ul>
+                <li>Nombre completo</li>
+                <li>Número de teléfono</li>
+                <li>Referencia de pago</li>
+                <li>Historial de participaciones</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-lock"></i> Uso de la Información</h3>
+            <p>Utilizamos tu información para:</p>
+            <ul>
+                <li>Procesar tu participación en sorteos</li>
+                <li>Contactarte si eres ganador</li>
+                <li>Enviarte actualizaciones sobre sorteos</li>
+                <li>Mejorar nuestros servicios</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-key"></i> Protección de Datos</h3>
+            <p>Implementamos medidas de seguridad para proteger tu información personal:</p>
+            <ul>
+                <li>Tu teléfono, método de pago y referencia nunca se exponen públicamente</li>
+                <li>Acceso restringido a información personal</li>
+                <li>Copias de seguridad regulares</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-share-nodes"></i> Compartir Información</h3>
+            <p>No vendemos, comercializamos o transferimos tu información personal a terceros, excepto:</p>
+            <ul>
+                <li>Cuando sea requerido por ley</li>
+                <li>Para procesar pagos (con procesadores seguros)</li>
+                <li>Con tu consentimiento explícito</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-user-cog"></i> Tus Derechos</h3>
+            <p>Tienes derecho a:</p>
+            <ul>
+                <li>Acceder a tu información personal</li>
+                <li>Solicitar correcciones</li>
+                <li>Solicitar eliminación de datos</li>
+                <li>Limitar el procesamiento</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="contactoModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2><i class="fa-solid fa-address-book"></i> Contacto</h2>
+                <button class="close-modal" onclick="closeFooterModal('contactoModal')">&times;</button>
+            </div>
+            <div class="contact-info">
+                <h3><i class="fa-solid fa-building"></i> GStar INK</h3>
+                <p>Tu plataforma de confianza para sorteos premium</p>
+
+                <div class="contact-phone"><i class="fa-solid fa-phone"></i> +58 422-874-5777</div>
+
+                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
+                </a>
+            </div>
+
+            <h3><i class="fa-solid fa-clock"></i> Horario de Atención</h3>
+            <p><strong>Lunes a Domingo:</strong> 8:00 AM - 10:00 PM (Hora de Venezuela)</p>
+
+            <h3><i class="fa-solid fa-envelope"></i> Otros Canales</h3>
+            <ul>
+                <li><strong>Canal de Noticias:</strong> <a href="https://www.whatsapp.com/channel/0029Vb5zME7EVccL7OuS3H0L" target="_blank" rel="noopener" style="color: var(--primary);">WhatsApp Channel</a></li>
+                <li><strong>Soporte Técnico:</strong> Disponible 24/7 vía WhatsApp</li>
+                <li><strong>Reclamos:</strong> Respuesta en menos de 24 horas</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-question-circle"></i> ¿En qué podemos ayudarte?</h3>
+            <ul>
+                <li>Información sobre sorteos</li>
+                <li>Verificación de pagos</li>
+                <li>Consultas sobre niveles VIP</li>
+                <li>Reportar problemas técnicos</li>
+                <li>Sugerencias y comentarios</li>
+            </ul>
+
+            <p style="margin-top: 15px; font-style: italic;">
+                Estamos aquí para brindarte la mejor experiencia en sorteos premium.
+                No dudes en contactarnos para cualquier consulta.
+            </p>
+        </div>
+    </div>
+
+    <div id="ayudaModal" class="footer-modal">
+        <div class="footer-modal-content">
+            <div class="footer-modal-header">
+                <h2><i class="fa-solid fa-question"></i> Centro de Ayuda</h2>
+                <button class="close-modal" onclick="closeFooterModal('ayudaModal')">&times;</button>
+            </div>
+            <h3><i class="fa-solid fa-rocket"></i> Cómo Participar</h3>
+            <p><strong>Paso 1:</strong> Espera a que un sorteo esté activo</p>
+            <p><strong>Paso 2:</strong> Haz clic en un número disponible (color brillante)</p>
+            <p><strong>Paso 3:</strong> Completa tus datos personales</p>
+            <p><strong>Paso 4:</strong> Realiza el pago según las instrucciones</p>
+            <p><strong>Paso 5:</strong> Envía tu comprobante vía WhatsApp</p>
+            <p><strong>Paso 6:</strong> Espera la verificación y el sorteo</p>
+
+            <h3><i class="fa-solid fa-crown"></i> Sistema de Niveles VIP</h3>
+            <ul>
+                <li><strong><i class="fa-regular fa-user"></i> Nuevo (0-3 part.):</strong> Usuario nuevo</li>
+                <li><strong><i class="fa-solid fa-medal"></i> Bronce (3+ part.):</strong> 5% descuento</li>
+                <li><strong><i class="fa-solid fa-medal"></i> Plata (1000 pts):</strong> 10% descuento + 1 número gratis</li>
+                <li><strong><i class="fa-solid fa-medal"></i> Oro (5000 pts):</strong> 15% descuento + 2 números gratis</li>
+                <li><strong><i class="fa-regular fa-gem"></i> Diamante (10000 pts):</strong> 20% descuento + 3 números gratis</li>
+                <li><strong><i class="fa-solid fa-crown"></i> Rodio (20000+ pts):</strong> 25% descuento + 5 números gratis</li>
+            </ul>
+            <p><em>Necesitas 3 participaciones para alcanzar Bronce y empezar a acumular puntos. Ganas 100 puntos por cada participación verificada a partir de Bronce.</em></p>
+
+            <h3><i class="fa-solid fa-circle-info"></i> Estados de los Números</h3>
+            <ul>
+                <li><strong><i class="fa-circle"></i> Brillante:</strong> Disponible para seleccionar</li>
+                <li><strong><i class="fa-circle"></i> Amarillo:</strong> Reservado (pago pendiente de verificación)</li>
+                <li><strong><i class="fa-circle"></i> Verde:</strong> Ocupado (pago verificado)</li>
+                <li><strong><i class="fa-circle"></i> Gris:</strong> No disponible</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-credit-card"></i> Métodos de Pago Aceptados</h3>
+            <ul>
+                <li>Pago Móvil</li>
+                <li>Zelle (USD)</li>
+                <li>PayPal</li>
+                <li>Transferencias bancarias</li>
+                <li>Binance Pay</li>
+            </ul>
+
+            <h3><i class="fa-solid fa-lightbulb"></i> Preguntas Frecuentes</h3>
+            <p><strong><i class="fa-solid fa-clock"></i> ¿Cuándo se realizan los sorteos?</strong><br>
+            Los sorteos se realizan en las fechas y horas programadas, siempre en vivo.</p>
+
+            <p><strong><i class="fa-solid fa-check-circle"></i> ¿Cómo sé si mi pago fue verificado?</strong><br>
+            Tu número cambiará de amarillo (pendiente) a verde (verificado).</p>
+
+            <p><strong><i class="fa-solid fa-times-circle"></i> ¿Puedo cancelar mi participación?</strong><br>
+            Solo antes de que inicie el sorteo y sujeto a políticas de reembolso.</p>
+
+            <p><strong><i class="fa-solid fa-gift"></i> ¿Cómo recibo mi premio si gano?</strong><br>
+            Te contactaremos inmediatamente vía WhatsApp para coordinar la entrega.</p>
+
+            <h3><i class="fa-solid fa-headset"></i> ¿Necesitas más ayuda?</h3>
+            <p>Si no encuentras la respuesta a tu pregunta, contáctanos directamente:</p>
+            <div class="contact-info">
+                <a href="https://wa.me/584228745777" class="contact-whatsapp-btn" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-whatsapp"></i> Soporte WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+
+        // ==================================================================
+        // CONFIGURACIÓN DE SUPABASE
+        // Usa la clave "publishable" (equivalente pública al anon key):
+        // segura para el navegador porque todo el acceso está limitado por
+        // Row Level Security (ver supabase_setup.sql).
+        // ==================================================================
+        const SUPABASE_URL = 'https://xcpsryvvszwxiqdujgjr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjcHNyeXZ2c3p3eGlxZHVqZ2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDg5OTksImV4cCI6MjA3NzU4NDk5OX0.zeSNs_7tDpN9MFmYOdERS4Bg7QQuMXtqW7iE8HMJNw8';
+        const WHATSAPP_SOPORTE = '584228745777';
+
+        // Si el CDN de Supabase no cargó (red bloqueada, adblock, CDN caído),
+        // seguimos mostrando la página en vez de romper todo el script.
+        const db = (window.supabase && typeof window.supabase.createClient === 'function')
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            : null;
+
+        // ==================================================================
+        // ESTADO LOCAL
+        // ==================================================================
+        let appState = {
+            config: {
+                estado: 'activo', premio: 0, costo_ticket: 0,
+                fecha: '', hora: '', cantidad_numeros: 20,
+                girando: false, desacelerando: false, numero_ganador: null,
+                spin_duracion_ms: 6000
+            },
+            participantes: [],
+            historial: []
+        };
+
+        let selectedNumber = null;
+        let lastSpinId = null;
+        let currentCantidadNumeros = null;
+        let resizeTimer = null;
+
+        // -------- Motor de animación de la ruleta (independiente de CSS keyframes) --------
+        let spinAnimFrame = null;
+        let currentRotation = 0;
+        const FAST_SPIN_SPEED = 14; // grados por frame ~60fps
+
+        function startFastSpin() {
+            stopFastSpin();
+            const inner = document.getElementById('ruletaInner');
+            inner.style.transition = 'none';
+            const tick = () => {
+                currentRotation += FAST_SPIN_SPEED;
+                inner.style.transform = `rotate(${currentRotation}deg)`;
+                spinAnimFrame = requestAnimationFrame(tick);
+            };
+            spinAnimFrame = requestAnimationFrame(tick);
+        }
+
+        function stopFastSpin() {
+            if (spinAnimFrame) {
+                cancelAnimationFrame(spinAnimFrame);
+                spinAnimFrame = null;
+            }
+        }
+
+        function landOnWinner(numeroGanador, cantidadNumeros, duracionMs) {
+            stopFastSpin();
+            const inner = document.getElementById('ruletaInner');
+            const total = cantidadNumeros || currentCantidadNumeros || 1;
+            const angleStep = 360 / total;
+            const centroSegmento = (numeroGanador - 1) * angleStep + angleStep / 2;
+
+            // Ángulo para que el puntero (fijo arriba) quede exactamente sobre el número ganador
+            const objetivo = (360 - centroSegmento) % 360;
+            const vueltasExtra = 6;
+            let finalAngle = (currentRotation - (currentRotation % 360)) + 360 * vueltasExtra + objetivo;
+            while (finalAngle <= currentRotation) finalAngle += 360;
+
+            inner.style.transition = `transform ${Math.max(duracionMs, 60)}ms cubic-bezier(0.12, 0.72, 0.15, 1)`;
+            void inner.offsetWidth; // fuerza reflow para que la transición se aplique correctamente
+            inner.style.transform = `rotate(${finalAngle}deg)`;
+            currentRotation = finalAngle;
+        }
+
+        // ==================================================================
+        // UTILIDADES
+        // ==================================================================
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // ==================================================================
+        // CARGA INICIAL
+        // ==================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            setupFormatters();
+            cargarInicial();
+            suscribirRealtime();
+            window.addEventListener('resize', onResize);
+        });
+
+        function mostrarErrorConexion(detalle) {
+            layoutRuleta(appState.config.cantidad_numeros);
+            const banner = document.getElementById('statusBanner');
+            banner.className = 'status-banner';
+            banner.style.borderColor = '#FF4136';
+            banner.style.color = '#FF4136';
+            banner.style.whiteSpace = 'normal';
+            banner.style.textAlign = 'left';
+            banner.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> <span>Error de conexión: ${escapeHtml(detalle || 'desconocido')}</span>`;
+        }
+
+        async function cargarInicial() {
+            if (!db) {
+                mostrarErrorConexion('no se pudo cargar la librería de Supabase (CDN bloqueado o sin internet)');
+                return;
+            }
+            try {
+                const [{ data: cfg, error: e1 }, { data: parts, error: e2 }, { data: hist, error: e3 }] = await Promise.all([
+                    db.from('sorteo_config').select('*').eq('id', 1).single(),
+                    db.from('participantes').select('numero, nombre, verificado').order('numero', { ascending: true }),
+                    db.from('historial').select('ganador_nombre, ganador_numero, premio, sorteado_en').order('sorteado_en', { ascending: false }).limit(10)
+                ]);
+                if (e1) throw e1;
+                if (e2) console.error('Error cargando participantes:', e2);
+                if (e3) console.error('Error cargando historial:', e3);
+
+                appState.config = cfg || appState.config;
+                appState.participantes = parts || [];
+                appState.historial = hist || [];
+
+                layoutRuleta(appState.config.cantidad_numeros);
+                renderParticipantsList();
+                renderWinnersTable();
+                handleConfigChange(appState.config);
+            } catch (err) {
+                console.error('No se pudo conectar con Supabase:', err);
+                mostrarErrorConexion(err && (err.message || err.details || err.hint) || JSON.stringify(err));
+            }
+        }
+
+        // ==================================================================
+        // TIEMPO REAL — reacciona al instante a lo que hace el panel admin
+        // ==================================================================
+        function suscribirRealtime() {
+            if (!db) return;
+            db.channel('ruleta-publico')
+                .on('postgres_changes',
+                    { event: 'UPDATE', schema: 'public', table: 'sorteo_config' },
+                    (payload) => handleConfigChange(payload.new)
+                )
+                .on('postgres_changes',
+                    { event: '*', schema: 'public', table: 'participantes', select: ['id', 'numero', 'nombre', 'verificado'] },
+                    () => refreshParticipantes()
+                )
+                .on('postgres_changes',
+                    { event: 'INSERT', schema: 'public', table: 'historial' },
+                    () => refreshHistorial()
+                )
+                .subscribe();
+        }
+
+        function handleConfigChange(cfg) {
+            if (!cfg) return;
+            appState.config = cfg;
+
+            if (cfg.cantidad_numeros && cfg.cantidad_numeros !== currentCantidadNumeros) {
+                layoutRuleta(cfg.cantidad_numeros);
+            }
+
+            renderInfoPanel(cfg);
+
+            if (cfg.girando && cfg.spin_id && cfg.spin_id !== lastSpinId) {
+                lastSpinId = cfg.spin_id;
+                startFastSpin();
+            }
+
+            if (cfg.desacelerando && cfg.numero_ganador && cfg.decel_iniciado_en) {
+                const duracion = cfg.spin_duracion_ms || 6000;
+                const transcurrido = Date.now() - new Date(cfg.decel_iniciado_en).getTime();
+                const restante = Math.max(duracion - transcurrido, 60);
+                landOnWinner(cfg.numero_ganador, cfg.cantidad_numeros, restante);
+            }
+
+            if (!cfg.girando && !cfg.desacelerando) {
+                stopFastSpin();
+            }
+        }
+
+        async function refreshParticipantes() {
+            const { data, error } = await db
+                .from('participantes')
+                .select('numero, nombre, verificado')
+                .order('numero', { ascending: true });
+            if (error) { console.error(error); return; }
+            appState.participantes = data || [];
+            updateRuletaEstados(appState.participantes);
+            renderParticipantsList();
+        }
+
+        async function refreshHistorial() {
+            const { data, error } = await db
+                .from('historial')
+                .select('ganador_nombre, ganador_numero, premio, sorteado_en')
+                .order('sorteado_en', { ascending: false })
+                .limit(10);
+            if (error) { console.error(error); return; }
+            appState.historial = data || [];
+            renderWinnersTable();
+        }
+
+        // ==================================================================
+        // RENDER
+        // ==================================================================
+        function renderInfoPanel(cfg) {
+            document.getElementById('infoPremio').textContent = `${cfg.premio ?? 0} USD`;
+            document.getElementById('infoCosto').textContent = (!cfg.costo_ticket || cfg.costo_ticket == 0) ? 'GRATIS' : `${cfg.costo_ticket}`;
+            document.getElementById('infoFecha').textContent = cfg.fecha || '--/--';
+            document.getElementById('infoDisp').textContent =
+                `${Math.max((cfg.cantidad_numeros || 0) - appState.participantes.length, 0)}/${cfg.cantidad_numeros || 0}`;
+
+            const banner = document.getElementById('statusBanner');
+            if (cfg.estado === 'activo') {
+                banner.className = 'status-banner status-active';
+                banner.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> SORTEO EN VIVO';
+            } else if (cfg.estado === 'finalizado') {
+                banner.className = 'status-banner';
+                banner.style.borderColor = 'var(--gold)';
+                banner.style.color = 'var(--gold)';
+                banner.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> FINALIZADO';
+            } else {
+                banner.className = 'status-banner';
+                banner.style.borderColor = 'orange';
+                banner.style.color = 'orange';
+                banner.innerHTML = '<i class="fa-solid fa-lock"></i> CERRADO';
+            }
+
+            updateCountdown(cfg.fecha, cfg.hora);
+        }
+
+        function renderParticipantsList() {
+            const pList = document.getElementById('participantsList');
+            const participantes = appState.participantes;
+            document.getElementById('partCount').textContent = participantes.length;
+
+            pList.innerHTML = participantes.length ? participantes.map(p => `
+                <div class="p-item">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="p-badge">#${p.numero}</div>
+                        <div>
+                            <div style="font-weight:bold">${escapeHtml(p.nombre)}</div>
+                            <div style="font-size:0.8em; color:${p.verificado ? 'var(--primary)' : 'orange'}">
+                                ${p.verificado ? 'Verificado' : 'Pendiente'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<div style="text-align:center; opacity:0.5; padding:20px;">Sin participantes</div>';
+        }
+
+        function renderWinnersTable() {
+            const wTable = document.getElementById('winnersTable');
+            const historial = appState.historial;
+            if (historial && historial.length > 0) {
+                wTable.innerHTML = historial.slice(0, 5).map(h => {
+                    const d = new Date(h.sorteado_en);
+                    const fecha = isNaN(d) ? '--' : d.toLocaleDateString('es-VE');
+                    const hora = isNaN(d) ? '--' : d.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+                    return `
+                    <tr>
+                        <td>${fecha}</td>
+                        <td>${hora}</td>
+                        <td>${escapeHtml(h.ganador_nombre)}</td>
+                        <td><span class="tag-number">#${h.ganador_numero}</span></td>
+                        <td style="color:var(--gold)">${h.premio} USD</td>
+                    </tr>`;
+                }).join('');
+            } else {
+                wTable.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No hay historial reciente</td></tr>';
+            }
+        }
+
+        // ---------- Ruleta: layout 100% fluido según el tamaño real del contenedor ----------
+        function layoutRuleta(total) {
+            const wrapper = document.getElementById('ruletaWrapper');
+            const container = document.getElementById('ruletaInner');
+            if (!wrapper || !container || !total) return;
+
+            const size = wrapper.clientWidth;
+            if (!size) return;
+
+            const center = size / 2;
+            const radius = size * 0.37;
+            const angleStep = 360 / total;
+            const arcLength = (2 * Math.PI * radius) / total;
+            const btnSize = Math.max(14, Math.min(34, arcLength * 0.82, size * 0.085));
+            const fontSize = Math.max(8, btnSize * 0.42);
+            const colors = ['#00B8D4', '#E0F7FA'];
+
+            const frag = document.createDocumentFragment();
+
+            for (let i = 1; i <= total; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'segment';
+                seg.style.backgroundColor = i % 2 === 0 ? colors[0] : colors[1];
+                seg.style.transform = `rotate(${(i - 1) * angleStep}deg)`;
+
+                const angle = ((i - 1) * angleStep + angleStep / 2) * (Math.PI / 180);
+                const x = center + radius * Math.cos(angle - Math.PI / 2);
+                const y = center + radius * Math.sin(angle - Math.PI / 2);
+
+                const numberCircle = document.createElement('div');
+                numberCircle.className = 'segment-number';
+                numberCircle.style.width = numberCircle.style.height = btnSize + 'px';
+                numberCircle.style.left = `${x - btnSize / 2}px`;
+                numberCircle.style.top = `${y - btnSize / 2}px`;
+                numberCircle.style.fontSize = fontSize + 'px';
+                numberCircle.textContent = i;
+
+                const btn = document.createElement('div');
+                btn.className = 'segment-button';
+                btn.dataset.numero = String(i);
+                btn.style.width = btn.style.height = btnSize + 'px';
+                btn.style.left = `${x - btnSize / 2}px`;
+                btn.style.top = `${y - btnSize / 2}px`;
+                btn.style.fontSize = fontSize + 'px';
+                btn.textContent = i;
+                btn.title = `Seleccionar #${i}`;
+                btn.setAttribute('role', 'button');
+                btn.setAttribute('tabindex', '0');
+                btn.addEventListener('click', () => onSegmentClick(i));
+                btn.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSegmentClick(i); }
+                });
+
+                frag.appendChild(seg);
+                frag.appendChild(numberCircle);
+                frag.appendChild(btn);
+            }
+
+            container.innerHTML = '';
+            container.appendChild(frag);
+            currentCantidadNumeros = total;
+            updateRuletaEstados(appState.participantes);
+        }
+
+        function updateRuletaEstados(participantes) {
+            const ocupados = new Map((participantes || []).map(p => [Number(p.numero), p]));
+            document.querySelectorAll('.segment-button').forEach(btn => {
+                const numero = Number(btn.dataset.numero);
+                const p = ocupados.get(numero);
+                btn.classList.toggle('occupied', !!p);
+                btn.classList.toggle('verified', !!(p && p.verificado));
+                if (p) {
+                    btn.title = `Ocupado: ${p.nombre}`;
+                } else {
+                    btn.title = `Seleccionar #${numero}`;
+                }
+            });
+            document.getElementById('infoDisp').textContent =
+                `${Math.max((appState.config.cantidad_numeros || 0) - (participantes || []).length, 0)}/${appState.config.cantidad_numeros || 0}`;
+            document.getElementById('partCount').textContent = (participantes || []).length;
+        }
+
+        function onSegmentClick(numero) {
+            const btn = document.querySelector(`.segment-button[data-numero="${numero}"]`);
+            if (btn && btn.classList.contains('occupied')) return;
+            openModal(numero);
+        }
+
+        function onResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (currentCantidadNumeros) layoutRuleta(currentCantidadNumeros);
+            }, 150);
+        }
+
+        // ==================================================================
+        // MODAL DE RESERVA
+        // ==================================================================
+        function openModal(num) {
+            if (appState.config.estado !== 'activo') {
+                alert('Sorteo cerrado.');
+                return;
+            }
+            selectedNumber = num;
+            document.getElementById('modalNum').textContent = num;
+            document.getElementById('registroModal').classList.add('active');
+        }
+        window.closeModal = function () {
+            document.getElementById('registroModal').classList.remove('active');
+        };
+
+        document.getElementById('formRegistro').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+
+            if (!db) {
+                alert('No hay conexión con el servidor. Recarga la página e intenta de nuevo.');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
+            btn.disabled = true;
+
+            const nombre = document.getElementById('regNombre').value.trim();
+            const telefonoRaw = document.getElementById('regTel').value.trim();
+            const metodoPago = document.getElementById('regMetodoPago').value;
+            const referencia = document.getElementById('regRef').value.trim();
+            const codigoRef = document.getElementById('regCodigoRef').value.trim().toUpperCase();
+
+            const { error } = await db.rpc('registrar_participante', {
+                p_numero: selectedNumber,
+                p_nombre: nombre,
+                p_telefono: telefonoRaw,
+                p_metodo_pago: metodoPago,
+                p_referencia: referencia,
+                p_codigo_referido: codigoRef || null
+            });
+
+            if (error) {
+                alert(`No se pudo completar la reserva: ${error.message || 'intenta de nuevo.'}`);
+                await refreshParticipantes();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            await refreshParticipantes();
+
+            const msg = encodeURIComponent(`🎰 *NUEVA RESERVA LARULETA*
+
+👤 *Nombre:* ${nombre}
+🎯 *Número:* #${selectedNumber}
+📱 *WhatsApp:* ${telefonoRaw}
+💳 *Método de Pago:* ${metodoPago}
+🔖 *Referencia:* ${referencia}
+${codigoRef ? `🎁 *Código Referido:* ${codigoRef}` : ''}
+
+💰 *Premio:* ${appState.config.premio} USD
+📅 *Fecha Sorteo:* ${appState.config.fecha} a las ${appState.config.hora}
+
+✅ _Esperando verificación de pago..._`);
+
+            window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${msg}`, '_blank');
+
+            alert('✅ Reserva enviada exitosamente!\n\nTe contactaremos pronto para verificar tu pago.');
+            closeModal();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            document.getElementById('formRegistro').reset();
+        });
+
+        // ==================================================================
+        // FORMATEO DE CAMPOS
+        // ==================================================================
+        function setupFormatters() {
+            document.getElementById('regNombre').addEventListener('input', formatNombre);
+            document.getElementById('regTel').addEventListener('input', formatTelefono);
+            document.getElementById('regCodigoRef').addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+
+        function formatNombre(e) {
+            e.target.value = e.target.value.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatTelefono(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            const vzCodes = ['412', '422', '424', '414', '416', '426', '212'];
+            const coCodes = ['300', '301', '302', '303', '304', '305', '310', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321', '322', '323', '324', '350', '351'];
+
+            if (value.startsWith('58')) value = value.substring(2);
+            else if (value.startsWith('57')) value = value.substring(2);
+            else if (value.startsWith('1')) value = value.substring(1);
+            else if (value.startsWith('0')) value = value.substring(1);
+
+            const prefix = value.substring(0, 3);
+            if (vzCodes.includes(prefix)) e.target.value = '+58 ' + value;
+            else if (coCodes.includes(prefix)) e.target.value = '+57 ' + value;
+            else if (value.length === 10 && !isNaN(value)) e.target.value = '+1 ' + value;
+            else e.target.value = value;
+        }
+
+        // ==================================================================
+        // CUENTA REGRESIVA
+        // ==================================================================
+        function updateCountdown(d, t) {
+            const el = document.getElementById('countdown');
+            if (!d || !t) { el.textContent = '--:--:--'; return; }
+            const target = new Date(`${d}T${t}`).getTime();
+            const diff = target - Date.now();
+
+            if (isNaN(target)) { el.textContent = '--:--:--'; return; }
+            if (diff <= 0) { el.textContent = '00:00:00'; return; }
+
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            el.textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        setInterval(() => updateCountdown(appState.config.fecha, appState.config.hora), 1000);
+
+        // ==================================================================
+        // PARTÍCULAS DECORATIVAS (menos elementos en pantallas chicas)
+        // ==================================================================
+        function initParticles() {
+            const c = document.getElementById('particles');
+            const count = window.innerWidth < 640 ? 16 : window.innerWidth < 1024 ? 26 : 40;
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                frag.appendChild(p);
+            }
+            c.appendChild(frag);
+        }
+
+        // ==================================================================
+        // MODALES DEL FOOTER
+        // ==================================================================
+        window.openFooterModal = function (modalId) {
+            document.getElementById(modalId).classList.add('active');
+        };
+        window.closeFooterModal = function (modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        };
+
+        window.addEventListener('click', function (event) {
+            const modal = document.getElementById('registroModal');
+            if (event.target === modal) closeModal();
+
+            ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'].forEach(modalId => {
+                const footerModal = document.getElementById(modalId);
+                if (event.target === footerModal) closeFooterModal(modalId);
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            const modal = document.getElementById('registroModal');
+            if (e.key === 'Escape') {
+                if (modal.classList.contains('active')) closeModal();
+                ['terminosModal', 'privacidadModal', 'contactoModal', 'ayudaModal'].forEach(modalId => {
+                    const footerModal = document.getElementById(modalId);
+                    if (footerModal.classList.contains('active')) closeFooterModal(modalId);
+                });
+            }
+
+            if (e.key === 'Tab' && modal.classList.contains('active')) {
+                const focusableElements = modal.querySelectorAll('input, select, button');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                if (e.shiftKey && document.activeElement === firstElement) {
+                    e.preventDefault(); lastElement.focus();
+                } else if (!e.shiftKey && document.activeElement === lastElement) {
+                    e.preventDefault(); firstElement.focus();
+                }
+            }
+        });
+    })();
+    </script>
+</body>
+</html>
